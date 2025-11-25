@@ -25,7 +25,7 @@ enum Status {
 
 model User {
   id        String    @id @default(cuid())
-  email     String    @unique
+  email     String    @unique @db.VarChar(255)
   name      String
   lastname  String
   birthdate DateTime?
@@ -36,7 +36,6 @@ model User {
   role      Role      @default(USER)
   status    Status    @default(ACTIVE)
   sessions  Session[]
-  accounts Account[]
   events    Event[]
 }
 
@@ -50,25 +49,6 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Account {
-  id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-  createdAt             DateTime
-  updatedAt             DateTime
-
-  @@map("account")
 }
 
 model Invitation {
