@@ -1,4 +1,4 @@
-import LoginForm from "@/components/common/form/LoginForm";
+import LoginForm from "@/app/auth/login/components/LoginForm";
 import FouleesLogo from "@/components/common/logo/FouleesLogo";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/components/ui/sheet";
 import { LogIn } from "lucide-react";
