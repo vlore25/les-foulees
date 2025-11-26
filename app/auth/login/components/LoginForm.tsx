@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { LockKeyhole, UserCircle } from 'lucide-react';
 import Link from 'next/link';
+import { useActionState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
 interface State {
@@ -14,11 +15,11 @@ interface State {
 const initialState: State = {};
 
 const LoginForm = () => {
-    const [state, formAction] = useFormState(loginUser, initialState);
+    const [state, formAction] = useActionState(loginUser, initialState);
     const { pending } = useFormStatus();
 
     return (
-        <div className='absolute flex flex-col items-center justify-center h-full w-full'>
+        <div className='absolute lg:static flex flex-col items-center justify-center h-full w-full'>
             <h2 className='text-center'>Se connecter</h2>
             <form  action={formAction} className='space-y-4'>
                 <InputGroup>

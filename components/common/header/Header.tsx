@@ -1,7 +1,5 @@
-import Image from "next/image";
 import DesktopMenu from "./components/navigation/DesktopMenu";
 import MobileMenu from "./components/navigation/Mobilemenu";
-import Link from "next/link";
 import UserMenu from "./components/user-menu/UserMenu";
 import FouleesLogo from "../logo/FouleesLogo";
 
