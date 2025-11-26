@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import Home from '@/app/(external)/page'
 import Header from '@/components/common/header/Header'
 
@@ -14,14 +14,14 @@ jest.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }))
 
-// Mock the UserMenu component
+// Mock the UserMenu component to avoid server-side issues
 jest.mock('@/components/common/header/components/user-menu/UserMenu', () => {
   return function DummyUserMenu() {
     return <div data-testid="user-menu">UserMenu</div>
   }
 })
 
-// Mock auth functions
+// Mock auth functions that use iron-session
 jest.mock('@/lib/auth', () => ({
   getSession: jest.fn(() => Promise.resolve({ user: null })),
 }))
@@ -32,30 +32,14 @@ jest.mock('@/app/actions/auth', () => ({
   register: jest.fn(),
 }))
 
-describe('Homepage Integration', () => {
-  it('renders the header and the homepage content', () => {
-    render(
+describe('Homepage Snapshot', () => {
+  it('renders homepage unchanged', () => {
+    const { container } = render(
       <>
         <Header />
         <Home />
       </>
     )
-
-    // Test Header - Check for logo
-    const logo = screen.getByAltText('Les Foulees avrillaises logo')
-    expect(logo).toBeInTheDocument()
-
-    // Test Homepage Content - Check for login heading
-    const loginHeading = screen.getByRole('heading', { 
-      level: 2, 
-      name: /Se connecter/i 
-    })
-    expect(loginHeading).toBeInTheDocument()
-
-    // Check for Sign Up button
-    const signUpButton = screen.getByRole('button', { 
-      name: /Sign Up/i 
-    })
-    expect(signUpButton).toBeInTheDocument()
+    expect(container).toMatchSnapshot()
   })
 })

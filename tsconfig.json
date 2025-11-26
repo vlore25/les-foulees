@@ -33,7 +33,7 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "seed.mjs"  ],
+, "seed.mjs", "__tests__/snapshot.jsx"  ],
   "exclude": [
     "node_modules"
   ]
