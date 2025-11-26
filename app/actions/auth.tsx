@@ -79,8 +79,6 @@ export async function loginUser(prevState: LoginState, formData: FormData): Prom
 
   const session = await getSession()
   session.userId = user.id
-  session.email = user.email
-  session.isLoggedIn = true
   await session.save() 
 
   redirect('/dashboard')

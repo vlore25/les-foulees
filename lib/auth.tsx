@@ -4,12 +4,13 @@ import { cookies } from 'next/headers'
 export interface SessionData {
   userId?: string
   email?: string
+  role?: string
   isLoggedIn: boolean
 }
 
 export async function getSession() {
   const session = await getIronSession<SessionData>(await cookies(), {
-    password: process.env.SESSION_SECRET!, // Min 32 caractères
+    password: process.env.SESSION_SECRET!, 
     cookieName: 'app-session',
     cookieOptions: {
       httpOnly: true,

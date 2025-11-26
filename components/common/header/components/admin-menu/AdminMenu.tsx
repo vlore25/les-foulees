@@ -1,21 +1,25 @@
-"use client";
+"use client"
 
-import LoginForm from "@/app/auth/login/components/LoginForm";
 import FouleesLogo from "@/components/common/logo/FouleesLogo";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { LogIn, User2 } from "lucide-react";
-import UserNav from "./components/UserNav";
-import { useUser } from "@/components/providers/UserProvider"; 
+import { BrickWallShield } from "lucide-react";
+import AdminNav from "./components/AdminNav";
+import { useUser } from "@/components/providers/UserProvider";
 
+const user = useUser();
 
-const UserMenu = () => {
-    const user = useUser(); 
+const AdminMenu = () => {
+    
+    if (!user || user.role !== "ADMIN") {
+        return null;
+    }
 
     return (
+
         <div className="lg:hidden">
             <Sheet>
                 <SheetTrigger>
-                   {!user ? <LogIn /> : <User2 />} 
+                   <BrickWallShield />
                 </SheetTrigger>
                 <SheetContent className="w-full">
                     <SheetHeader>
@@ -24,13 +28,10 @@ const UserMenu = () => {
                         <SheetDescription className="sr-only">
                         </SheetDescription>
                     </SheetHeader>
-                    
-                    {/* Conditional Rendering based on Provider data */}
-                    {!user ? <LoginForm /> : <UserNav />} 
-                        
+                    <AdminNav />
                 </SheetContent>
             </Sheet>
         </div>
     );
 }
-export default UserMenu;
+export default AdminMenu;

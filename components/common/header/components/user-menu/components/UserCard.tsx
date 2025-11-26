@@ -1,29 +1,20 @@
 // components/user-card.tsx
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { getSession } from "@/lib/auth";
-import { prisma } from "@/lib/prisma"; // Make sure to import your prisma instance
+"use client";
+
+import { useUser } from "@/components/providers/UserProvider";
+import { Avatar, AvatarFallback} from "@/components/ui/avatar"
+
+const user = useUser();
 
 export default async function UserCard() {
-    const session = await getSession();
-
-    if (!session || !session.userId) {
-        return null;
-    }
-    const user = await prisma.user.findUnique({
-        where: { id: session.userId },
-        select: { name: true, lastname: true, email: true }
-    });
-
     if (!user) return null;
-
-    const getInitials = (name: string, lastName: string) => {
-        const parts = name.trim().split(" ");
+    const getInitials = (name: string, lastname: string) => {
         const firstInitial = Array.from(name)[0];
-        const lastInitial = Array.from(lastName)[0];
+        const lastInitial = Array.from(lastname)[0];
         return (firstInitial + lastInitial).toUpperCase();
     };
 
-    const initials = user.name ? getInitials(user.name, user.lastname) : "??";
+    const initials = getInitials(user.name || "", user.lastname || "");
 
     return (
         <div className="flex gap-2.5 content-center">
