@@ -14,7 +14,10 @@ function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="input-group"
       role="group"
       className={cn(
-        "group/input-group border-input dark:bg-input/30 relative flex w-full items-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none",
+        // AJOUT: 'bg-background' pour le mode clair
+        // MODIF: 'transition-colors' au lieu de transition-[color,box-shadow]
+        "group/input-group border-input bg-background dark:bg-input/30 relative flex w-full items-center rounded-md border shadow-xs transition-colors outline-none",
+        
         "h-9 min-w-0 has-[>textarea]:h-auto",
 
         // Variants based on alignment.
@@ -24,7 +27,10 @@ function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
         "has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3",
 
         // Focus state.
-        "has-[[data-slot=input-group-control]:focus-visible]:border-red has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot=input-group-control]:focus-visible]:ring-[3px]",
+        // SUPPRESSION: border-red (probablement un reste de debug)
+        // REMPLACEMENT: border-ring pour colorer la bordure au focus
+        "has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot=input-group-control]:focus-visible]:ring-[3px]",
+        "has-[[data-slot=input-group-control]:focus-visible]:border-ring", 
 
         // Error state.
         "has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-destructive dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40",

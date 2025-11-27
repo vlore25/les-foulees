@@ -1,4 +1,4 @@
-import { Calendar, CalendarCheck, CalendarCheck2, CalendarCog, CalendarPlus, CalendarSearch, FileInput, FilePlus, Files, FileStack, LogOut, Newspaper, UserPlus, Users, UserSquare } from "lucide-react";
+import { Calendar, CalendarCheck, CalendarCheck2, CalendarCog, CalendarPlus, CalendarSearch, FileInput, FilePlus, Files, FileStack, LogOut, Newspaper, UserCog, UserPlus, Users, UserSquare } from "lucide-react";
 import { ReactNode } from "react";
 
 type AdminNavItem = {
@@ -10,10 +10,15 @@ type AdminNavItem = {
 
 const AdminNavItems: AdminNavItem[] = [
     {
-        title: "Utilisateurs",
+        title: "Membres",
         href: "/admin/dashboard/users",
         icon: <Users />,
         subItems: [
+            {
+                title: "Gestion des membres",
+                href: "/admin/users/",
+                icon: <UserCog />
+            },
             {
                 title: "Inviter un nouveau membre",
                 href: "/admin/dashboard/users/invitation",

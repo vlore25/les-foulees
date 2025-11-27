@@ -7,7 +7,7 @@ export default async function DashboardPage() {
   
   // Si pas de session, rediriger vers login
   if (!session.isLoggedIn) {
-    redirect('/auth/login')
+    redirect('/')
   }
   
   // User est connecté!

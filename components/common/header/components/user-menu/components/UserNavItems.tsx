@@ -10,7 +10,7 @@ type UserNavItem = {
 
 const UserNavItems: UserNavItem[]= [
         {
-            title: "Informaton personel",
+            title: "Information personel",
             href: "/dashboard/profile",
             icon: <UserSquare/>
         },
@@ -35,11 +35,6 @@ const UserNavItems: UserNavItem[]= [
             title: "Documents du club",
             href: "/documents",
             icon: <Files/>
-        },
-        {
-            title: "Se déconnecter",
-            href: "/logout",
-            icon: <LogOut/>
         },
     ]
 export default UserNavItems;

@@ -2,6 +2,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import UserNavItems from "./UserNavItems";
 import Link from "next/link";
 import UserCard from "./UserCard";
+import LogoutButton from "@/app/auth/logout/LogoutButton";
 
 export default function UserNav() {
     return (
@@ -38,6 +39,11 @@ export default function UserNav() {
                             </div>
                         </AccordionItem>
                 )}
+                <AccordionItem value={"logout"}>
+                    <div className="flex flex-row gap-4 items-center">
+                        <LogoutButton/>
+                    </div>
+                </AccordionItem>
             </Accordion>
         </div >
     );

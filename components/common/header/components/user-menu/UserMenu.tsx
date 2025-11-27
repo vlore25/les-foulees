@@ -6,16 +6,18 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { LogIn, User2 } from "lucide-react";
 import UserNav from "./components/UserNav";
 import { useUser } from "@/components/providers/UserProvider"; 
+import { useState } from "react";
 
 
 const UserMenu = () => {
     const user = useUser(); 
-
+    const [isConnected, setIsconnected] = useState(user)
+    
     return (
         <div className="lg:hidden">
             <Sheet>
                 <SheetTrigger>
-                   {!user ? <LogIn /> : <User2 />} 
+                   {!isConnected? <LogIn /> : <User2 />} 
                 </SheetTrigger>
                 <SheetContent className="w-full">
                     <SheetHeader>
@@ -26,7 +28,7 @@ const UserMenu = () => {
                     </SheetHeader>
                     
                     {/* Conditional Rendering based on Provider data */}
-                    {!user ? <LoginForm /> : <UserNav />} 
+                    {!isConnected ? <LoginForm /> : <UserNav />} 
                         
                 </SheetContent>
             </Sheet>

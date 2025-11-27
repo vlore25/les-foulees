@@ -5,12 +5,17 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { BrickWallShield } from "lucide-react";
 import AdminNav from "./components/AdminNav";
 import { useUser } from "@/components/providers/UserProvider";
+import { useState } from "react";
 
-const user = useUser();
+
 
 const AdminMenu = () => {
     
-    if (!user || user.role !== "ADMIN") {
+    const user = useUser();
+
+    const [islogged, setisLogged] = useState(user);
+
+    if (!islogged || islogged.role !== "ADMIN") {
         return null;
     }
 
