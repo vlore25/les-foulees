@@ -14,26 +14,26 @@ export default function RegisterForm() {
         <label htmlFor="name" className="block text-sm font-medium">First Name</label>
         <input id="name" name="name" placeholder="John" className="border p-2 rounded w-full" />
       </div>
-      {state?.errors?.name && <p className="text-red-500 text-sm">{state.errors.name}</p>}
+      {state?.error?.name && <p className="text-red-500 text-sm">{state.error.name}</p>}
       <div>
         <label htmlFor="lastname" className="block text-sm font-medium">Last Name</label>
         <input id="lastname" name="lastname" placeholder="Doe" className="border p-2 rounded w-full" />
       </div>
-      {state?.errors?.lastname && <p className="text-red-500 text-sm">{state.errors.lastname}</p>}
+      {state?.error?.lastname && <p className="text-red-500 text-sm">{state.error.lastname}</p>}
       <div>
         <label htmlFor="email" className="block text-sm font-medium">Email</label>
         <input id="email" name="email" placeholder="john@example.com" className="border p-2 rounded w-full" />
       </div>
-      {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
+      {state?.error?.email && <p>{state.error.email}</p>}
       <div>
         <label htmlFor="password" className="block text-sm font-medium">Password</label>
         <input id="password" name="password" type="password" className="border p-2 rounded w-full" />
       </div>
-      {state?.errors?.password && (
+      {state?.error?.password && (
         <div className="text-red-500 text-sm">
           <p>Password requirements:</p>
           <ul>
-            {state.errors.password.map((error) => (
+            {state.error.password.map((error) => (
               <li key={error}>- {error}</li>
             ))}
           </ul>

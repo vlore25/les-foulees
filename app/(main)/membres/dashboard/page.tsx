@@ -1,5 +1,5 @@
 // app/(main)/dashboard/page.tsx
-import { getSession } from '@/lib/auth'
+import { getSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
 
 export default async function DashboardPage() {

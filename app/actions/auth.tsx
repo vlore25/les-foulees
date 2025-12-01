@@ -1,21 +1,38 @@
 'use server'
 
-import { getSession } from '@/lib/auth'
-import { registerFormSchema, RegisterFormState, loginSchema } from '@/lib/definitions'
+import { createSession, deleteSession } from '@/lib/session'
+import { registerFormSchema, loginSchema } from '@/lib/definitions'
 import { prisma } from '@/lib/prisma'
 import * as bcrypt from 'bcrypt'
 import { redirect } from 'next/navigation'
 
 
+export type RegisterFormState = {
+  error?: {
+    name?: string[];
+    lastname?: String[];
+    email?: string[];
+    password?: string[];
+  };
+  message?: string;
+} | undefined;
 
+export type LoginFormState = {
+  error?: {
+    email?: string[];
+    password?: string[];
+  };
+  message?: string; 
+} | undefined;
+
+//Register Logic
 export async function registerUser(state: RegisterFormState, formData: FormData): Promise<RegisterFormState> {
 
   const validatedFields = registerFormSchema.safeParse(Object.fromEntries(formData.entries()))
 
   if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to Create Account.',
+    return { 
+      error: validatedFields.error.flatten().fieldErrors 
     }
   }
 
@@ -25,7 +42,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
   })
 
   if (existingUser) {
-    return { message: 'An account with this email already exists.' }
+    return { message: 'Un compte est déjà associé cette adresse e-mail.' }
   }
 
   const hashedPassword = await bcrypt.hash(password, 10)
@@ -42,50 +59,48 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
   } catch (e) {
     console.error(e)
     return {
-      message: 'Database Error: Failed to Create Account.',
+      message: 'A erreur s"est produit, veuillez reesayer.',
+    }
+  }
+  return{
+    message: 'Compte créé avec succés'
+  }
+}
+
+
+//Login logic
+export async function loginUser(state: LoginFormState, formData: FormData): Promise<LoginFormState> {
+
+  const validatedFields = loginSchema.safeParse({ 
+    email : formData.get('email'),
+    password: formData.get('password'),
+
+  })
+
+  if (!validatedFields.success) {
+    return { 
+      error: validatedFields.error.flatten().fieldErrors 
+    }
+  }
+  
+  const {email, password} = validatedFields.data
+  const user = await prisma.user.findUnique({
+    where: { email },
+  })
+
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return { 
+      message: 'Courriel ou mot de passe incorrect.' 
     }
   }
 
-  redirect('/auth/login')
-}
-
-export type LoginState = {
-  error?: string
-}
-export async function loginUser(prevState: LoginState, formData: FormData): Promise<LoginState> {
-
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
-
-  const result = loginSchema.safeParse({ email, password })
-
-  if (!result.success) {
-    return { error: 'Invalid email or password' }
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { email: result.data.email }
-  })
-
-  if (!user) {
-    return { error: 'User not found' }
-  }
-
-  const passwordMatch = await bcrypt.compare(result.data.password, user.password)
-
-  if (!passwordMatch) {
-    return { error: 'Wrong password' }
-  }
-
-  const session = await getSession()
-  session.userId = user.id
-  await session.save() 
+  await createSession(user.id)
 
   redirect('/dashboard')
 }
 
+//Logout Logic
 export async function logout() {
-  const session = await getSession()
-  session.destroy() // ← Supprime le cookie
+  await deleteSession()
   redirect('/auth/login')
 }

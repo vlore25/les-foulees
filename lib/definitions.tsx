@@ -24,10 +24,9 @@ const nameSchema = z
 
 // Login schema (only email + password)
 export const loginSchema = z.object({
-  email: emailSchema,
-  password: z.string().min(1, { message: 'Password is required' }) // Less strict for login
-})
-
+  email: z.string().email({ message: "Email invalide" }),
+  password: z.string().min(1, { message: "Mot de passe requis" }),
+});
 
 
 export const registerFormSchema = z.object({
