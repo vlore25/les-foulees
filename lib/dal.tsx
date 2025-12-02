@@ -12,8 +12,19 @@ export type UserListEntry = {
   lastname: string;
 };
 
+export const getSession = cache(async () => {
+  const cookie = (await cookies()).get('lesFoulees')?.value
+  const session = await decrypt(cookie)
+
+  if (!session?.userId) {
+    return null
+  }
+
+  return { isAuth: true, userId: session.userId as string }
+})
+
 export const verifySession = cache(async () => {
-  const cookie = (await cookies()).get('session')?.value
+  const cookie = (await cookies()).get('lesFoulees')?.value
   const session = await decrypt(cookie)
  
   if (!session?.userId) {
@@ -28,7 +39,7 @@ export type CurrentUser = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>
 
 // Retrieve user based on session
 export const getCurrentUser = cache(async () => {
-  const session = await verifySession();
+  const session = await getSession();
 
   if (!session?.userId) {
     return null;
@@ -50,11 +61,8 @@ export const getCurrentUser = cache(async () => {
 
 // Retrieve all users
 export const getAllUsers = cache(async (): Promise<UserDTO[]> => {
-  // 1. Qui est là ?
   const session = await verifySession()
 
-  // 2. On récupère le rôle réel depuis la DB pour être sûr à 100%
-  // (Optionnel mais recommandé si le cookie peut être vieux)
   let isAdmin = false
   
   if (session?.userId) {
@@ -82,8 +90,6 @@ export const getAllUsers = cache(async (): Promise<UserDTO[]> => {
 
     return users.map(user => toAdminDTO(user))
   } else {
-    // Sinon (User normal ou Anonyme), on utilise le mapper Public
-    // Les champs 'email' et 'role' sont jetés à la poubelle ici
     return users.map(user => toPublicDTO(user))
   }
 })

@@ -11,7 +11,7 @@ type AdminNavItem = {
 const AdminNavItems: AdminNavItem[] = [
     {
         title: "Membres",
-        href: "/admin/dashboard/users",
+        href: "/admin/users",
         icon: <Users />,
         subItems: [
             {

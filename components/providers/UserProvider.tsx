@@ -1,23 +1,15 @@
 "use client";
-
 import { createContext, useContext, ReactNode } from "react";
+import type { CurrentUser } from "@/lib/dal";
 
-type User = {
-  id: string;
-  email: string;
-  role: string; 
-  name?: string;
-  lastname?: string;
-} | null;
-
-const UserContext = createContext<User>(null);
+const UserContext = createContext<CurrentUser | null>(null);
 
 export default function UserProvider({ 
   children, 
   user 
 }: { 
   children: ReactNode; 
-  user: User; 
+  user: CurrentUser | null;
 }) {
   return (
     <UserContext.Provider value={user}>
@@ -25,7 +17,6 @@ export default function UserProvider({
     </UserContext.Provider>
   );
 }
-
 
 export function useUser() {
   const context = useContext(UserContext);

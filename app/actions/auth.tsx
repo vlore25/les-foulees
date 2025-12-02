@@ -102,5 +102,5 @@ export async function loginUser(state: LoginFormState, formData: FormData): Prom
 //Logout Logic
 export async function logout() {
   await deleteSession()
-  redirect('/auth/login')
+  redirect('/')
 }

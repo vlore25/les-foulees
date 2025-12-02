@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { decrypt } from '@/lib/session'
-import { cookies } from 'next/headers'
  
 // 1. Specify protected and public routes
 const protectedPaths = ['/dashboard', '/admin']
-const publicPaths = ['/login', '/signup', '/']
+const publicPaths = ['/login', '/']
  
 export default async function proxy(req: NextRequest) {
   // 2. Check if the current route is protected or public
@@ -13,7 +12,7 @@ export default async function proxy(req: NextRequest) {
   const isPublicRoute = publicPaths.includes(path)
  
   // 3. Decrypt the session from the cookie
-  const cookie = (await cookies()).get('lesFoulees')?.value
+  const cookie = req.cookies.get('lesFoulees')?.value
   const session = await decrypt(cookie)
  
   // 4. Redirect to /login if the user is not authenticated
