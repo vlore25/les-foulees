@@ -1,6 +1,6 @@
 // app/(main)/dashboard/profile/page.tsx
-import { getSession } from '@/lib/session'
-import { prisma } from '@/lib/prisma'
+import { getSession } from '@/src/lib/session'
+import { prisma } from '@/src/lib/prisma'
 import { redirect } from 'next/navigation'
 
 export default async function ProfilePage() {

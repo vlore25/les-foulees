@@ -1,5 +1,5 @@
-import LoginForm from "../auth/login/components/LoginForm";
-import RegisterForm from "../auth/register/components/RegisterForm";
+import LoginForm from "../../src/features/auth/login/components/LoginForm";
+import RegisterForm from "../../src/features/auth/register/components/RegisterForm";
 
 export default function Home() {
   return (

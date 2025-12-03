@@ -1,41 +1,51 @@
-// app/(admin)/dashboard/page.tsx
-import { getCurrentUser } from "@/app/actions/user";
+import { getCurrentUser } from "@/src/features/users/dal";
+import { TabsContent } from "@/components/ui/tabs";
+
+// Imaginons que vous ayez extrait vos tableaux/listes dans des composants séparés
+// import UsersList from "@/src/features/admin/UsersList";
+// import EventsList from "@/src/features/admin/EventsList";
 
 export default async function AdminDashboardPage() {
+  // 1. Récupération des données côté serveur (Server Component)
   const user = await getCurrentUser();
   const name = user?.name || "Administrateur"; 
 
+  // 2. On retourne directement les TabsContent.
+  // Ils s'afficheront automatiquement selon l'onglet cliqué dans le Layout.
   return (
-    <div className="p-8 space-y-6">
-      {/* Utilisation de la classe text-primary définie dans globals.css */}
-      <h1 className="text-4xl font-bold text-primary">Tableau de Bord Administrateur</h1>
-      <p className="text-lg">
-        Bienvenue dans la zone d'administration, **{name}** !
-      </p>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+      
+      {/* === CONTENU ONGLET MEMBRES === */}
+      <TabsContent value="users" className="m-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+        <div className="flex flex-col gap-4">
+          <h1 className="text-2xl font-bold tracking-tight">Bonjour, {name} 👋</h1>
+          <p className="text-muted-foreground">Voici la liste des membres.</p>
+          
+          {/* Insérez votre composant de liste ici */}
+          {/* <UsersList /> */}
+          <div className="border border-dashed p-10 rounded-lg">Composant UsersList ici</div>
+        </div>
+      </TabsContent>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Carte 1 */}
-        <div className="p-4 border rounded-md shadow-sm bg-card">
-          <h2 className="text-xl font-semibold">Gestion des Utilisateurs</h2>
-          <p className="text-muted-foreground">Accéder à la liste des membres et des invitations.</p>
+      {/* === CONTENU ONGLET ÉVÉNEMENTS === */}
+      <TabsContent value="events" className="m-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+        <div className="flex flex-col gap-4">
+          <h1 className="text-2xl font-bold tracking-tight">Événements</h1>
+          
+          {/* Insérez votre composant d'événements ici */}
+          {/* <EventsList /> */}
+          <div className="border border-dashed p-10 rounded-lg">Composant EventsList ici</div>
         </div>
-        
-        {/* Carte 2 */}
-        <div className="p-4 border rounded-md shadow-sm bg-card">
-          <h2 className="text-xl font-semibold">Événements</h2>
-          <p className="text-muted-foreground">Créer, modifier ou supprimer des événements.</p>
-        </div>
-        
-        {/* Carte 3 */}
-        <div className="p-4 border rounded-md shadow-sm bg-card">
-          <h2 className="text-xl font-semibold">Paramètres</h2>
-          <p className="text-muted-foreground">Modifier les configurations globales du club.</p>
-        </div>
-      </div>
+      </TabsContent>
 
-      <p className="mt-8 text-sm text-muted-foreground">
-        **Test de Routage Réussi :** Si vous voyez cette page, l'accès à **`/admin/dashboard`** est validé pour l'administrateur.
-      </p>
+      {/* === CONTENU ONGLET DOCS === */}
+      <TabsContent value="docs" className="m-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+         <h1 className="text-2xl font-bold tracking-tight mb-4">Documents</h1>
+         <div className="p-10 border border-dashed rounded-lg text-center text-muted-foreground">
+           Module Documents à venir...
+         </div>
+      </TabsContent>
+
     </div>
   );
 }

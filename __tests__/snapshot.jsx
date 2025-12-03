@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import { render } from '@testing-library/react'
 import Home from '@/app/(external)/page'
-import Header from '@/components/common/header/Header'
+import Header from '@/components/layout/header/Header'
 
 // Mock Next.js navigation
 jest.mock('next/navigation', () => ({

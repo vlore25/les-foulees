@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Header from "@/components/common/header/Header";
 import "./globals.css";
-import { getCurrentUser } from "@/lib/dal";
 import UserProvider from "@/components/providers/UserProvider";
+import { getCurrentUser } from "@/src/features/users/dal";
+import Header from "@/components/layout/header/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,16 +28,18 @@ export default async function RootLayout({
 }>) {
 
   const user = await getCurrentUser();
-  
+
   return (
     <html lang="fr">
-      
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <UserProvider user={user}>
-        <Header />
-        {children}
+          <Header />
+          <div className="mx-2 lg:mx-50">
+            {children}
+          </div>
         </UserProvider>
       </body>
     </html>
