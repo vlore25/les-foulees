@@ -9,7 +9,7 @@ const MobileMenu = () => {
         <div className="lg:hidden">
             <Sheet >
                 <SheetTrigger>
-                    <Menu />
+                        <Menu className="size-6 justify-self-center" />
                 </SheetTrigger>
                 <SheetContent>
                     <SheetTitle className="sr-only">menu</SheetTitle>

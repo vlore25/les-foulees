@@ -1,12 +1,9 @@
 import { getCurrentUser } from "@/src/features/users/dal";
 import { TabsContent } from "@/components/ui/tabs";
-
-// Imaginons que vous ayez extrait vos tableaux/listes dans des composants séparés
-// import UsersList from "@/src/features/admin/UsersList";
-// import EventsList from "@/src/features/admin/EventsList";
+import UsersList from "@/src/features/users/UsersList";
+import UsersTabManager from "../_components/UsersTabManager";
 
 export default async function AdminDashboardPage() {
-  // 1. Récupération des données côté serveur (Server Component)
   const user = await getCurrentUser();
   const name = user?.name || "Administrateur"; 
 
@@ -18,12 +15,11 @@ export default async function AdminDashboardPage() {
       {/* === CONTENU ONGLET MEMBRES === */}
       <TabsContent value="users" className="m-0 focus-visible:ring-0 focus-visible:ring-offset-0">
         <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-bold tracking-tight">Bonjour, {name} 👋</h1>
           <p className="text-muted-foreground">Voici la liste des membres.</p>
-          
-          {/* Insérez votre composant de liste ici */}
-          {/* <UsersList /> */}
-          <div className="border border-dashed p-10 rounded-lg">Composant UsersList ici</div>
+          <UsersTabManager>
+             {/* UsersList est passé comme enfant. Il reste un Server Component ! */}
+             <UsersList /> 
+          </UsersTabManager>
         </div>
       </TabsContent>
 

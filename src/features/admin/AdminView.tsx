@@ -49,7 +49,6 @@ export default function AdminView({ usersContent, eventsContent }: AdminViewProp
   );
 
   return (
-    // Le composant Tabs englobe TOUTE la page pour partager l'état
     <Tabs defaultValue="users" orientation="vertical" className="flex flex-col md:flex-row h-screen w-full">
       
       {/* === 1. HEADER MOBILE (Visible uniquement sur mobile "md:hidden") === */}

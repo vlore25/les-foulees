@@ -13,7 +13,7 @@ interface AdminShellProps {
 export default function AdminShell({ children }: AdminShellProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  // Liste des onglets (définie ici car elle utilise setIsMobileOpen)
+  // Liste des onglets
   const TabItems = () => (
     <TabsList className="flex flex-col h-auto bg-transparent p-0 gap-2 items-stretch text-foreground">
       <TabsTrigger 
@@ -46,7 +46,7 @@ export default function AdminShell({ children }: AdminShellProps) {
   );
 
   return (
-    // Le composant Tabs doit envelopper tout le layout pour partager le contexte avec les enfants
+
     <Tabs defaultValue="users" orientation="vertical" className="flex flex-col md:flex-row h-screen w-full bg-background">
       
       {/* === HEADER MOBILE === */}

@@ -12,6 +12,7 @@ export default async function UsersList(){
                 <div>
                     <h3>{user.name}{' '}{user.lastname}</h3>
                     <p className="text-mutted">{user.email}</p>
+                    <p className="text-mutted">{user.role}</p>
                     <p>{user.status == 'ACTIVE' ?
                         <Badge variant={'active'}><span>Active</span></Badge> : <Badge variant={'inactive'}><span>Inactif</span></Badge>
                     }</p>
