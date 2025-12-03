@@ -5,11 +5,11 @@ import navItems from "./NavItems";
 const DesktopMenu = () => {
     return(
         <NavigationMenu className="hidden lg:flex">
-                <NavigationMenuList>
+                <NavigationMenuList className="gap-3">
                     {navItems.map((item) => (
                         <NavigationMenuItem key={item.title}>
                             <NavigationMenuLink asChild>
-                                <Link href={item.href}>{item.title}</Link>
+                                <Link href={item.href}><p className="text-2xl">{item.title}</p></Link>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                     ))}

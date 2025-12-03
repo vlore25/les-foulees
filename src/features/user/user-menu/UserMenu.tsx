@@ -27,7 +27,6 @@ const DesktopMenu = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                     {UserNavItems.map((item) => {
-                        // CORRECTION 2 : Gestion du retour (return) et du cas "else"
                         if (item.subItems) {
                             return (
                                 <DropdownMenuSub key={item.title}>
@@ -45,9 +44,7 @@ const DesktopMenu = () => {
                                     </DropdownMenuPortal>
                                 </DropdownMenuSub>
                             );
-                        } 
-                        
-                        // Cas où il n'y a pas de sous-menu (lien simple)
+                        }
                         return (
                             <DropdownMenuItem key={item.title} asChild>
                                 <Link href={item.href || "#"}>
@@ -56,14 +53,10 @@ const DesktopMenu = () => {
                             </DropdownMenuItem>
                         );
                     })}
-                    
-                    {/* Séparateur pour le logout */}
-                    <div className="h-px bg-muted my-1" /> 
-                    
+                    <div className="h-px bg-muted my-1" />
                     <DropdownMenuItem asChild>
-                        {/* LogoutButton doit accepter des props ou être wrappé s'il contient un bouton */}
                         <div className="w-full cursor-pointer">
-                             <LogoutButton />
+                            <LogoutButton />
                         </div>
                     </DropdownMenuItem>
                 </DropdownMenuContent>

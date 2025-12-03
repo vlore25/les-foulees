@@ -3,13 +3,16 @@ import { ChevronRightIcon, Menu } from "lucide-react";
 import navItems from "./NavItems";
 import Link from "next/link";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 
 const MobileMenu = () => {
     return (
         <div className="lg:hidden">
             <Sheet >
-                <SheetTrigger>
-                        <Menu className="size-6 justify-self-center" />
+                <SheetTrigger asChild>
+                    <Button variant="ghost">
+                        <Menu className="size-6" />
+                    </Button>
                 </SheetTrigger>
                 <SheetContent>
                     <SheetTitle className="sr-only">menu</SheetTitle>

@@ -5,7 +5,7 @@ import HeaderActions from "./HeaderActions";
 
 const Header = () => {
     return (
-        <nav className="p-2 border-b-2">
+        <nav className="p-2 lg:p-3 border-b-2">
             <div className="flex justify-between items-center lg:mx-20">
             <MobileMenu />
             <FouleesLogo />

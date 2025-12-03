@@ -37,7 +37,7 @@ export default async function RootLayout({
       >
         <UserProvider user={user}>
           <Header />
-          <div className="mx-2 lg:mx-50">
+          <div className="flex min-h-screen mx-1 lg:mx-10 p-4">
             {children}
           </div>
         </UserProvider>
