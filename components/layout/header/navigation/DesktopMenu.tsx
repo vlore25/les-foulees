@@ -9,7 +9,7 @@ const DesktopMenu = () => {
                     {navItems.map((item) => (
                         <NavigationMenuItem key={item.title}>
                             <NavigationMenuLink asChild>
-                                <Link href={item.href}><p className="text-2xl">{item.title}</p></Link>
+                                <Link href={item.href}><p className="text-xl">{item.title}</p></Link>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
                     ))}

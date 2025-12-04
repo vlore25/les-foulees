@@ -19,12 +19,12 @@ export default function UserCard() {
     const initials = getInitials(user.name || "", user.lastname || "");
 
     return (
-        <div className="flex gap-2.5 align-center">
+        <div className="flex gap-2.5 items-center">
             <Avatar>
                 <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
-            <div>
-                <div className="flex gap-1.5">
+            <div className="flex flex-col items-start overflow-hidden">
+                <div className="flex gap-1.5 font-medium whitespace-nowrap truncate w-full">
                     <span>{user.name}</span><span>{user.lastname}</span>
                 </div>
                 <p className="text-xs lowercase">{user.email}</p>

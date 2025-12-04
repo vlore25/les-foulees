@@ -1,5 +1,5 @@
 // app/(main)/dashboard/page.tsx
-import { getCurrentUser } from '@/src/features/users/dal'
+import { getCurrentUser } from '@/src/features/user/dal'
 import { redirect } from 'next/navigation'
 
 export default async function DashboardPage() {

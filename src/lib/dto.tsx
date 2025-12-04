@@ -32,7 +32,6 @@ export function toAdminDTO(user: any): AdminUserDTO {
     name: user.name,
     lastname: user.lastname,
     status: user.status,
-    // Champs supplémentaires
     phone: user.phone,
     email: user.email,
     role: user.role,

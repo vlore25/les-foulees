@@ -3,7 +3,7 @@
 import FouleesLogo from "@/components/common/logo/FouleesLogo";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { BrickWallShield } from "lucide-react";
-import AdminNav from "./components/AdminNav";
+import AdminNav from "../../../../src/features/admin/admin-menu/components/AdminNav";
 
 
 

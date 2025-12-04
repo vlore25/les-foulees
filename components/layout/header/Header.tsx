@@ -6,16 +6,14 @@ import HeaderActions from "./HeaderActions";
 const Header = () => {
     return (
         <nav className="p-2 lg:p-3 border-b-2">
-            <div className="flex justify-between items-center lg:mx-20">
-            <MobileMenu />
-            <FouleesLogo />
-            <DesktopMenu />
-            <HeaderActions />
+            <div className="flex justify-between items-center min-w-0 max-w-7xl mx-auto px-4 lg:px-8">
+                <MobileMenu />
+                <FouleesLogo />
+                <DesktopMenu />
+                <HeaderActions />
             </div>
         </nav>
     )
 }
 
 export default Header;
-
-

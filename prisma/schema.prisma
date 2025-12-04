@@ -56,8 +56,7 @@ model Session {
 model Invitation {
   id        Int       @id @default(autoincrement())
   token     String    @unique
-  email     String // The email address the invitation was sent to
-  expiresAt DateTime // When the token becomes invalid
+  email     String    @unique
   createdAt DateTime  @default(now())
 }
 

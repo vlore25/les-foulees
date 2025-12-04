@@ -1,4 +1,4 @@
-import UsersList from "@/src/features/users/UsersList";
+import UsersList from "@/src/features/users/components/users-gestion/UsersList";
 
 export default function annuaire(){
     return(

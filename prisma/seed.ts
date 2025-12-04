@@ -1,42 +1,61 @@
 import { PrismaClient } from "@/app/generated/prisma/client"
 import { PrismaPg } from '@prisma/adapter-pg';
-import * as crypto from 'crypto';
+import * as bcrypt from 'bcrypt';
+import { fakerFR as faker } from '@faker-js/faker'; // On importe la version française directement
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
 });
 const prisma = new PrismaClient({ adapter })
 
-async function hashScrypt(password: string): Promise<string> {
-    const salt = crypto.randomBytes(16).toString('hex');
-    const hash = await new Promise((resolve, reject) => {
-        crypto.scrypt(password, salt, 64, (err, derivedKey) => {
-            if (err) reject(err);
-            // Store the hash along with the salt and parameters in a single string format
-            resolve(`${salt}:${derivedKey.toString('hex')}`);
-        });
-    });
-    return hash as string;
-}
 async function main() {
-  // User 1: Alice
   console.log('🌱 Début du seeding...')
+
+  // Mot de passe crypté unique pour tous les utilisateurs de test (pour se connecter facilement)
   const plainPassword = '987654'; 
-  const hashedPassword = await hashScrypt(plainPassword);
-  const user = await prisma.user.upsert({
-    where: { email: 'alice@prisma.io' },
+  const hashedPassword = await bcrypt.hash(plainPassword, 10);
+
+  // 1. Création de l'admin fixe (Alice)
+  await prisma.user.upsert({
+    where: { email: 'alice@foulees.com' },
     update: {},
     create: {
-      email: 'alice@prisma.io',
+      email: 'alice@foulees.com',
       name: 'Alice',
-      lastname: 'Wonderland', // Required field based on your schema
-      password: hashedPassword,     // Required field
+      lastname: 'Wonderland',
+      password: hashedPassword,
       role: 'ADMIN',
+      status: 'ACTIVE',
     },
+  });
+  console.log('✅ Admin Alice créé.');
+
+  // 2. Génération de 50 utilisateurs avec Faker
+  console.log('... Génération de 50 utilisateurs fictifs');
+  
+  for (let i = 0; i < 50; i++) {
+    // Générer un prénom et un nom en français
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
     
-  })
-  console.log(`✅ Utilisateur créé avec l'id: ${user.id}`)
-  console.log('🚀 Seeding terminé !')
+    // Générer un email cohérent avec le nom/prénom
+    const email = faker.internet.email({ firstName, lastName });
+
+    await prisma.user.create({
+      data: {
+        email: email,
+        name: firstName,
+        lastname: lastName,
+        password: hashedPassword,
+        role: 'USER',
+        status: 'ACTIVE',
+        phone: faker.phone.number(),
+        birthdate: faker.date.past()
+      },
+    });
+  }
+
+  console.log('🚀 Seeding terminé avec succès !')
 }
 
 main()

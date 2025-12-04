@@ -1,24 +1,32 @@
 "use client";
 import FouleesLogo from "@/components/common/logo/FouleesLogo";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { User2 } from "lucide-react";
+import { Columns3Cog, User2 } from "lucide-react";
 import UserNav from "./components/UserNav";
 import UserCard from "./components/UserCard";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import LogoutButton from "../../auth/logout/LogoutButton";
 import UserNavItems from "./components/UserNavItems";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { useUser } from "@/components/providers/UserProvider";
+
+interface MenuProps {
+    user: ReturnType<typeof useUser>; // Récupère automatiquement le type retourné par useUser (CurrentUser | null)
+}
 
 const UserMenu = () => {
+    const user = useUser();
     return (
         <>
-            <DesktopMenu />
-            <MobileMenu />
+            <DesktopMenu user={user}/>
+            <MobileMenu user={user}/>
         </>
     );
 }
 
-const DesktopMenu = () => {
+const DesktopMenu = ({ user }: MenuProps) => {
+    
     return (
         <div className="hidden lg:flex">
             <DropdownMenu>
@@ -53,6 +61,9 @@ const DesktopMenu = () => {
                             </DropdownMenuItem>
                         );
                     })}
+                    {user?.role == "ADMIN" && <DropdownMenuItem asChild>
+                        <AdminLink />
+                    </DropdownMenuItem>}
                     <div className="h-px bg-muted my-1" />
                     <DropdownMenuItem asChild>
                         <div className="w-full cursor-pointer">
@@ -64,7 +75,8 @@ const DesktopMenu = () => {
         </div>
     );
 }
-const MobileMenu = () => {
+
+const MobileMenu = ({ user }: MenuProps) => {
     return (
         <div className="lg:hidden">
             <Sheet>
@@ -78,6 +90,7 @@ const MobileMenu = () => {
                         <SheetDescription className="sr-only">
                         </SheetDescription>
                     </SheetHeader>
+                    {user?.role == "ADMIN" && <AdminLink />}
                     <UserNav />
                 </SheetContent>
             </Sheet>
@@ -85,3 +98,16 @@ const MobileMenu = () => {
     );
 }
 export default UserMenu;
+
+
+function AdminLink() {
+    return (
+        <Button variant="ghost" size="sm" asChild className="gap-2">
+            <Link href="/admin/dashboard">
+                <Columns3Cog className="size-4" />
+                <span>Espace Admin</span>
+            </Link>
+        </Button>
+    );
+}
+

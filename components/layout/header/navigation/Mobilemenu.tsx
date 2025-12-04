@@ -14,7 +14,7 @@ const MobileMenu = () => {
                         <Menu className="size-6" />
                     </Button>
                 </SheetTrigger>
-                <SheetContent>
+                <SheetContent side='left'>
                     <SheetTitle className="sr-only">menu</SheetTitle>
                     <Accordion type="single" collapsible className="w-full flex flex-col gap-2 mt-9 p-4">
                         {navItems.map((item) =>

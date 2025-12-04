@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import UserProvider from "@/components/providers/UserProvider";
-import { getCurrentUser } from "@/src/features/users/dal";
+import { getCurrentUser } from "@/src/features/user/dal";
 import Header from "@/components/layout/header/Header";
 
 const geistSans = Geist({
@@ -37,7 +37,7 @@ export default async function RootLayout({
       >
         <UserProvider user={user}>
           <Header />
-          <div className="flex min-h-screen mx-1 lg:mx-10 p-4">
+          <div className="flex min-h-screen mx-1 lg:mx-15">
             {children}
           </div>
         </UserProvider>

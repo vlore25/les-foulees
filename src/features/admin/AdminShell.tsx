@@ -15,14 +15,14 @@ export default function AdminShell({ children }: AdminShellProps) {
 
   // Liste des onglets
   const TabItems = () => (
-    <TabsList className="flex flex-col h-auto bg-transparent p-0 gap-2 items-stretch text-foreground">
+    <TabsList className="flex flex-col h-auto bg-transparent p-0 gap-2 text-foreground">
       <TabsTrigger 
         value="users" 
         onClick={() => setIsMobileOpen(false)}
-        className="justify-start gap-2 px-4 py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+        className="justify-start gap-2 px-4 w-full py-3 data-[state=active]:bg-primary/15 data-[state=active]:text-primary-foreground transition-all"
       >
         <Users className="h-4 w-4" />
-        Membres
+        <p>Membres</p>
       </TabsTrigger>
 
       <TabsTrigger 
@@ -46,9 +46,7 @@ export default function AdminShell({ children }: AdminShellProps) {
   );
 
   return (
-
     <Tabs defaultValue="users" orientation="vertical" className="flex flex-col md:flex-row h-screen w-full bg-background">
-      
       {/* === HEADER MOBILE === */}
       <div className="md:hidden flex items-center p-4 border-b bg-muted/20 shrink-0">
         <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
@@ -67,23 +65,20 @@ export default function AdminShell({ children }: AdminShellProps) {
             <TabItems />
           </SheetContent>
         </Sheet>
-        <h1 className="ml-4 font-bold text-lg">Admin Dashboard</h1>
+        <h1 className="ml-4  text-lg">Admin Dashboard</h1>
       </div>
 
       {/* === SIDEBAR DESKTOP === */}
       <aside className="hidden md:flex w-64 border-r bg-muted/30 p-6 flex-col gap-4 shrink-0">
         <div className="flex items-center gap-2 px-2 mb-4">
             <BrickWallShield className="h-6 w-6 text-primary" />
-            <h2 className="text-xl font-bold">Admin</h2>
+            <h2 className="text-xl font-bold">Tableau de bord</h2>
         </div>
         <TabItems />
       </aside>
-
-      {/* === ZONE PRINCIPALE (Là où 'children' sera injecté) === */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto mx-1">
         {children}
       </main>
-
     </Tabs>
   );
 }

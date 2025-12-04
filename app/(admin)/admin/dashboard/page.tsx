@@ -1,23 +1,18 @@
-import { getCurrentUser } from "@/src/features/users/dal";
+import { getCurrentUser } from "@/src/features/user/dal";
 import { TabsContent } from "@/components/ui/tabs";
-import UsersList from "@/src/features/users/UsersList";
-import UsersTabManager from "../_components/UsersTabManager";
+import UsersList from "@/src/features/users/components/users-gestion/UsersList";
+import UsersTabManager from "../../../../src/features/admin/dashboard-tabs/UsersTabManager";
 
 export default async function AdminDashboardPage() {
   const user = await getCurrentUser();
   const name = user?.name || "Administrateur"; 
-
-  // 2. On retourne directement les TabsContent.
-  // Ils s'afficheront automatiquement selon l'onglet cliqué dans le Layout.
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
-      
+    <div className="md:p-8 max-w-7xl mx-auto space-y-6">
       {/* === CONTENU ONGLET MEMBRES === */}
       <TabsContent value="users" className="m-0 focus-visible:ring-0 focus-visible:ring-offset-0">
         <div className="flex flex-col gap-4">
-          <p className="text-muted-foreground">Voici la liste des membres.</p>
+          <h3>Gestion des membres.</h3>
           <UsersTabManager>
-             {/* UsersList est passé comme enfant. Il reste un Server Component ! */}
              <UsersList /> 
           </UsersTabManager>
         </div>
@@ -27,9 +22,6 @@ export default async function AdminDashboardPage() {
       <TabsContent value="events" className="m-0 focus-visible:ring-0 focus-visible:ring-offset-0">
         <div className="flex flex-col gap-4">
           <h1 className="text-2xl font-bold tracking-tight">Événements</h1>
-          
-          {/* Insérez votre composant d'événements ici */}
-          {/* <EventsList /> */}
           <div className="border border-dashed p-10 rounded-lg">Composant EventsList ici</div>
         </div>
       </TabsContent>
@@ -41,7 +33,6 @@ export default async function AdminDashboardPage() {
            Module Documents à venir...
          </div>
       </TabsContent>
-
     </div>
   );
 }
