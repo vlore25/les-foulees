@@ -4,8 +4,6 @@ import { cookies } from 'next/headers'
 import { decrypt, getSession } from '@/src/lib/session'
 import { cache } from 'react'
 import { redirect } from 'next/navigation'
-import { prisma } from './prisma'
-import { toPublicDTO, toAdminDTO, type UserDTO } from './dto'
 
 export type UserListEntry = {
   name: string;

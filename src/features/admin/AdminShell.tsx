@@ -31,7 +31,7 @@ export default function AdminShell({ children }: AdminShellProps) {
         className="justify-start gap-2 px-4 py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
       >
         <Calendar className="h-4 w-4" />
-        Événements
+        <p>Événements</p>
       </TabsTrigger>
 
       <TabsTrigger 
