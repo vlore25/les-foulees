@@ -19,7 +19,7 @@ export const registerFormSchema = z.object({
     .string()
     .min(2, { message: 'Name must be at least 2 characters long.' })
     .trim(),
-  lastname: z 
+  lastname: z
     .string()
     .min(2, { message: 'Last name must be at least 2 characters long.' })
     .trim(),
@@ -35,11 +35,69 @@ export const registerFormSchema = z.object({
     .trim(),
 })
 
+
 export const inviteSchema = z.object({
-  email: emailSchema, 
+  email: emailSchema,
 });
 
- 
+/*
+*
+*/
+
+
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+// Définition de l'Enum pour correspondre à la Base de Données
+export const EventTypeEnum = z.enum([
+  "TRAIL",
+  "COURSE_ROUTE",
+  "ENTRAINEMENT",
+  "VIE_DU_CLUB",
+  "SORTIE",
+  "AUTRE"
+]);
+
+export const eventSchema = z.object({
+  title: z
+    .string().toLowerCase()
+    .min(3, { message: "Le titre doit contenir au moins 3 caractères." })
+    .max(100, { message: "Le titre est trop long." })
+    .trim(),
+
+  dateStart: z.coerce
+    .date() 
+    .refine((date) => date > new Date(), {
+      message: "La date doit être dans le futur.",
+    }),
+
+  place: z
+    .string()
+    .min(2, { message: "Le lieu est requis." })
+    .trim(),
+
+  eventtype: EventTypeEnum, 
+
+  description: z
+    .string()
+    .min(10, { message: "La description doit faire au moins 10 caractères." })
+    .max(3000, { message: "Description trop longue." })
+    .optional()
+    .or(z.literal("")),
+
+  picture: z
+    .instanceof(File, { message: "L'image est requise" })
+    .refine((file) => file.size > 0, "Le fichier ne peut pas être vide")
+    .refine((file) => file.size <= MAX_FILE_SIZE, `Taille max 5MB.`)
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      "Seuls .jpg, .png, .webp sont acceptés."
+    ),
+});
+
+
+export type EventFormState = z.infer<typeof eventSchema>;
+
 // Type exports for form states
 export type LoginFormState = {
   errors?: {
@@ -52,7 +110,7 @@ export type LoginFormState = {
 export type RegisterFormState = {
   errors?: {
     name?: string[]
-    lastname?: string[] 
+    lastname?: string[]
     email?: string[]
     password?: string[]
   }
@@ -63,6 +121,6 @@ export type InviteUserState = {
   errors?: {
     email?: string[];
   };
-  message: string | null; 
-  success: boolean;      
+  message: string | null;
+  success: boolean;
 };

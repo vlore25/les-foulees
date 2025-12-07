@@ -1,13 +1,13 @@
 // app/auth/register/components/RegisterForm.tsx
 'use client'
- 
+
 import { registerUser } from '@/src/features/auth/actions'
 import { Button } from '@/components/ui/button'
 import { useActionState } from 'react'
- 
+
 export default function RegistrationForm({ email, token }: { email: string, token: string }) {
   const [state, action, pending] = useActionState(registerUser, undefined)
- 
+
   return (
     <form action={action} className="space-y-4">
       <input type="hidden" name="token" value={token} />
@@ -23,7 +23,7 @@ export default function RegistrationForm({ email, token }: { email: string, toke
       {state?.error?.lastname && <p className="text-red-500 text-sm">{state.error.lastname}</p>}
       <div>
         <label htmlFor="email" className="block text-sm font-medium" >Courriel</label>
-        <input id="email" name="email" placeholder="Adresse e-mail" className="border p-2 rounded w-full" value={email} readOnly/>
+        <input id="email" name="email" placeholder="Adresse e-mail" className="border p-2 rounded w-full" value={email} readOnly />
       </div>
       {state?.error?.email && <p>{state.error.email}</p>}
       <div>
@@ -41,7 +41,11 @@ export default function RegistrationForm({ email, token }: { email: string, toke
       )}
       {state?.message && <p className="text-red-500 text-sm font-bold">{state.message}</p>}
 
-      <Button disabled={pending} type="submit" className=" p-2 rounded w-full disabled:opacity-50">
+      <Button
+        disabled={pending}
+        type="submit"
+        className=" p-2 rounded w-full disabled:opacity-50"
+      >
         {pending ? 'Enregistrement en cours' : 'S’inscrire'}
       </Button>
     </form>

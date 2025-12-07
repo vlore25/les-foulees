@@ -1,8 +1,9 @@
-import { getCurrentUser } from "@/src/features/user/dal";
 import { TabsContent } from "@/components/ui/tabs";
 import UsersList from "@/src/features/users/components/users-gestion/UsersList";
 import UsersTabManager from "../../../../src/features/admin/dashboard-tabs/UsersTabManager";
 import EventsTabManager from "@/src/features/admin/dashboard-tabs/EventsTabsManager";
+import { getCurrentUser } from "@/src/features/users/dal";
+import EventList from "@/src/features/events/components/admin/EventList";
 
 export default async function AdminDashboardPage() {
   const user = await getCurrentUser();
@@ -24,6 +25,7 @@ export default async function AdminDashboardPage() {
         <div className="flex flex-col gap-4">
           <h3>Gestion des Evenements.</h3>
           <EventsTabManager>
+            <EventList/>
           </EventsTabManager>
         </div>
       </TabsContent>

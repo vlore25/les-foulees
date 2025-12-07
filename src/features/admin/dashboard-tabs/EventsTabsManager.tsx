@@ -3,15 +3,16 @@
 import { ReactNode, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Plus } from "lucide-react";
+import EventForm from "../../events/components/admin/EventForm"; 
 
 interface EventsTabManagerProps {
   children: ReactNode; 
 }
 
 export default function EventsTabManager({ children }: EventsTabManagerProps) {
-  const [view, setView] = useState<"list" | "invite">("list");
+  const [view, setView] = useState<"list" | "create">("list");
 
-  if (view === "invite") {
+  if (view === "create") {
     return (
       <div className="animate-in fade-in slide-in-from-right-4 duration-300">
         <Button 
@@ -22,17 +23,17 @@ export default function EventsTabManager({ children }: EventsTabManagerProps) {
           <ArrowLeft className="h-4 w-4" />
           Retour à la liste
         </Button>
-        <CreateEvent/> 
+        <EventForm /> 
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-left-4 duration-300">
-      <div className="flex items-center justify-between w-40">
-        <Button onClick={() => setView("invite")} className="gap-2">
+      <div className="flex items-center justify-between">
+        <Button onClick={() => setView("create")} className="gap-2">
             <Plus className="h-4 w-4" />
-            Inviter un membre
+            Ajouter un événement
          </Button> 
       </div>
        {children}

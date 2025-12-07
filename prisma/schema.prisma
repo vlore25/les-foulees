@@ -65,6 +65,15 @@ enum Visibility {
   PUBLIC
 }
 
+enum EventType {
+  TRAIL
+  COURSE_ROUTE
+  ENTRAINEMENT
+  VIE_DU_CLUB
+  SORTIE
+  AUTRE
+}
+
 model Event {
   id           Int        @id @default(autoincrement())
   title        String
@@ -73,6 +82,7 @@ model Event {
   dateStart    DateTime?
   dateEnd      DateTime?
   location     String?
+  type         EventType?
   visibility   Visibility @default(PUBLIC)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
