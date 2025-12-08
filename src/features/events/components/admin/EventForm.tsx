@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSepa
 import { Textarea } from "@/components/ui/textarea";
 import { CalendarIcon, ChevronDownIcon } from "lucide-react";
 import { useActionState, useState } from "react";
-import { createEvent } from "../../actions";
+import { createEvent } from "../../event.actions";
 
 
 export default function EventForm() {

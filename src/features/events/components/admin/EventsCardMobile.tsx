@@ -1,34 +1,42 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
+import { EventListItem } from "../../dal";
+import { Button } from "@/components/ui/button";
+import { EventRowActions } from "./EventRowAction";
 
 interface EventsProps {
-    events: any;
+    events: EventListItem[];
 }
 
-export default function EventsCardMobile(events: EventsProps) {
-
+export default function EventsCardMobile({ events }: EventsProps) {
     return (
-        <div>
-            {events.map((event: any) => {
+        <div className="flex flex-col gap-4 lg:hidden">
+            {events.map((event) => {
                 return (
-                    <Card className='max-w-lg py-0 sm:flex-row sm:gap-0'>
-                        <CardContent className='grow-1 px-0'>
-                            <Image
-                                src={event.imageUrlPath}
+                    <Card key={event.id} className='flex flex-row overflow-hidden max-w-lg p-0'>
+                        <div className='w-1/3  relative'>
+                            <img
+                                src={event.imgUrl || '/images/login-hero.jpg'}
                                 alt={event.title}
-                                className='size-full rounded-l-xl'
+                                className='h-full w-full object-cover'
                             />
-                        </CardContent>
-                        <div className='sm:min-w-54'>
-                            <CardHeader className='pt-6'>
-                                <CardTitle>{event.title}</CardTitle>
-                                <CardDescription>{event.description}</CardDescription>
+                        </div>
+
+                        {/* COLONNE DROITE : CORPS */}
+                        {/* flex-1 permet de prendre tout l'espace restant */}
+                        <div className='flex flex-col flex-1 justify-between'>
+                            <CardHeader className='p-4 pb-0'>
+                                <div className="flex flex-row justify-between">
+                                <CardTitle className="text-lg line-clamp-1">{event.title}</CardTitle>
+                                <EventRowActions eventId={event.id}/>
+                                </div>
+
+                                <CardDescription>
+                                    {event.dateStart ? new Date(event.dateStart).toLocaleDateString() : ''}
+                                </CardDescription>
                             </CardHeader>
-                            <CardFooter className='gap-3 py-6'>
-                                <Button className='bg-transparent bg-gradient-to-br from-purple-500 to-pink-500 text-white focus-visible:ring-pink-600/20'>
-                                    Explore More
-                                </Button>
+                            
+                            <CardFooter className='p-4 pt-2 justify-end'>
+                    
                             </CardFooter>
                         </div>
                     </Card>

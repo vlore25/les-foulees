@@ -3,14 +3,6 @@ import { prisma } from "@/src/lib/prisma"
 import { getSession, verifySession } from "@/src/lib/session"
 import { cache } from "react"
 
-export interface User {
-  id: string;
-  name: string;
-  lastname: string;
-  email: string;
-  status: string;
-  role: string;
-}
 
 // Retrieve all users
 export const getAllUsers = cache(async (): Promise<UserDTO[]> => {

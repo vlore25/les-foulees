@@ -43,6 +43,7 @@ export default function AdminShell({ children }: AdminShellProps) {
       {adminTabsItems.map((item) => {
         return(
         <TabsTrigger
+        key={item.value}
         value={item.value}
         onClick={() => setIsMobileOpen(false)}
         className="justify-start gap-2 py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"

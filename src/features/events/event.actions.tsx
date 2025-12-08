@@ -4,6 +4,7 @@ import { EventType } from "@/app/generated/prisma/enums";
 import { eventSchema } from "@/src/lib/definitions";
 import { prisma } from "@/src/lib/prisma";
 import { writeFile } from "fs/promises";
+import { revalidatePath } from "next/cache";
 import { join } from "path";
 
 
@@ -64,4 +65,12 @@ export async function createEvent(state: EventFormState, formData: FormData): Pr
     }
 
     return { message: 'Evenement créé acec succes!' };
+}
+
+export async function deleteEventAction(eventId: string) {
+  await prisma.event.delete({
+    where: { id: eventId },
+  });
+
+  revalidatePath("/events");
 }

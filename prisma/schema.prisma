@@ -75,14 +75,14 @@ enum EventType {
 }
 
 model Event {
-  id           Int        @id @default(autoincrement())
+  id           String        @id @default(cuid())
   title        String
-  imgUrl       String?
+  imgUrl       String
   description  String?
   dateStart    DateTime?
   dateEnd      DateTime?
-  location     String?
-  type         EventType?
+  location     String
+  type         EventType
   visibility   Visibility @default(PUBLIC)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
