@@ -1,7 +1,10 @@
-import AdminShell from "../../../../src/features/admin/AdminShell"; // Ajustez le chemin selon où vous avez créé le fichier
+// app/(admin)/admin/dashboard/layout.tsx
 
-export const metadata = {
-  title: "Administration",
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Administration | Les Foulées Avrillaises",
+  description: "Espace de gestion de l'association",
 };
 
 export default function AdminLayout({
@@ -10,8 +13,8 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AdminShell>
+    <div className="min-h-screen w-full bg-background font-sans antialiased">
       {children}
-    </AdminShell>
+    </div>
   );
 }

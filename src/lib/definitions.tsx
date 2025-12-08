@@ -1,6 +1,10 @@
 // lib/validations.ts
 import { z } from 'zod'
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const ACCEPTED_DOC_TYPES = [...ACCEPTED_IMAGE_TYPES, "application/pdf"];
+
 // Base reusable schemas
 export const emailSchema = z
   .string()
@@ -45,10 +49,8 @@ export const inviteSchema = z.object({
 */
 
 
-const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-// Définition de l'Enum pour correspondre à la Base de Données
+
 export const EventTypeEnum = z.enum([
   "TRAIL",
   "COURSE_ROUTE",
@@ -66,7 +68,7 @@ export const eventSchema = z.object({
     .trim(),
 
   dateStart: z.coerce
-    .date() 
+    .date()
     .refine((date) => date > new Date(), {
       message: "La date doit être dans le futur.",
     }),
@@ -76,7 +78,7 @@ export const eventSchema = z.object({
     .min(2, { message: "Le lieu est requis." })
     .trim(),
 
-  eventtype: EventTypeEnum, 
+  eventtype: EventTypeEnum,
 
   description: z
     .string()
@@ -88,13 +90,57 @@ export const eventSchema = z.object({
   picture: z
     .instanceof(File, { message: "L'image est requise" })
     .refine((file) => file.size > 0, "Le fichier ne peut pas être vide")
-    .refine((file) => file.size <= MAX_FILE_SIZE, `Taille max 5MB.`)
+    .refine((file) => file.size <= MAX_FILE_SIZE, `Taille max 4MB.`)
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
       "Seuls .jpg, .png, .webp sont acceptés."
     ),
 });
 
+
+export const eventUpdateSchema = eventSchema.extend({
+  picture: z
+    .instanceof(File)
+    .optional()
+    .refine((file) => !file || file.size <= MAX_FILE_SIZE, `Taille max 4MB.`)
+    .refine(
+      (file) => !file || file.size === 0 || ACCEPTED_IMAGE_TYPES.includes(file.type),
+      "Seuls .jpg, .png, .webp sont acceptés."
+    ),
+});
+
+
+
+
+export const legalDocSchema = z.object({
+  title: z
+    .string()
+    .min(2, { message: "Le titre est requis (min 2 caractères)." })
+    .max(100),
+
+  description: z.string().optional(),
+
+  file: z
+    .instanceof(File)
+    .optional()
+    .refine(
+      (file) => !file || file.size <= MAX_FILE_SIZE,
+      `Le fichier est trop volumineux (Max 10Mo).`
+    )
+    .refine(
+      // On vérifie si le type est dans notre nouvelle liste (Images + PDF)
+      (file) => !file || ACCEPTED_DOC_TYPES.includes(file.type),
+      "Formats acceptés : PDF, JPG, PNG, WEBP."
+    ),
+});
+export type LegalDocFormState = {
+  error?: {
+    title?: string[];
+    description?: string[];
+    file?: string[];
+  };
+  message?: string | null;
+} | undefined;
 
 export type EventFormState = z.infer<typeof eventSchema>;
 

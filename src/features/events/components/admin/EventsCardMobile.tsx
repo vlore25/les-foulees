@@ -21,8 +21,6 @@ export default function EventsCardMobile({ events }: EventsProps) {
                             />
                         </div>
 
-                        {/* COLONNE DROITE : CORPS */}
-                        {/* flex-1 permet de prendre tout l'espace restant */}
                         <div className='flex flex-col flex-1 justify-between'>
                             <CardHeader className='p-4 pb-0'>
                                 <div className="flex flex-row justify-between">
@@ -34,10 +32,6 @@ export default function EventsCardMobile({ events }: EventsProps) {
                                     {event.dateStart ? new Date(event.dateStart).toLocaleDateString() : ''}
                                 </CardDescription>
                             </CardHeader>
-                            
-                            <CardFooter className='p-4 pt-2 justify-end'>
-                    
-                            </CardFooter>
                         </div>
                     </Card>
                 );

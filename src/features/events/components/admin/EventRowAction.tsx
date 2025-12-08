@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { useTransition } from "react";
 import { Pencil, Trash2, MoreVertical } from "lucide-react";
-import { deleteEventAction } from "../../event.actions";
+import { deleteEventAction } from "../../events.actions";
 
 export function EventRowActions({ eventId }: { eventId: string }) {
     const [isPending, startTransition] = useTransition();
@@ -41,7 +41,7 @@ export function EventRowActions({ eventId }: { eventId: string }) {
                         <DropdownMenuSeparator />
                         {/* Action Editer */}
                         <DropdownMenuItem asChild>
-                            <Link href={`/events/${eventId}/edit`} className="cursor-pointer w-full flex items-center">
+                            <Link href={`/admin/dashboard/evenement/${eventId}/modifier`} className="cursor-pointer w-full flex items-center">
                                 <Pencil className="mr-2 h-4 w-4" />
                                 <span>Modifier</span>
                             </Link>
@@ -63,7 +63,7 @@ export function EventRowActions({ eventId }: { eventId: string }) {
             {/* --- VERSION DESKTOP (Boutons) --- */}
             <div className="hidden lg:flex gap-1">
                 <Button variant="outline" size="sm" asChild>
-                    <Link href={`/event/${eventId}/edit`}>
+                    <Link href={`/admin/dashboard/evenement/${eventId}/modifier`}>
                         <Pencil className="h-4 w-4" />
                     </Link>
                 </Button>

@@ -1,4 +1,5 @@
 import { prisma } from "@/src/lib/prisma";
+import { cache } from "react";
 
 
 export type EventListItem = {
@@ -31,3 +32,14 @@ export async function getAllevents(): Promise<EventListItem[]> {
   return events;
 
 }
+
+
+export const getEventById = cache(async (eventId: string) => {
+  const event = await prisma.event.findUnique({
+    where: {
+      id: eventId,
+    },
+  });
+
+  return event;
+});
