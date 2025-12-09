@@ -101,7 +101,7 @@ export default function AdminDashboard({ currentTab, usersListNode, eventsListNo
         <TabsContent value="docs" className="space-y-4 m-0">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium">Gestion des Événements</h3>
+                <h3 className="text-lg font-medium">Documents administratifs</h3>
             </div>
             <LegalDocsTabManager>
               {legalDocsListNode}

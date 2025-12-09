@@ -38,9 +38,6 @@ export default function LegalDocsTableDesktop({ docs }: LegalDocsTableDesktopPro
               <TableRow key={doc.id}>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">
-                    <div className="p-2 bg-primary/10 rounded-full">
-                         <FileText className="h-4 w-4 text-primary" />
-                    </div>
                     {doc.title}
                   </div>
                 </TableCell>

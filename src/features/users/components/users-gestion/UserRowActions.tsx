@@ -39,14 +39,6 @@ export function UserRowActions({ userId }: { userId: string }) {
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        {/* Action Editer */}
-                        <DropdownMenuItem asChild>
-                            <Link href={`/users/${userId}/edit`} className="cursor-pointer w-full flex items-center">
-                                <Pencil className="mr-2 h-4 w-4" />
-                                <span>Modifier</span>
-                            </Link>
-                        </DropdownMenuItem>
-
                         {/* Action Supprimer */}
                         <DropdownMenuItem
                             onClick={handleDelete}
@@ -62,11 +54,6 @@ export function UserRowActions({ userId }: { userId: string }) {
 
             {/* --- VERSION DESKTOP (Boutons) --- */}
             <div className="hidden lg:flex gap-1">
-                <Button variant="outline" size="sm" asChild>
-                    <Link href={`/users/${userId}/edit`}>
-                        <Pencil className="h-4 w-4" />
-                    </Link>
-                </Button>
                 <Button
                     variant="destructive"
                     size="sm"
