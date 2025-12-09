@@ -13,6 +13,9 @@ datasource db {
   provider = "postgresql"
 }
 
+/**
+ * ==============USERS=================
+ */
 enum Role {
   ADMIN
   USER
@@ -24,19 +27,27 @@ enum Status {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique @db.VarChar(255)
-  name      String
-  lastname  String
-  birthdate DateTime?
-  phone     String?
-  password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  role      Role      @default(USER)
-  status    Status    @default(ACTIVE)
-  sessions  Session[]
-  events    Event[]
+  id                String    @id @default(cuid())
+  email             String    @unique @db.VarChar(255)
+  name              String
+  lastname          String
+  birthdate         DateTime?
+  phone             String?
+  password          String
+  adress            String
+  zipCode           String
+  city              String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  role              Role      @default(USER)
+  status            Status    @default(ACTIVE)
+  emergencyName     String?
+  emergencyLastName String?
+  emergencyPhone    String?
+  sessions          Session[]
+  events            Event[]
+  payments          Payment[]
+  licenses          License[]
 }
 
 model Session {
@@ -57,6 +68,10 @@ model Invitation {
   email     String   @unique
   createdAt DateTime @default(now())
 }
+
+/**
+ * ==============EVENTS=================
+ */
 
 enum Visibility {
   PRIVATE
@@ -85,11 +100,85 @@ model Event {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   participants User[]
+  payments     Payment[]
 }
+
+/**
+ * ==============DOCS=================
+ */
 
 model LegalDocs {
   id          String  @id @default(cuid())
   title       String?
   description String?
   Url         String?
+}
+
+/**
+ * ==============SEASONS=================
+ */
+model Season {
+  id            String    @id @default(cuid())
+  name          String    @unique // ex: "2025-2026"
+  startDate     DateTime
+  endDate       DateTime
+  isActive      Boolean   @default(false)
+  priceStandard Float     @default(35.0)
+  priceCouple   Float     @default(60.0)
+  priceYoung    Float     @default(25.0)
+  priceFfa      Float     @default(98.0)
+  licenses      License[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// ==============DOSSIER ADHERANT=================
+
+enum LicenseType {
+  STANDARD
+  COUPLE
+  YOUNG
+  FFA
+}
+
+model License {
+  id            String      @id @default(cuid())
+  type          LicenseType @default(STANDARD)
+  licenseNumber String?
+  isValid       Boolean     @default(false)
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  seasonId      String
+  season        Season      @relation(fields: [seasonId], references: [id])
+  payments      Payment[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([userId, seasonId])
+}
+
+/**
+ * ==============CENTRALISED ALL PAYEMENTS=================
+ */
+
+enum PaymentMethod {
+  CHEQUE
+  VIREMENT
+  ESPECES
+  STRIPE
+  AUTRE
+}
+
+model Payment {
+  id        String        @id @default(cuid())
+  amount    Float
+  date      DateTime      @default(now())
+  method    PaymentMethod
+  reference String?
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  licenseId String?
+  license   License?      @relation(fields: [licenseId], references: [id])
+  eventId   String?
+  event     Event?        @relation(fields: [eventId], references: [id])
 }

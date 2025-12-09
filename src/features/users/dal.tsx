@@ -24,7 +24,8 @@ export const getAllUsers = cache(async (): Promise<UserDTO[]> => {
       name: true,
       lastname: true,
       status: true,
-      email: true, 
+      email: true,
+      phone: true, 
       role: true, 
     },
     orderBy: { lastname: 'asc' }

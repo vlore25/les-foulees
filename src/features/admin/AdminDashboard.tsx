@@ -9,26 +9,30 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { BrickWallShield, Users, Calendar, FileText } from "lucide-react";
+
 import UsersTabManager from "@/src/features/admin/dashboard-tabs/UsersTabManager";
 import EventsTabManager from "@/src/features/admin/dashboard-tabs/EventsTabsManager";
 import LegalDocsTabManager from "./dashboard-tabs/DocsTabsManager";
+import SeasonsTabsManager from "./dashboard-tabs/SeasonsTabsManager";
+
+import { BrickWallShield, Users, Calendar, FileText, ClipboardClock } from "lucide-react";
 
 interface AdminDashboardProps {
   currentTab: string;
-  // PROPS POUR RECEVOIR LE CONTENU SERVEUR
   usersListNode: React.ReactNode;
   eventsListNode: React.ReactNode;
   legalDocsListNode: React.ReactNode;
+  seasonsListNode: React.ReactNode;
 }
 
-export default function AdminDashboard({ currentTab, usersListNode, eventsListNode, legalDocsListNode }: AdminDashboardProps) {
+export default function AdminDashboard({ currentTab, usersListNode, eventsListNode, legalDocsListNode,  seasonsListNode}: AdminDashboardProps) {
   const router = useRouter();
 
   const tabsItems = [
     { value: "users", label: "Membres", icon: <Users className="h-4 w-4 mr-2" /> },
     { value: "events", label: "Événements", icon: <Calendar className="h-4 w-4 mr-2" /> },
     { value: "docs", label: "Documents", icon: <FileText className="h-4 w-4 mr-2" /> },
+    { value: "season", label: "Seasons", icon: <ClipboardClock className="h-4 w-4 mr-2" /> },
   ];
 
   const handleTabChange = (value: string) => {
@@ -106,6 +110,18 @@ export default function AdminDashboard({ currentTab, usersListNode, eventsListNo
             <LegalDocsTabManager>
               {legalDocsListNode}
            </LegalDocsTabManager>
+          </div>
+           
+        </TabsContent>
+        {/* === CONTENU SEASONS === */}
+        <TabsContent value="season" className="space-y-4 m-0">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium">Seasons</h3>
+            </div>
+            <SeasonsTabsManager>
+              {seasonsListNode}
+           </SeasonsTabsManager>
           </div>
            
         </TabsContent>

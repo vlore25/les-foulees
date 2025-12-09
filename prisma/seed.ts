@@ -3,7 +3,6 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 import { fakerFR as faker } from '@faker-js/faker';
 
-// On importe les types si nécessaire, ou on les définit en dur pour le seed
 enum EventType {
   TRAIL = 'TRAIL',
   COURSE_ROUTE = 'COURSE_ROUTE',
@@ -25,7 +24,7 @@ async function main() {
   const plainPassword = '987654'; 
   const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
-  // Admin Alice
+  // 1. Admin Alice (Correction : Ajout des champs obligatoires)
   await prisma.user.upsert({
     where: { email: 'alice@foulees.com' },
     update: {},
@@ -36,11 +35,17 @@ async function main() {
       password: hashedPassword,
       role: 'ADMIN',
       status: 'ACTIVE',
+      // 👇 AJOUTS OBLIGATOIRES (Données en dur pour l'admin)
+      phone: "0612345678",
+      adress: "1 rue des Merveilles", // Attention à l'orthographe 'adress' vs 'address' selon ton schema
+      zipCode: "49240",
+      city: "Avrillé",
+      birthdate: new Date("1990-01-01")
     },
   });
   console.log('✅ Admin Alice créé.');
 
-  // 50 Utilisateurs
+  // 2. 50 Utilisateurs (Correction : Génération des champs manquants)
   console.log('... Génération de 50 utilisateurs fictifs');
   for (let i = 0; i < 50; i++) {
     const firstName = faker.person.firstName();
@@ -56,7 +61,10 @@ async function main() {
         role: 'USER',
         status: 'ACTIVE',
         phone: faker.phone.number(),
-        birthdate: faker.date.past()
+        birthdate: faker.date.past(),
+        adress: faker.location.streetAddress(), 
+        zipCode: faker.location.zipCode('#####'),
+        city: faker.location.city()
       },
     });
   }
@@ -64,46 +72,41 @@ async function main() {
   // --- PARTIE 2 : ÉVÉNEMENTS ---
   console.log('... Génération de 50 événements');
 
-  const eventTypes = Object.values(EventType); // Récupère ['TRAIL', 'COURSE_ROUTE', ...]
-  const pivotDate = new Date('2025-12-08T00:00:00.000Z'); // Date pivot demandée
+  const eventTypes = Object.values(EventType); 
+  const pivotDate = new Date('2025-12-08T00:00:00.000Z'); 
 
   for (let i = 0; i < 50; i++) {
-    // Logique de date : 30 avant le 08/12/25, 20 après
     let dateStart: Date;
     
     if (i < 30) {
-        // 30 événements PASSÉS ou FUTURS PROCHES (Avant le 08/12/2025)
-        // On génère une date entre il y a 1 an et le pivot
+        // 30 événements PASSÉS ou FUTURS PROCHES
         dateStart = faker.date.between({ 
             from: new Date('2024-01-01'), 
             to: pivotDate 
         });
     } else {
-        // 20 événements FUTURS (Après le 08/12/2025)
+        // 20 événements FUTURS
         dateStart = faker.date.future({ 
             years: 1, 
             refDate: pivotDate 
         });
     }
 
-    // On crée une date de fin (ex: 2 à 5 heures après le début)
     const dateEnd = new Date(dateStart);
     dateEnd.setHours(dateEnd.getHours() + faker.number.int({ min: 2, max: 5 }));
 
-    // Choix d'un type aléatoire
     const randomType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
 
     await prisma.event.create({
       data: {
-        title: faker.lorem.sentence(3), // Ex: "Course du Dimanche"
+        title: faker.lorem.sentence(3),
         description: faker.lorem.paragraph(),
-        // On utilise une image LoremFlickr de sport pour faire joli
         imgUrl: faker.image.urlLoremFlickr({ category: 'sports' }), 
         location: faker.location.city(),
-        type: randomType,
+        type: randomType, // Assure-toi que ton Prisma Schema a bien cet Enum, sinon utilise type: "TRAIL"
         dateStart: dateStart,
         dateEnd: dateEnd,
-        visibility: 'PUBLIC', // Par défaut
+        visibility: 'PUBLIC',
       },
     });
   }

@@ -1,16 +1,14 @@
 import { InscriptionFeature } from "@/src/features/auth/inscription/components/inscription-feature";
 
-interface PageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
-}
+type Params = Promise<{ token?: string }>;
 
-export default function InscriptionPage({ searchParams }: PageProps) {
+export default async function InscriptionPage({ searchParams }: { searchParams: Params }) {
     
-    const token = typeof searchParams.token === "string" ? searchParams.token : undefined;
+    const params = await searchParams;
 
     return (
-        <main className="mx-auto h-full my-20">
-            <InscriptionFeature token={token}/>
+        <main className="mx-auto h-full my-10">
+            <InscriptionFeature token={params.token}/>
         </main>
     );
 }

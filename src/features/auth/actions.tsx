@@ -1,20 +1,25 @@
 'use server'
 
 import { createSession, deleteSession } from '@/src/lib/session'
-import { registerFormSchema, loginSchema } from '@/src/lib/definitions'
+import { registerFormSchema, loginSchema } from '@/src/lib/definitions' // Assurez-vous que votre schema est bien exporté d'ici
 import { prisma } from '@/src/lib/prisma'
 import * as bcrypt from 'bcrypt'
 import { redirect } from 'next/navigation'
 
-
 export type RegisterFormState = {
   error?: {
     name?: string[];
-    lastname?: String[];
+    lastname?: string[]; 
     email?: string[];
+    phone?: string[];
     password?: string[];
+    confirmPassword?: string[];
+    birthdate?: string[];
+    adress?: string[];
+    zipCode?: string[];
+    city?: string[];
   };
-  message?: string;
+  message?: string | null;
 } | undefined;
 
 export type LoginFormState = {
@@ -22,75 +27,90 @@ export type LoginFormState = {
     email?: string[];
     password?: string[];
   };
-  message?: string;
+  message?: string | null;
 } | undefined;
 
 
-//Register Logic
+// Register Logic
 export async function registerUser(state: RegisterFormState, formData: FormData): Promise<RegisterFormState> {
-
+  // 1. Récupérer le token
   const token = formData.get('token') as string;
-  const validatedFields = registerFormSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!token) {
+     return { message: "Token d'invitation manquant ou invalide." };
+  }
+
+  // 2. VERIFICATION DE SÉCURITÉ : On cherche l'invitation en BDD
+  const invitation = await prisma.invitation.findUnique({
+    where: { token: token },
+  });
+
+  if (!invitation) {
+    return { message: "Cette invitation est invalide ou a expiré." };
+  }
+
+  const emailVerifie = invitation.email;
+
+  const rawFormData = {
+    token: formData.get('token'),
+    name: formData.get('name'),
+    lastname: formData.get('lastname'),
+    phone: formData.get('phone'),
+    adress: formData.get('adress'),
+    zipCode: formData.get('zip-code'), 
+    city: formData.get('city'),
+    birthdate: formData.get('birthdate'), 
+    password: formData.get('password'),
+    confirmPassword: formData.get('confirmPassword'),
+  }
+
+  const validatedFields = registerFormSchema.safeParse(rawFormData);
 
   if (!validatedFields.success) {
     return { error: validatedFields.error.flatten().fieldErrors };
   }
 
-  const { name, lastname, email, password } = validatedFields.data;
+  const { confirmPassword, ...userData } = validatedFields.data;
   
-  const existingUser = await prisma.user.findUnique({ where: { email } });
-
+  const existingUser = await prisma.user.findUnique({ where: { email: emailVerifie } });
   if (existingUser) {
-    return { message: 'Un compte est déjà associé cette adresse e-mail.' };
+    return { message: 'Un compte existe déjà pour cet email.' };
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(userData.password, 10);
 
   try {
-    // Transaction : Création User + Suppression Invitation
     await prisma.$transaction(async (tx) => {
         
-        // 1. Créer l'utilisateur (Juste les champs que vous avez)
         await tx.user.create({
           data: {
-            name,
-            lastname,
-            email,
+            ...userData, 
+            email: emailVerifie, 
             password: hashedPassword,
-            // J'ai retiré emailVerified ici !
           },
         });
 
-        // 2. Supprimer l'invitation
-        if (token) {
-            // On utilise deleteMany par sécurité (évite erreur si introuvable)
-            await tx.invitation.deleteMany({
-                where: { token: token }
-            });
-        } else {
-             await tx.invitation.deleteMany({
-                where: { email: email }
-            });
-        }
+        await tx.invitation.delete({
+            where: { token: token }
+        });
     });
 
   } 
   catch (e) {
     console.error("Erreur inscription:", e);
-    return { message: 'Une erreur s\'est produite, veuillez réessayer.' };
+    return { message: 'Une erreur technique est survenue.' };
   }
 
-  return { message: 'Compte créé avec succès' };
+  redirect('/auth/login')
 }
 
 
-//Login logic
+// Login logic
 export async function loginUser(state: LoginFormState, formData: FormData): Promise<LoginFormState> {
 
     const validatedFields = loginSchema.safeParse({
       email: formData.get('email'),
       password: formData.get('password'),
-
     })
 
     if (!validatedFields.success) {
@@ -113,10 +133,10 @@ export async function loginUser(state: LoginFormState, formData: FormData): Prom
     await createSession(user.id)
 
     redirect('/dashboard')
-  }
+}
 
-  //Verify invitation token
-  export async function verifyInvitationToken(token: string) {
+// Verify invitation token
+export async function verifyInvitationToken(token: string) {
     if (!token || typeof token !== "string") return null;
 
     try {
@@ -128,10 +148,10 @@ export async function loginUser(state: LoginFormState, formData: FormData): Prom
     } catch (error) {
       return null;
     }
-  }
+}
 
-  //Logout Logic
-  export async function logout() {
+// Logout Logic
+export async function logout() {
     await deleteSession()
     redirect('/')
-  }
+}

@@ -8,8 +8,8 @@ export default async function UsersList() {
     const activeUsers = await getAllUsers();
     return (
         <div>
-            <UsersTableDesktop data={activeUsers}/>
-            <UsersCardsMobile users={activeUsers}/>
+            <UsersTableDesktop data={activeUsers} />
+            <UsersCardsMobile users={activeUsers} />
         </div>
     );
 }
