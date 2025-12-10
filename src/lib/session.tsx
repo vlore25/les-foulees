@@ -81,7 +81,7 @@ export async function verifySession(){
   if(!session?.userId){
     redirect('/login')
   }
-  return { userId: session.userId }
+  return { userId: session.userId as string }
 
 }
 

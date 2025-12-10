@@ -109,7 +109,7 @@ export const EventTypeEnum = z.enum([
   "AUTRE"
 ]);
 
-export const eventSchema = z.object({
+const eventBase = z.object({
   title: z
     .string().toLowerCase()
     .min(3, { message: "Le titre doit contenir au moins 3 caractères." })
@@ -117,6 +117,12 @@ export const eventSchema = z.object({
     .trim(),
 
   dateStart: z.coerce
+    .date()
+    .refine((date) => date > new Date(), {
+      message: "La date doit être dans le futur.",
+    }),
+    
+  dateEnd: z.coerce
     .date()
     .refine((date) => date > new Date(), {
       message: "La date doit être dans le futur.",
@@ -146,18 +152,30 @@ export const eventSchema = z.object({
     ),
 });
 
-
-export const eventUpdateSchema = eventSchema.extend({
-  picture: z
-    .instanceof(File)
-    .optional()
-    .refine((file) => !file || file.size <= MAX_FILE_SIZE, `Taille max 4MB.`)
-    .refine(
-      (file) => !file || file.size === 0 || ACCEPTED_IMAGE_TYPES.includes(file.type),
-      "Seuls .jpg, .png, .webp sont acceptés."
-    ),
+// --- 2. On exporte le schéma de Création (avec le refine de dates) ---
+export const eventSchema = eventBase.refine((data) => data.dateEnd > data.dateStart, {
+  message: "La date de fin doit être postérieure à la date de début.",
+  path: ["dateEnd"],
 });
 
+
+// --- 3. On exporte le schéma de Mise à jour ---
+// On part de 'eventBase' (et non eventSchema), on étend, PUIS on réapplique le refine
+export const eventUpdateSchema = eventBase
+  .extend({
+    picture: z
+      .instanceof(File)
+      .optional()
+      .refine((file) => !file || file.size <= MAX_FILE_SIZE, `Taille max 4MB.`)
+      .refine(
+        (file) => !file || file.size === 0 || ACCEPTED_IMAGE_TYPES.includes(file.type),
+        "Seuls .jpg, .png, .webp sont acceptés."
+      ),
+  })
+  .refine((data) => data.dateEnd > data.dateStart, {
+    message: "La date de fin doit être postérieure à la date de début.",
+    path: ["dateEnd"],
+  });
 
 export const legalDocSchema = z.object({
   title: z

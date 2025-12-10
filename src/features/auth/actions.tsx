@@ -71,7 +71,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
   }
 
   const { confirmPassword, ...userData } = validatedFields.data;
-  
+
   
   const existingUser = await prisma.user.findUnique({ where: { email: emailVerifie } });
   if (existingUser) {
@@ -102,7 +102,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
     return { message: 'Une erreur technique est survenue.' };
   }
 
-  redirect('/auth/login')
+  redirect('/login')
 }
 
 

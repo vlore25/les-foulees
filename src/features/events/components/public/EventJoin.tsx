@@ -13,11 +13,8 @@ import Link from "next/link";
 import { useTransition } from "react";
 import { Pencil, Trash2, MoreVertical } from "lucide-react";
 import { deleteEventAction } from "../../events.actions";
-import { useUser } from "@/components/providers/UserProvider";
 
 export function EventRowActions({ eventId }: { eventId: string }) {
-    const user = useUser();
-    const isAdmin = user?.role === "ADMIN";
     const [isPending, startTransition] = useTransition();
 
     const handleDelete = () => {
@@ -28,16 +25,15 @@ export function EventRowActions({ eventId }: { eventId: string }) {
         }
     };
 
-    if (!isAdmin) return null;
     return (
-            <div>
+        <>
             {/* --- VERSION MOBILE (Dropdown) ---*/}
             <div className="lg:hidden">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
                             <span className="sr-only">Ouvrir menu</span>
-                            <MoreVertical className="h-4 w-4 text-black" />
+                            <MoreVertical className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -80,6 +76,6 @@ export function EventRowActions({ eventId }: { eventId: string }) {
                     <Trash2 className="h-4 w-4" />
                 </Button>
             </div>
-        </div>    
+        </>
     );
 }

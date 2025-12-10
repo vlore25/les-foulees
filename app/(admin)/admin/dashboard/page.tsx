@@ -13,7 +13,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const currentTab = params?.tab || "users";
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto">
+    <div className="p-3 md:p-8 max-w-7xl mx-auto">
       <AdminDashboard
         currentTab={currentTab}
         usersListNode={<UsersList />}

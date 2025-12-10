@@ -1,6 +1,5 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EventListItem } from "../../dal";
-import { EventRowActions } from "./EventRowAction";
 
 
 interface EventsProps {
@@ -8,7 +7,7 @@ interface EventsProps {
 }
 
 
-export default function EventsTableDesktop({ events }: EventsProps) {
+export default function EventsTablePublic({ events }: EventsProps) {
     return (
         <div className='overflow-hidden rounded-md border'>
             <Table className="hidden lg:table">
@@ -16,10 +15,8 @@ export default function EventsTableDesktop({ events }: EventsProps) {
                     <TableRow>
                         <TableHead>Nom</TableHead>
                         <TableHead>Date de debut</TableHead>
-                        <TableHead>jusqu'à</TableHead>
                         <TableHead >Location</TableHead>
                         <TableHead >type</TableHead>
-                        <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -37,19 +34,8 @@ export default function EventsTableDesktop({ events }: EventsProps) {
                                         : "Pas de date"
                                     }
                                 </TableCell>
-                                <TableCell>
-                                    {event.dateEnd
-                                        ? new Date(event.dateEnd).toLocaleDateString("fr-FR", {
-                                            day: "numeric",
-                                            month: "long",
-                                            year: "numeric"
-                                        })
-                                        : "Pas de date"
-                                    }
-                                </TableCell>
                                 <TableCell >{event.location}</TableCell>
                                 <TableCell >{event.type}</TableCell>
-                                <TableCell ><EventRowActions eventId={event.id} /></TableCell>
                             </TableRow>
                         )
                     })}

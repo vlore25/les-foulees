@@ -50,6 +50,7 @@ export default function EventForm({ event }: EventFormProps) {
             <div className="flex flex-col gap-2">
                 <label className="block text-sm font-medium">Date de début</label>
                 <EventDatePicker name="dateStart" initialDate={event?.dateStart} />
+                <EventDatePicker name="dateEnd" initialDate={event?.dateEnd} />
                 {state?.error?.dateStart && (
                     <p className="text-red-500 text-sm">{state.error.dateStart[0]}</p>
                 )}

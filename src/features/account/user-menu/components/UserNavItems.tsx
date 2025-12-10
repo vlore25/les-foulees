@@ -26,7 +26,7 @@ const UserNavItems: UserNavItem[]= [
         },
         {
             title: "Documents du club",
-            href: "/documents",
+            href: "/dashboard/documents",
             icon: <Files/>
         },
     ]

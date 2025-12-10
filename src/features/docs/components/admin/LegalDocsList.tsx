@@ -1,6 +1,6 @@
 
 import LegalDocsTableDesktop from "./LegalDocsTableDesktop";
-import LegalDocsCardMobile from "./LegalDocsCardMobile";
+import LegalDocsCardMobile from "../shared/LegalDocsCardMobile";
 import { getLegalDocs } from "../../dal";
 
 export default async function LegalDocsList() {
