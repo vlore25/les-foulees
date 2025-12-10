@@ -13,7 +13,7 @@ import { cn } from '@/src/lib/utils'
 
 const STEPS = [
   { id: 0, title: "Identité", fields: ["name", "lastname", "phone", "birthday"] },
-  { id: 1, title: "Adresse", fields: ["adress", "zip-code", "city"] },
+  { id: 1, title: "Adresse", fields: ["address", "zip-code", "city"] },
   { id: 2, title: "Sécurité", fields: ["password", "confirmPassword"] }
 ]
 
@@ -113,7 +113,7 @@ export default function RegistrationForm({ email, token }: { email: string, toke
              <h2 className="text-xl font-semibold mb-4">Où habitez-vous ?</h2>
              <Field>
                 <FieldLabel>Adresse</FieldLabel>
-                <Input id="adress" name="adress" placeholder="N° et rue" required />
+                <Input id="address" name="address" placeholder="N° et rue" required />
             </Field>
 
             <div className='flex flex-col md:flex-row gap-4 w-full'>

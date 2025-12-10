@@ -39,19 +39,17 @@ export const registerFormSchema = z.object({
     .regex(phoneRegex, { message: "Numéro de téléphone invalide." })
     .trim(),
 
-  password: z
-    .string()
-    .min(8, { message: "Le mot de passe doit contenir au moins 8 caractères." })
-    .regex(/[a-zA-Z]/, { message: "Il doit contenir au moins une lettre." })
-    .regex(/[0-9]/, { message: "Il doit contenir au moins un chiffre." })
-    .regex(/[^a-zA-Z0-9]/, { message: "Il doit contenir au moins un caractère spécial." })
-    .trim(),
+  password: z.string()
+    .min(8, "Le mot de passe doit faire 8 caractères minimum")
+    .regex(/[A-Z]/, "Au moins une majuscule")
+    .regex(/[0-9]/, "Au moins un chiffre")
+    .regex(/[^a-zA-Z0-9]/, "Au moins un caractère spécial (@, !, #, etc.)"),
 
   confirmPassword: z
     .string()
     .min(1, { message: "La confirmation du mot de passe est requise." }),
 
-  adress: z
+  address: z
     .string()
     .min(5, { message: "L'adresse est requise." })
     .regex(/\d+.*[a-zA-Z]+/, { message: "L'adresse doit contenir un numéro et un nom de rue." })
@@ -182,6 +180,43 @@ export const legalDocSchema = z.object({
       "Formats acceptés : PDF, JPG, PNG, WEBP."
     ),
 });
+
+export const profileFormSchema = z.object({
+  name: z.string().min(2, "Prénom trop court").trim(),
+  lastname: z.string().min(2, "Nom trop court").trim(),
+  phone: z.string().regex(phoneRegex, "Numéro invalide").trim(),
+  birthdate: z.string()
+    .trim()
+    .min(1, { message: "La date de naissance est requise." }) 
+    .transform((val) => new Date(val))                      
+    .refine((date) => !isNaN(date.getTime()), { 
+      message: "Format de date invalide."                  
+    }),
+  adress: z.string().min(5, "Adresse requise").trim(),
+  zipCode: z.string().regex(/^\d{5}$/, "Code postal invalide"),
+  city: z.string().min(1, "Ville requise").trim(),
+
+  emergencyName: z.string().optional().or(z.literal('')),
+  emergencyLastName: z.string().optional().or(z.literal('')),
+  emergencyPhone: z.string().optional().or(z.literal('')).refine(val => !val || phoneRegex.test(val), "Numéro invalide"),
+});
+
+export type ProfileFormState = {
+  error?: {
+    name?: string[];
+    lastname?: string[];
+    phone?: string[];
+    adress?: string[];
+    zipCode?: string[];
+    city?: string[];
+    birthdate?: string[];
+    picture?: string[];
+    emergencyPhone?: string[];
+  };
+  message?: string | null;
+  success?: boolean;
+} | undefined;
+
 export type LegalDocFormState = {
   error?: {
     title?: string[];

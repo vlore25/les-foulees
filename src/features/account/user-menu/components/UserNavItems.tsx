@@ -11,25 +11,13 @@ type UserNavItem = {
 const UserNavItems: UserNavItem[]= [
         {
             title: "Information personel",
-            href: "/dashboard/profile",
+            href: "/dashboard/account",
             icon: <UserSquare/>
         },
         {
             title: "Evenements",
-            href: "/events",
+            href: "/dashboard/evenements",
             icon: <Calendar/>,
-            subItems: [
-            {
-                title: "Evenements ou je suis inscrit",
-                href: "/evenements/participation",
-                icon: <CalendarCheck2/>
-            },
-            {
-                title: "Voir tous les evenements",
-                href: "/events",
-                icon: <CalendarSearch/>
-            },
-        ]
         },
         {
             title: "Annuaire de membres",

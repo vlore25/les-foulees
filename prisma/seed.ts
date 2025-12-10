@@ -37,7 +37,7 @@ async function main() {
       status: 'ACTIVE',
       // 👇 AJOUTS OBLIGATOIRES (Données en dur pour l'admin)
       phone: "0612345678",
-      adress: "1 rue des Merveilles", // Attention à l'orthographe 'adress' vs 'address' selon ton schema
+      address: "1 rue des Merveilles", // Attention à l'orthographe 'adress' vs 'address' selon ton schema
       zipCode: "49240",
       city: "Avrillé",
       birthdate: new Date("1990-01-01")
@@ -62,7 +62,7 @@ async function main() {
         status: 'ACTIVE',
         phone: faker.phone.number(),
         birthdate: faker.date.past(),
-        adress: faker.location.streetAddress(), 
+        address: faker.location.streetAddress(), 
         zipCode: faker.location.zipCode('#####'),
         city: faker.location.city()
       },

@@ -34,7 +34,7 @@ model User {
   birthdate         DateTime?
   phone             String?
   password          String
-  adress            String
+  address            String
   zipCode           String
   city              String
   createdAt         DateTime  @default(now())

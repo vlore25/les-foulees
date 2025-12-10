@@ -15,7 +15,7 @@ export type RegisterFormState = {
     password?: string[];
     confirmPassword?: string[];
     birthdate?: string[];
-    adress?: string[];
+    address?: string[];
     zipCode?: string[];
     city?: string[];
   };
@@ -56,7 +56,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
     name: formData.get('name'),
     lastname: formData.get('lastname'),
     phone: formData.get('phone'),
-    adress: formData.get('adress'),
+    address: formData.get('address'),
     zipCode: formData.get('zip-code'), 
     city: formData.get('city'),
     birthdate: formData.get('birthdate'), 
@@ -71,6 +71,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
   }
 
   const { confirmPassword, ...userData } = validatedFields.data;
+  
   
   const existingUser = await prisma.user.findUnique({ where: { email: emailVerifie } });
   if (existingUser) {
