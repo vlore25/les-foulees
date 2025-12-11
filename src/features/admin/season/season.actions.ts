@@ -22,17 +22,17 @@ export async function getNextSeasonPreview() {
     let newStart: Date, newEnd: Date, newName: string
     // Valeurs par défaut si aucune saison n'existe
     let defaultPrices: SeasonPrices = {
-       priceStandard: 35.0, priceCouple: 60.0, priceYoung: 25.0, priceFfa: 98.0
+      priceStandard: 35.0, priceCouple: 60.0, priceYoung: 25.0, priceFfa: 98.0
     }
 
     if (lastSeason) {
       newStart = addYears(lastSeason.startDate, 1)
       newEnd = addYears(lastSeason.endDate, 1)
       defaultPrices = {
-          priceStandard: lastSeason.priceStandard,
-          priceCouple: lastSeason.priceCouple,
-          priceYoung: lastSeason.priceYoung,
-          priceFfa: lastSeason.priceFfa
+        priceStandard: lastSeason.priceStandard,
+        priceCouple: lastSeason.priceCouple,
+        priceYoung: lastSeason.priceYoung,
+        priceFfa: lastSeason.priceFfa
       }
     } else {
       // Initialisation 1ère fois
@@ -41,12 +41,12 @@ export async function getNextSeasonPreview() {
       newStart = new Date(year, 8, 1)
       newEnd = new Date(year + 1, 7, 31)
     }
-    
+
     newName = `${getYear(newStart)}-${getYear(newEnd)}`
 
-    return { 
-      success: true, 
-      data: { name: newName, startDate: newStart, endDate: newEnd, prices: defaultPrices } 
+    return {
+      success: true,
+      data: { name: newName, startDate: newStart, endDate: newEnd, prices: defaultPrices }
     }
   } catch (e) {
     return { success: false, message: "Impossible de calculer la prévision" }
@@ -56,7 +56,7 @@ export async function getNextSeasonPreview() {
 
 export async function generateNextSeason(formData: FormData) {
   try {
-    
+
     const name = formData.get('name') as string
     const startDate = new Date(formData.get('startDate') as string)
     const endDate = new Date(formData.get('endDate') as string)
@@ -67,6 +67,21 @@ export async function generateNextSeason(formData: FormData) {
     const priceYoung = parseFloat(formData.get('priceYoung') as string)
     const priceFfa = parseFloat(formData.get('priceFfa') as string)
 
+    const existingFutureSeason = await prisma.season.findFirst({
+      where: {
+        isActive: false, // Elle n'est pas active
+        startDate: {
+          gt: new Date() // Et elle commence dans le futur
+        }
+      }
+    })
+
+    if (existingFutureSeason) {
+      return {
+        success: false,
+        message: `Une saison brouillon (${existingFutureSeason.name}) existe déjà. Veuillez l'activer ou la supprimer avant d'en préparer une autre.`
+      }
+    }
 
     const exists = await prisma.season.findUnique({ where: { name } })
     if (exists) return { success: false, message: `La saison ${name} existe déjà !` }
@@ -76,7 +91,7 @@ export async function generateNextSeason(formData: FormData) {
         name,
         startDate,
         endDate,
-        isActive: false, 
+        isActive: false,
         priceStandard,
         priceCouple,
         priceYoung,
@@ -84,7 +99,7 @@ export async function generateNextSeason(formData: FormData) {
       }
     })
 
-    revalidatePath('/admin/seasons') 
+    revalidatePath('/admin/seasons')
     return { success: true }
   } catch (e) {
     console.error(e)
