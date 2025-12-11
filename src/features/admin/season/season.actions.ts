@@ -53,16 +53,21 @@ export async function getNextSeasonPreview() {
   }
 }
 
-// ACTION 2 : Créer la saison avec les prix validés par l'admin
-export async function generateNextSeason(customPrices: SeasonPrices) {
+
+export async function generateNextSeason(formData: FormData) {
   try {
-    // On recalcule les dates ici par sécurité (ou on pourrait les passer en args)
-    const preview = await getNextSeasonPreview()
-    if (!preview.success || !preview.data) throw new Error("Erreur prévision")
+    
+    const name = formData.get('name') as string
+    const startDate = new Date(formData.get('startDate') as string)
+    const endDate = new Date(formData.get('endDate') as string)
 
-    const { name, startDate, endDate } = preview.data
 
-    // Vérif doublon
+    const priceStandard = parseFloat(formData.get('priceStandard') as string)
+    const priceCouple = parseFloat(formData.get('priceCouple') as string)
+    const priceYoung = parseFloat(formData.get('priceYoung') as string)
+    const priceFfa = parseFloat(formData.get('priceFfa') as string)
+
+
     const exists = await prisma.season.findUnique({ where: { name } })
     if (exists) return { success: false, message: `La saison ${name} existe déjà !` }
 
@@ -72,18 +77,37 @@ export async function generateNextSeason(customPrices: SeasonPrices) {
         startDate,
         endDate,
         isActive: false, 
-        // On utilise les prix envoyés par le formulaire
-        priceStandard: customPrices.priceStandard,
-        priceCouple: customPrices.priceCouple,
-        priceYoung: customPrices.priceYoung,
-        priceFfa: customPrices.priceFfa
+        priceStandard,
+        priceCouple,
+        priceYoung,
+        priceFfa
       }
     })
 
-    revalidatePath('/admin/dashboard')
-    return { success: true, message: `Saison ${name} créée avec succès` }
+    revalidatePath('/admin/seasons') 
+    return { success: true }
   } catch (e) {
     console.error(e)
     return { success: false, message: "Erreur serveur lors de la création" }
+  }
+}
+
+export async function activateSeasonAction(seasonId: string) {
+  try {
+    await prisma.$transaction([
+      prisma.season.updateMany({
+        where: { isActive: true },
+        data: { isActive: false }
+      }),
+      prisma.season.update({
+        where: { id: seasonId },
+        data: { isActive: true }
+      })
+    ])
+
+    revalidatePath('/admin/dashboard')
+    return { success: true }
+  } catch (e) {
+    return { success: false, message: "Erreur lors de l'activation" }
   }
 }

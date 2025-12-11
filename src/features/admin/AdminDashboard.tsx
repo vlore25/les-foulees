@@ -15,7 +15,9 @@ import EventsTabManager from "@/src/features/admin/dashboard-tabs/EventsTabsMana
 import LegalDocsTabManager from "./dashboard-tabs/DocsTabsManager";
 import SeasonsTabsManager from "./dashboard-tabs/SeasonsTabsManager";
 
-import { BrickWallShield, Users, Calendar, FileText, ClipboardClock } from "lucide-react";
+import { BrickWallShield, Users, Calendar, FileText, ClipboardClock, BookUser } from "lucide-react";
+import MembershipTabsManager from "./dashboard-tabs/MembershipTabsManager";
+
 
 interface AdminDashboardProps {
   currentTab: string;
@@ -23,9 +25,10 @@ interface AdminDashboardProps {
   eventsListNode: React.ReactNode;
   legalDocsListNode: React.ReactNode;
   seasonsListNode: React.ReactNode;
+  membershipListNode: React.ReactNode;
 }
 
-export default function AdminDashboard({ currentTab, usersListNode, eventsListNode, legalDocsListNode,  seasonsListNode}: AdminDashboardProps) {
+export default function AdminDashboard({ currentTab, usersListNode, eventsListNode, legalDocsListNode,  seasonsListNode, membershipListNode}: AdminDashboardProps) {
   const router = useRouter();
 
   const tabsItems = [
@@ -33,6 +36,7 @@ export default function AdminDashboard({ currentTab, usersListNode, eventsListNo
     { value: "events", label: "Événements", icon: <Calendar className="h-4 w-4 mr-2" /> },
     { value: "docs", label: "Documents", icon: <FileText className="h-4 w-4 mr-2" /> },
     { value: "season", label: "Seasons", icon: <ClipboardClock className="h-4 w-4 mr-2" /> },
+    { value: "membership", label: "Adherants", icon: <BookUser className="h-4 w-4 mr-2" /> },
   ];
 
   const handleTabChange = (value: string) => {
@@ -111,8 +115,8 @@ export default function AdminDashboard({ currentTab, usersListNode, eventsListNo
               {legalDocsListNode}
            </LegalDocsTabManager>
           </div>
-           
         </TabsContent>
+
         {/* === CONTENU SEASONS === */}
         <TabsContent value="season" className="space-y-4 m-0">
           <div className="flex flex-col gap-4">
@@ -123,7 +127,18 @@ export default function AdminDashboard({ currentTab, usersListNode, eventsListNo
               {seasonsListNode}
            </SeasonsTabsManager>
           </div>
-           
+        </TabsContent>
+
+        {/* === CONTENU MEMBERSHIP === */}
+        <TabsContent value="membership" className="space-y-4 m-0">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium">Gestion d'adherants</h3>
+            </div>
+            <MembershipTabsManager>
+              {membershipListNode}
+           </MembershipTabsManager>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

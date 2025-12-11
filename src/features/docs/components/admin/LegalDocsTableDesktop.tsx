@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FileText, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import LegalDocRowActions from "./LegalDocRowActions"; // Assurez-vous que ce fichier existe (étape précédente)
 import { LegalDocs } from "@/app/generated/prisma/client"; // Adaptez l'import selon votre config
 

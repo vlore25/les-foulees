@@ -220,6 +220,15 @@ export const profileFormSchema = z.object({
   emergencyPhone: z.string().optional().or(z.literal('')).refine(val => !val || phoneRegex.test(val), "Numéro invalide"),
 });
 
+const AdhesionSchema = z.object({
+  type: z.enum(['INDIVIDUAL', 'COUPLE', 'YOUNG', 'LICENSE_RUNNING']),
+  paymentMethod: z.enum(['CHECK', 'TRANSFER', 'CASH']),
+  phone: z.string().min(10, "Numéro requis"),
+  sharePhone: z.boolean().default(false),
+  shareEmail: z.boolean().default(false),
+  imageRights: z.boolean().default(false),
+});
+
 export type ProfileFormState = {
   error?: {
     name?: string[];

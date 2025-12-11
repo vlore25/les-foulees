@@ -9,7 +9,7 @@ export const getSeasons = async () => {
       },
       include: {
         _count: {
-          select: { licenses: true }
+          select: { memberships: true }
         }
       }
     })

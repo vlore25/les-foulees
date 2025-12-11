@@ -1,4 +1,3 @@
-import { useUser } from "@/components/providers/UserProvider";
 import { getAllevents } from "../../dal";
 import EventsCardMobile from "../shared/EventsCardMobile";
 import EventsTableDesktop from "./EventsTableDesktop";

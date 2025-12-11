@@ -2,7 +2,6 @@ import 'server-only';
 import { prisma } from '@/src/lib/prisma';
 import { cache } from 'react';
 
-// On utilise 'cache' de React pour dédupliquer les requêtes si appelé plusieurs fois dans la même page
 export const getProfile = cache(async (userId: string) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -23,17 +22,18 @@ export const getProfile = cache(async (userId: string) => {
       emergencyPhone: true,
       role: true,
       createdAt: true,
-      licenses: {
+      memberships: {
         where: {
           season: {
-            isActive: true
+            isActive: true 
           }
         },
         select: {
           id: true,
-          type: true,
-          licenseNumber: true,
-          isValid: true,
+          type: true,       
+          ffaLicenseNumber: true, 
+          status: true,          
+          medicalCertificateVerified: true,
           season: {
             select: {
               name: true,
@@ -41,7 +41,7 @@ export const getProfile = cache(async (userId: string) => {
             }
           }
         },
-        take: 1 
+        take: 1 // On prend la seule adhésion active
       }
     },
   });

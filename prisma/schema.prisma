@@ -27,8 +27,9 @@ enum Status {
 }
 
 model User {
-  id                 String    @id @default(cuid())
-  email              String    @unique @db.VarChar(255)
+  id                 String       @id @default(cuid())
+  email              String       @unique @db.VarChar(255)
+  // --- Infos Personnelles ---
   name               String
   lastname           String
   birthdate          DateTime?
@@ -37,19 +38,20 @@ model User {
   address            String
   zipCode            String
   city               String
-  showPhoneDirectory Boolean   @default(false)
-  showEmailDirectory Boolean   @default(false)
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  role               Role      @default(USER)
-  status             Status    @default(ACTIVE)
+  // Contact Urgence
   emergencyName      String?
   emergencyLastName  String?
   emergencyPhone     String?
+  showPhoneDirectory Boolean      @default(false)
+  showEmailDirectory Boolean      @default(false)
+  role               Role         @default(USER)
+  status             Status       @default(ACTIVE)
   sessions           Session[]
   events             Event[]
+  memberships        Membership[]
   payments           Payment[]
-  licenses           License[]
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 }
 
 model Session {
@@ -102,12 +104,9 @@ model Event {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   participants User[]
-  payments     Payment[]
 }
 
-/**
- * ==============DOCS=================
- */
+// ==============DOCS=================
 
 model LegalDocs {
   id          String  @id @default(cuid())
@@ -116,71 +115,90 @@ model LegalDocs {
   Url         String?
 }
 
-/**
- * ==============SEASONS=================
- */
+// ==============SEASON=================
+
 model Season {
-  id            String    @id @default(cuid())
-  name          String    @unique // ex: "2025-2026"
+  id            String       @id @default(cuid())
+  name          String       @unique
   startDate     DateTime
   endDate       DateTime
-  isActive      Boolean   @default(false)
-  priceStandard Float     @default(35.0)
-  priceCouple   Float     @default(60.0)
-  priceYoung    Float     @default(25.0)
-  priceFfa      Float     @default(98.0)
-  licenses      License[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  isActive      Boolean      @default(false)
+  priceStandard Float        @default(35.0)
+  priceCouple   Float        @default(60.0)
+  priceYoung    Float        @default(25.0)
+  priceFfa      Float        @default(98.0)
+  memberships   Membership[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 // ==============DOSSIER ADHERANT=================
 
-enum LicenseType {
-  STANDARD
-  COUPLE
-  YOUNG
-  FFA
+enum MembershipStatus {
+  PENDING   // Dossier créé, en attente de validation admin
+  VALIDATED // Tout est bon (certificat + paiement)
+  REJECTED  // Dossier refusé
 }
 
-model License {
-  id            String      @id @default(cuid())
-  type          LicenseType @default(STANDARD)
-  licenseNumber String?
-  isValid       Boolean     @default(false)
-  userId        String
-  user          User        @relation(fields: [userId], references: [id])
-  seasonId      String
-  season        Season      @relation(fields: [seasonId], references: [id])
-  payments      Payment[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+enum MembershipType {
+  INDIVIDUAL
+  COUPLE
+  YOUNG
+  LICENSE_RUNNING
+}
 
+model Membership {
+  id          String   @id @default(cuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  season      Season   @relation(fields: [seasonId], references: [id])
+  seasonId    String
+  // --- Données spécifiques à CETTE année ---
+  // Le N° de licence peut changer, ou le club précédent
+  ffaLicenseNumber String? 
+  previousClub     String? 
+  // Les consentements doivent être redemandés chaque année (RGPD)
+  sharePhone  Boolean   @default(false)
+  shareEmail  Boolean   @default(false)
+  imageRights Boolean   @default(false)
+  medicalCertificateVerified Boolean @default(false)
+  status      MembershipStatus @default(PENDING)
+  type        MembershipType   @default(INDIVIDUAL)
+  payment     Payment?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   @@unique([userId, seasonId])
 }
 
-/**
- * ==============CENTRALISED ALL PAYEMENTS=================
- */
+
+
+ // ==============CENTRALISED ALL PAYEMENTS=================
+
 
 enum PaymentMethod {
-  CHEQUE
-  VIREMENT
-  ESPECES
-  STRIPE
-  AUTRE
+  CHECK     
+  TRANSFER  
+  CASH    
+  ONLINE   
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
 }
 
 model Payment {
-  id        String        @id @default(cuid())
-  amount    Float
-  date      DateTime      @default(now())
-  method    PaymentMethod
-  reference String?
-  userId    String
-  user      User          @relation(fields: [userId], references: [id])
-  licenseId String?
-  license   License?      @relation(fields: [licenseId], references: [id])
-  eventId   String?
-  event     Event?        @relation(fields: [eventId], references: [id])
+  id            String        @id @default(cuid())
+  amount        Float
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  reference     String?
+  date          DateTime      @default(now())
+  user          User          @relation(fields: [userId], references: [id])
+  userId        String
+  membership    Membership    @relation(fields: [membershipId], references: [id])
+  membershipId  String        @unique 
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
