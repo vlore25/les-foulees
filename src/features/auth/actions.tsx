@@ -33,7 +33,6 @@ export type LoginFormState = {
 
 // Register Logic
 export async function registerUser(state: RegisterFormState, formData: FormData): Promise<RegisterFormState> {
-  // 1. Récupérer le token
   const token = formData.get('token') as string;
 
   if (!token) {
@@ -59,13 +58,15 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
     address: formData.get('address'),
     zipCode: formData.get('zip-code'), 
     city: formData.get('city'),
-    birthdate: formData.get('birthdate'), 
+    birthdate: formData.get('birthdate'),
+    showPhoneDirectory: formData.get('showPhoneDirectory') === 'on',
+    showEmailDirectory: formData.get('showEmailDirectory') === 'on', 
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
   }
 
-  const validatedFields = registerFormSchema.safeParse(rawFormData);
-
+  const validatedFields = registerFormSchema.safeParse(rawFormData) ;
+  
   if (!validatedFields.success) {
     return { error: validatedFields.error.flatten().fieldErrors };
   }

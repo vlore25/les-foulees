@@ -75,7 +75,8 @@ export const registerFormSchema = z.object({
     .optional()
     .or(z.literal(''))
     .transform(v => v || ""),
-
+  showPhoneDirectory: z.boolean().default(false), 
+  showEmailDirectory: z.boolean().default(false),
   emergencyName: z.string().optional().or(z.literal('')).transform(v => v || null),
   emergencyLastName: z.string().optional().or(z.literal('')).transform(v => v || null),
   emergencyPhone: z

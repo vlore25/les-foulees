@@ -27,27 +27,29 @@ enum Status {
 }
 
 model User {
-  id                String    @id @default(cuid())
-  email             String    @unique @db.VarChar(255)
-  name              String
-  lastname          String
-  birthdate         DateTime?
-  phone             String?
-  password          String
+  id                 String    @id @default(cuid())
+  email              String    @unique @db.VarChar(255)
+  name               String
+  lastname           String
+  birthdate          DateTime?
+  phone              String?
+  password           String
   address            String
-  zipCode           String
-  city              String
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  role              Role      @default(USER)
-  status            Status    @default(ACTIVE)
-  emergencyName     String?
-  emergencyLastName String?
-  emergencyPhone    String?
-  sessions          Session[]
-  events            Event[]
-  payments          Payment[]
-  licenses          License[]
+  zipCode            String
+  city               String
+  showPhoneDirectory Boolean   @default(false)
+  showEmailDirectory Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  role               Role      @default(USER)
+  status             Status    @default(ACTIVE)
+  emergencyName      String?
+  emergencyLastName  String?
+  emergencyPhone     String?
+  sessions           Session[]
+  events             Event[]
+  payments           Payment[]
+  licenses           License[]
 }
 
 model Session {

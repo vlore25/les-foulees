@@ -51,8 +51,6 @@ export async function sendInviteAction(prevState: InviteUserState, formData: For
       .setIssuedAt()
       .sign(secretKey);
 
-    // 4. Sauvegarde en Base (Upsert = Update ou Insert)
-    // Nécessite @unique sur l'email dans le schema Prisma
     await prisma.invitation.upsert({
       where: { email },
       update: { token, createdAt: new Date() },

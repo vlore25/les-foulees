@@ -8,6 +8,7 @@ import { LegalDocs } from "@/app/generated/prisma/client";
 import { useUser } from "@/components/providers/UserProvider";
 import { usePathname } from "next/navigation";
 
+
 interface LegalDocsCardMobileProps {
     docs: LegalDocs[];
 }
