@@ -126,3 +126,15 @@ export async function activateSeasonAction(seasonId: string) {
     return { success: false, message: "Erreur lors de l'activation" }
   }
 }
+
+export async function deleteDraftSeason(seasonId: string) {
+  try {
+    await prisma.season.delete({
+      where: { id: seasonId }
+    })
+    revalidatePath('/admin/dashboard')
+    return { success: true }
+  } catch (e) {
+    return { success: false, message: "Erreur lors de la suppression" }
+  }
+}

@@ -1,4 +1,4 @@
-import { Calendar, CalendarCheck, CalendarCheck2, CalendarSearch, Files, LogOut, Users, UserSquare } from "lucide-react";
+import { BookUser, Calendar, CalendarCheck, CalendarCheck2, CalendarSearch, Files, LogOut, Users, UserSquare } from "lucide-react";
 import { ReactNode } from "react";
 
 type UserNavItem = {
@@ -18,6 +18,11 @@ const UserNavItems: UserNavItem[]= [
             title: "Evenements",
             href: "/dashboard/evenements",
             icon: <Calendar/>,
+        },
+        {
+            title: "Adhesion",
+            href: "/dashboard/adhesion",
+            icon: <BookUser/>,
         },
         {
             title: "Annuaire de membres",

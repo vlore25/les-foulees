@@ -16,3 +16,14 @@ export const getSeasonsData = async () => {
 
   return { activeSeason, futureSeason, archivedSeasons, draftSeason };
 }
+
+export const getActiveSeasonData = async () => {
+  const ActiveSeason = await prisma.season.findFirst({
+    where: { 
+      isActive: true 
+    },
+    select{
+      
+    }
+  })
+}
