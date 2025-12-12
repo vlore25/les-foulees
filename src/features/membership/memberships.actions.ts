@@ -1,9 +1,12 @@
 'use server'
 
 import { MembershipType, PaymentMethod } from "@/app/generated/prisma/enums"
+import { membershipSchema } from "@/src/lib/definitions"
 import { prisma } from "@/src/lib/prisma"
 import { getSession } from "@/src/lib/session"
+import { get } from "http"
 import { revalidatePath } from "next/cache"
+import { getActiveSeasonData } from "../admin/season/dal"
 
 // --- 1. ACTION UTILISATEUR : CRÉER SA DEMANDE D'ADHÉSION ---
 export async function createMembershipRequest(formData: FormData) {
@@ -11,22 +14,21 @@ export async function createMembershipRequest(formData: FormData) {
     const session = await getSession();
     if (!session?.userId) return { message: "Non autorisé" };
 
-    const seasonId = formData.get("seasonId") as string
-    const type = formData.get("type") as MembershipType
-    const paymentMethod = formData.get("paymentMethod") as PaymentMethod
-    
-    // Consentements
-    const sharePhone = formData.get("sharePhone") === "on"
-    const shareEmail = formData.get("shareEmail") === "on"
-    const imageRights = formData.get("imageRights") === "on"
-    
-    // Infos complémentaires
-    const ffaLicenseNumber = formData.get("ffaLicenseNumber") as string
-    const previousClub = formData.get("previousClub") as string
+    const rawFormData = {
+        type: formData.get("type") as MembershipType,
+        paymentMethod: formData.get("paymentMethod") as PaymentMethod,
+        showPhoneDirectory: formData.get('showPhoneDirectory') === 'on',
+        showEmailDirectory: formData.get('showEmailDirectory') === 'on',
+        ffaLicenseNumber: formData.get("ffa") as string,
+        previousClub: formData.get("club") as string,
+    }
 
-    // 2. Récupérer la saison pour avoir le bon prix
-    const season = await prisma.season.findUnique({ where: { id: seasonId } })
-    if (!season) throw new Error("Saison introuvable")
+    const validatedFields = membershipSchema.safeParse(rawFormData);
+
+    const season = await getActiveSeasonData();
+    if (!season) {
+        return { message: "Aucune saison active pour l'instant." }
+    }
 
     // 3. Calculer le montant
     let amount = 0
@@ -40,7 +42,7 @@ export async function createMembershipRequest(formData: FormData) {
     try {
         // 4. Création Transactionnelle (Adhésion + Paiement)
         await prisma.$transaction(async (tx) => {
-            
+
             // Créer l'adhésion (Status PENDING par défaut)
             const membership = await tx.membership.create({
                 data: {
@@ -84,7 +86,7 @@ export async function validateMembershipAction(membershipId: string) {
             // 1. Passer l'adhésion en VALIDATED
             const membership = await tx.membership.update({
                 where: { id: membershipId },
-                data: { 
+                data: {
                     status: "VALIDATED",
                     medicalCertificateVerified: true // On suppose que l'admin a vérifié le papier
                 }

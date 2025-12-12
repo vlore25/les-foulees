@@ -220,14 +220,33 @@ export const profileFormSchema = z.object({
   emergencyPhone: z.string().optional().or(z.literal('')).refine(val => !val || phoneRegex.test(val), "Numéro invalide"),
 });
 
-const AdhesionSchema = z.object({
-  type: z.enum(['INDIVIDUAL', 'COUPLE', 'YOUNG', 'LICENSE_RUNNING']),
-  paymentMethod: z.enum(['CHECK', 'TRANSFER', 'CASH']),
-  phone: z.string().min(10, "Numéro requis"),
+
+// On définit les Enums ici pour qu'ils matchent votre Prisma Schema
+export const MembershipTypeEnum = z.enum([
+  "INDIVIDUAL",
+  "COUPLE",
+  "YOUNG",
+  "LICENSE_RUNNING"
+]);
+
+export const PaymentMethodEnum = z.enum([
+  "CHECK",    // Chèque
+  "TRANSFER", // Virement
+  "CASH",     // Espèces
+  "ONLINE"    // Si vous avez Stripe plus tard
+]);
+
+export const membershipSchema = z.object({
+  type: MembershipTypeEnum,
+  paymentMethod: PaymentMethodEnum,
+  ffaLicenseNumber: z.string().optional(),
+  previousClub: z.string().optional(),
   sharePhone: z.boolean().default(false),
   shareEmail: z.boolean().default(false),
-  imageRights: z.boolean().default(false),
 });
+
+// Type TypeScript inféré
+export type MembershipFormValues = z.infer<typeof membershipSchema>;
 
 export type ProfileFormState = {
   error?: {

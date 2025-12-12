@@ -140,36 +140,7 @@ export default function RegistrationForm({ email, token }: { email: string, toke
             <Input id="email" name="email" value={email} readOnly className="bg-muted" />
             <p className="text-xs text-muted-foreground mt-1">Lié à votre invitation.</p>
           </Field>
-          <h3 className="font-medium text-sm flex items-center gap-2">
-        Parution dans l'annuaire des adhérents
-    </h3>
-    <p className="text-xs text-muted-foreground">
-        Ces informations seront visibles uniquement par les autres membres connectés.
-    </p>
-    
-    <div className="flex flex-col gap-2">
-        {/* Case Téléphone */}
-        <div className="flex items-center space-x-2">
-            <Checkbox id="showPhoneDirectory" name="showPhoneDirectory" />
-            <label
-                htmlFor="showPhoneDirectory"
-                className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-                J'accepte de diffuser mon téléphone
-            </label>
-        </div>
-
-        {/* Case Email */}
-        <div className="flex items-center space-x-2">
-            <Checkbox id="showEmailDirectory" name="showEmailDirectory" />
-            <label
-                htmlFor="showEmailDirectory"
-                className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-                J'accepte de diffuser mon adresse e-mail
-            </label>
-        </div>
-    </div>
+          
           <div className='flex flex-col md:flex-row gap-4 w-full'>
             <div className="flex-1">
               <Field>
