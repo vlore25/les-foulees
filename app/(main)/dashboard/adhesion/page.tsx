@@ -10,6 +10,7 @@ import Link from "next/link";
 
 // Import des Enums générés par Prisma (adaptez le chemin si nécessaire)
 import { MembershipStatus, MembershipType } from "@/app/generated/prisma/enums";
+import { getProfile } from "@/src/features/account/dal";
 
 // Configuration stricte des statuts en utilisant l'Enum
 const STATUS_INFO: Record<MembershipStatus, { label: string; color: string }> = {
@@ -39,8 +40,7 @@ export default async function MembershipComp() {
   // 1. Vérification session
   const session = await getSession();
   if (!session?.userId) redirect("/login");
-
-  // 2. Récupération des données
+  const user = await getProfile(session.userId);
   const season = await getActiveSeasonData();
   const existingMembership = await getUserMembershipForActiveSeason(session.userId);
 
@@ -157,7 +157,7 @@ export default async function MembershipComp() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <MembershipForm />
+          <MembershipForm userProfile={user} season={season}/>
         </CardContent>
       </Card>
     </div>

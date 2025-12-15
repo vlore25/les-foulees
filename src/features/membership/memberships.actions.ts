@@ -6,6 +6,8 @@ import { prisma } from "@/src/lib/prisma"
 import { getSession } from "@/src/lib/session"
 import { revalidatePath } from "next/cache"
 import { getActiveSeasonData } from "../admin/season/dal"
+import { generateSignedMembershipPdf } from "./service/pdf-service"
+import { getProfile } from "../account/dal"
 
 // Type pour le retour de l'action
 export type MembershipState = {
@@ -24,6 +26,8 @@ export async function createMembershipRequest(prevState: any, formData: FormData
 
     const session = await getSession();
     if (!session?.userId) return { message: "Vous devez être connecté pour faire cette demande." };
+    const user = await getProfile(session.userId);
+    if (!user) return { message: "Utilisateur introuvable." };
 
     const rawFormData = {
         type: formData.get("type") as MembershipType,
@@ -32,6 +36,7 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         showEmailDirectory: formData.get('showEmailDirectory') === 'on',
         ffaLicenseNumber: formData.get("ffa") as string,
         previousClub: formData.get("club") as string,
+        signature: formData.get("signature") as string,
     }
 
     const validatedFields = membershipSchema.safeParse(rawFormData);
@@ -66,6 +71,17 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         default: amount = season.priceStandard;
     }
 
+    let pdfPath = null;
+    try {
+        pdfPath = await generateSignedMembershipPdf({
+            user: user,
+            seasonName: season.name,
+            signatureBase64: rawFormData.signature
+        });
+    } catch (e) {
+        return { message: "Erreur lors de la création du document PDF." };
+    }
+
    try {
 
         await prisma.$transaction(async (tx) => {
@@ -85,6 +101,7 @@ export async function createMembershipRequest(prevState: any, formData: FormData
                     sharePhone: showPhoneDirectory,
                     shareEmail: showEmailDirectory,
                     status: "PENDING",
+                    adhesionPdf: pdfPath
                 }
             })
 

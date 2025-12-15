@@ -7,9 +7,9 @@ import * as bcrypt from 'bcrypt'
 import { redirect } from 'next/navigation'
 
 export type RegisterFormState = {
-  error?: {
+  errors?: {
     name?: string[];
-    lastname?: string[]; 
+    lastname?: string[];
     email?: string[];
     phone?: string[];
     password?: string[];
@@ -18,8 +18,12 @@ export type RegisterFormState = {
     address?: string[];
     zipCode?: string[];
     city?: string[];
+    emergencyName?: string[];
+    emergencyLastName?: string[];
+    emergencyPhone?: string[];
   };
   message?: string | null;
+  success?: boolean; 
 } | undefined;
 
 export type LoginFormState = {
@@ -36,7 +40,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
   const token = formData.get('token') as string;
 
   if (!token) {
-     return { message: "Token d'invitation manquant ou invalide." };
+    return { message: "Token d'invitation manquant ou invalide." };
   }
 
   // 2. VERIFICATION DE SÉCURITÉ : On cherche l'invitation en BDD
@@ -55,25 +59,32 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
     name: formData.get('name'),
     lastname: formData.get('lastname'),
     phone: formData.get('phone'),
-    address: formData.get('address'),
-    zipCode: formData.get('zip-code'), 
-    city: formData.get('city'),
     birthdate: formData.get('birthdate'),
+    address: formData.get('address'),
+    zipCode: formData.get('zip-code'),
+    city: formData.get('city'),
+    emergencyName: formData.get('emergencyName'),
+    emergencyLastName: formData.get('emergencyLastName'),
+    emergencyPhone: formData.get('emergencyPhone'),
     showPhoneDirectory: formData.get('showPhoneDirectory') === 'on',
-    showEmailDirectory: formData.get('showEmailDirectory') === 'on', 
+    showEmailDirectory: formData.get('showEmailDirectory') === 'on',
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
   }
 
-  const validatedFields = registerFormSchema.safeParse(rawFormData) ;
-  
+  const validatedFields = registerFormSchema.safeParse(rawFormData);
+
   if (!validatedFields.success) {
-    return { error: validatedFields.error.flatten().fieldErrors };
+    return { 
+      success: false, 
+      errors: validatedFields.error.flatten().fieldErrors, 
+      message: "Veuillez corriger les erreurs dans le formulaire." 
+    };
   }
 
   const { confirmPassword, ...userData } = validatedFields.data;
 
-  
+
   const existingUser = await prisma.user.findUnique({ where: { email: emailVerifie } });
   if (existingUser) {
     return { message: 'Un compte existe déjà pour cet email.' };
@@ -83,77 +94,78 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
 
   try {
     await prisma.$transaction(async (tx) => {
-        
-        await tx.user.create({
-          data: {
-            ...userData, 
-            email: emailVerifie, 
-            password: hashedPassword,
-          },
-        });
 
-        await tx.invitation.delete({
-            where: { token: token }
-        });
+      await tx.user.create({
+        data: {
+          ...userData,
+          email: emailVerifie,
+          password: hashedPassword,
+        },
+      });
+
+      await tx.invitation.delete({
+        where: { token: token }
+      });
     });
 
-  } 
+    return { success: true, message: "Inscription réussie !" };
+   
+  }
   catch (e) {
     console.error("Erreur inscription:", e);
     return { message: 'Une erreur technique est survenue.' };
-  }
-
-  redirect('/login')
+  } 
+  
 }
 
 
 // Login logic
 export async function loginUser(state: LoginFormState, formData: FormData): Promise<LoginFormState> {
 
-    const validatedFields = loginSchema.safeParse({
-      email: formData.get('email'),
-      password: formData.get('password'),
-    })
+  const validatedFields = loginSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  })
 
-    if (!validatedFields.success) {
-      return {
-        error: validatedFields.error.flatten().fieldErrors
-      }
+  if (!validatedFields.success) {
+    return {
+      error: validatedFields.error.flatten().fieldErrors
     }
+  }
 
-    const { email, password } = validatedFields.data
-    const user = await prisma.user.findUnique({
-      where: { email },
-    })
+  const { email, password } = validatedFields.data
+  const user = await prisma.user.findUnique({
+    where: { email },
+  })
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return {
-        message: 'Courriel ou mot de passe incorrect.'
-      }
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return {
+      message: 'Courriel ou mot de passe incorrect.'
     }
+  }
 
-    await createSession(user.id)
+  await createSession(user.id)
 
-    redirect('/dashboard')
+  redirect('/dashboard')
 }
 
 // Verify invitation token
 export async function verifyInvitationToken(token: string) {
-    if (!token || typeof token !== "string") return null;
+  if (!token || typeof token !== "string") return null;
 
-    try {
-      const invitation = await prisma.invitation.findUnique({
-        where: { token: token }
-      });
+  try {
+    const invitation = await prisma.invitation.findUnique({
+      where: { token: token }
+    });
 
-      return invitation;
-    } catch (error) {
-      return null;
-    }
+    return invitation;
+  } catch (error) {
+    return null;
+  }
 }
 
 // Logout Logic
 export async function logout() {
-    await deleteSession()
-    redirect('/')
+  await deleteSession()
+  redirect('/')
 }

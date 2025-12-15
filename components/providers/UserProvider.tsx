@@ -1,6 +1,6 @@
 "use client";
+import { CurrentUser } from "@/src/features/users/dal";
 import { createContext, useContext, ReactNode } from "react";
-import type { CurrentUser } from "@/src/lib/dal";
 
 const UserContext = createContext<CurrentUser | null>(null);
 

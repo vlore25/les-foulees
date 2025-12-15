@@ -9,6 +9,7 @@ const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
 // Base reusable schemas
 export const emailSchema = z
   .string()
+  .toLowerCase()
   .email({ message: 'Email invalide.' })
   .trim()
 
@@ -56,41 +57,33 @@ export const registerFormSchema = z.object({
     .trim(),
 
   birthdate: z.coerce.date()
-    .refine((date) => !isNaN(date.getTime()), { 
-      message: "La date de naissance est requise." 
+    .refine((date) => !isNaN(date.getTime()), {
+      message: "La date de naissance est requise."
     }),
-  // --- CHAMPS OPTIONNELS ---
-
   zipCode: z
     .string()
     .optional()
     .or(z.literal(''))
-    .refine((val) => !val || /^\d{5}$/.test(val), { 
-      message: "Le code postal doit comporter 5 chiffres." 
+    .refine((val) => !val || /^\d{5}$/.test(val), {
+      message: "Le code postal doit comporter 5 chiffres."
     })
     .transform(v => v || ""),
-
   city: z
     .string()
     .optional()
     .or(z.literal(''))
     .transform(v => v || ""),
-  showPhoneDirectory: z.boolean().default(false), 
-  showEmailDirectory: z.boolean().default(false),
-  emergencyName: z.string().optional().or(z.literal('')).transform(v => v || null),
-  emergencyLastName: z.string().optional().or(z.literal('')).transform(v => v || null),
-  emergencyPhone: z
-    .string()
-    .optional()
-    .or(z.literal(''))
-    .refine((val) => !val || phoneRegex.test(val), {
-      message: "Numéro d'urgence invalide."
-    })
-    .transform(v => v || null),
-})
+  emergencyName: z.string().optional().or(z.literal('')),
+  emergencyLastName: z.string().optional().or(z.literal('')),
+  emergencyPhone: z.string().optional().or(z.literal('')).refine(val => !val || phoneRegex.test(val), "Numéro invalide"),
+  // --- CHAMPS OPTIONNELS ---
 
+  showPhoneDirectory: z.boolean().default(false),
+  showEmailDirectory: z.boolean().default(false),
+
+})
 .refine((data) => data.password === data.confirmPassword, {
-  message: "Les mots de passe ne correspondent pas",
+  message: "Les mots de passe ne correspondent pas.",
   path: ["confirmPassword"],
 });
 
@@ -122,7 +115,7 @@ const eventBase = z.object({
     .refine((date) => date > new Date(), {
       message: "La date doit être dans le futur.",
     }),
-    
+
   dateEnd: z.coerce
     .date()
     .refine((date) => date > new Date(), {
@@ -206,10 +199,10 @@ export const profileFormSchema = z.object({
   phone: z.string().regex(phoneRegex, "Numéro invalide").trim(),
   birthdate: z.string()
     .trim()
-    .min(1, { message: "La date de naissance est requise." }) 
-    .transform((val) => new Date(val))                      
-    .refine((date) => !isNaN(date.getTime()), { 
-      message: "Format de date invalide."                  
+    .min(1, { message: "La date de naissance est requise." })
+    .transform((val) => new Date(val))
+    .refine((date) => !isNaN(date.getTime()), {
+      message: "Format de date invalide."
     }),
   adress: z.string().min(5, "Adresse requise").trim(),
   zipCode: z.string().regex(/^\d{5}$/, "Code postal invalide"),

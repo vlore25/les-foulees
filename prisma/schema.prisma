@@ -162,6 +162,7 @@ model Membership {
   status      MembershipStatus @default(PENDING)
   type        MembershipType   @default(INDIVIDUAL)
   payment     Payment?
+  adhesionPdf String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   @@unique([userId, seasonId])
