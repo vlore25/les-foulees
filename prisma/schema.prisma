@@ -153,11 +153,8 @@ model Membership {
   userId      String
   season      Season   @relation(fields: [seasonId], references: [id])
   seasonId    String
-  // --- Données spécifiques à CETTE année ---
-  // Le N° de licence peut changer, ou le club précédent
   ffaLicenseNumber String? 
   previousClub     String? 
-  // Les consentements doivent être redemandés chaque année (RGPD)
   sharePhone  Boolean   @default(false)
   shareEmail  Boolean   @default(false)
   imageRights Boolean   @default(false)

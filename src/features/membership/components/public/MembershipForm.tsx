@@ -1,45 +1,57 @@
 "use client"
 
-import { useActionState, useTransition } from "react"
+import { useActionState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useFormState } from "react-dom"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { createMembershipRequest } from "../../memberships.actions"
-import { Label, RadioGroup } from "@radix-ui/react-dropdown-menu"
-import { RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@radix-ui/react-label"
 
+const initialState = {
+    message: "",
+    success: false,
+    errors: {}
+}
 
 export function MembershipForm() {
-    const [state, action, pending] = useActionState(createMembershipRequest, undefined);
-    const [isPending, startTransition] = useTransition();
+    // Utilisation de initialState pour éviter les erreurs au premier rendu
+    const [state, action, pending] = useActionState(createMembershipRequest, initialState);
 
     return (
         <form action={action} className="space-y-8 max-w-lg mx-auto py-6">
+
+            {/* Messages de retour */}
+            {state?.message && (
+                <div className={`p-4 rounded-md text-sm ${state.success ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                    {state.message}
+                </div>
+            )}
 
             {/* --- TYPE D'ADHÉSION --- */}
             <div className="space-y-3">
                 <h3 className="text-lg font-medium">Type d'adhésion</h3>
                 <RadioGroup
+                    name="type" // Important pour le FormData
                     defaultValue={'INDIVIDUAL'}
                     className="grid grid-cols-1 md:grid-cols-2 gap-4"
                 >
                     <div className="flex items-center space-x-2 border p-4 rounded-md cursor-pointer hover:bg-slate-50">
                         <RadioGroupItem value="INDIVIDUAL" id="t-indi" />
-                        <Label>Individuel</Label>
+                        <Label htmlFor="t-indi" className="cursor-pointer">Individuel</Label>
                     </div>
                     <div className="flex items-center space-x-2 border p-4 rounded-md cursor-pointer hover:bg-slate-50">
                         <RadioGroupItem value="COUPLE" id="t-couple" />
-                        <Label>Couple</Label>
+                        <Label htmlFor="t-couple" className="cursor-pointer">Couple</Label>
                     </div>
                     <div className="flex items-center space-x-2 border p-4 rounded-md cursor-pointer hover:bg-slate-50">
                         <RadioGroupItem value="YOUNG" id="t-young" />
-                        <Label>Jeune (-18)</Label>
+                        <Label htmlFor="t-young" className="cursor-pointer">Jeune (-18)</Label>
                     </div>
                     <div className="flex items-center space-x-2 border p-4 rounded-md cursor-pointer hover:bg-slate-50">
                         <RadioGroupItem value="LICENSE_RUNNING" id="t-run" />
-                        <Label>Licence Running (FFA)</Label>
+                        <Label htmlFor="t-run" className="cursor-pointer">Licence Running (FFA)</Label>
                     </div>
                 </RadioGroup>
             </div>
@@ -47,11 +59,11 @@ export function MembershipForm() {
             {/* --- INFORMATIONS COMPLÉMENTAIRES --- */}
             <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
-                    <Label >Numéro de licence FFA (si renouvellement)</Label>
+                    <Label htmlFor="ffa">Numéro de licence FFA (si renouvellement)</Label>
                     <Input id="ffa" name="ffa" placeholder="Ex: 123456" />
                 </div>
                 <div className="space-y-2">
-                    <Label >Ancien Club</Label>
+                    <Label htmlFor="club">Ancien Club</Label>
                     <Input id="club" name="club" placeholder="Nom du club" />
                 </div>
             </div>
@@ -60,12 +72,12 @@ export function MembershipForm() {
             <div className="space-y-4 border-t pt-4">
                 <h3 className="text-lg font-medium">Consentements</h3>
 
-                <h3 className="font-medium text-sm flex items-center gap-2">
-                    Parution dans l'annuaire des adhérents
-                </h3>
-                <p className="text-xs text-muted-foreground">
-                    Ces informations seront visibles uniquement par les autres membres connectés.
-                </p>
+                <div className="space-y-1">
+                    <h4 className="font-medium text-sm">Parution dans l'annuaire des adhérents</h4>
+                    <p className="text-xs text-muted-foreground">
+                        Ces informations seront visibles uniquement par les autres membres connectés.
+                    </p>
+                </div>
 
                 <div className="flex flex-col gap-2">
                     {/* PHONE DIFFUSION */}
@@ -73,7 +85,7 @@ export function MembershipForm() {
                         <Checkbox id="showPhoneDirectory" name="showPhoneDirectory" />
                         <label
                             htmlFor="showPhoneDirectory"
-                            className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                         >
                             J'accepte de diffuser mon téléphone
                         </label>
@@ -84,7 +96,7 @@ export function MembershipForm() {
                         <Checkbox id="showEmailDirectory" name="showEmailDirectory" />
                         <label
                             htmlFor="showEmailDirectory"
-                            className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                         >
                             J'accepte de diffuser mon adresse e-mail
                         </label>
@@ -96,6 +108,7 @@ export function MembershipForm() {
             <div className="space-y-3 border-t pt-4">
                 <h3 className="text-lg font-medium">Moyen de paiement</h3>
                 <Select
+                    name="paymentMethod" // Important pour le FormData
                     defaultValue="CHECK"
                 >
                     <SelectTrigger>
@@ -113,8 +126,8 @@ export function MembershipForm() {
             </div>
 
             {/* --- SUBMIT --- */}
-            <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? "Envoi en cours..." : "Valider ma demande d'adhésion"}
+            <Button type="submit" className="w-full" disabled={pending}>
+                {pending ? "Envoi en cours..." : "Valider ma demande d'adhésion"}
             </Button>
 
         </form>

@@ -17,18 +17,18 @@ export const getSeasonsData = async () => {
   return { activeSeason, futureSeason, archivedSeasons, draftSeason };
 }
 
+// C'est cette fonction qui doit être modifiée pour votre formulaire d'adhésion
 export const getActiveSeasonData = async () => {
   try {
     const activeSeason = await prisma.season.findFirst({
       where: {
         isActive: true,
       },
-      select: {
-        name: true,
-      }
+      // ON RETIRE LE 'select' pour récupérer l'objet entier (avec priceStandard, etc.)
     })
     return activeSeason;
-  }catch(e){
-    return("Pas de season active");
+  } catch(e) {
+    // On retourne null plutôt qu'une string pour éviter les conflits de types
+    return null;
   }
 }

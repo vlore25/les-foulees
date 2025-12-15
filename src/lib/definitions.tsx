@@ -241,8 +241,8 @@ export const membershipSchema = z.object({
   paymentMethod: PaymentMethodEnum,
   ffaLicenseNumber: z.string().optional(),
   previousClub: z.string().optional(),
-  sharePhone: z.boolean().default(false),
-  shareEmail: z.boolean().default(false),
+  showPhoneDirectory: z.boolean().default(false),
+  showEmailDirectory: z.boolean().default(false),
 });
 
 // Type TypeScript inféré

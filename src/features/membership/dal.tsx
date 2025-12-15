@@ -125,7 +125,7 @@ export async function getUserMembershipForActiveSeason(userId: string) {
             }
         })
 
-        return memberShip;
+        return memberShip
 
     }catch(e){
         return e;
