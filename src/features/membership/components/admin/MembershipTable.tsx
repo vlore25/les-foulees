@@ -1,15 +1,15 @@
 'use client'
 
-import { 
-    Table, 
-    TableBody, 
-    TableCell, 
-    TableHead, 
-    TableHeader, 
-    TableRow 
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Clock, XCircle, AlertCircle, FileText } from "lucide-react";
+import { CheckCircle2, Clock, XCircle, AlertCircle, FileText, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EmptyCategory from "@/components/common/EmptyCategory";
 
@@ -17,6 +17,7 @@ import EmptyCategory from "@/components/common/EmptyCategory";
 interface MembershipWithRelations {
     id: string;
     type: string;
+    adhesionPdf: string;
     status: string;
     medicalCertificateVerified: boolean;
     user: {
@@ -36,11 +37,11 @@ interface MembershipsListProps {
 }
 
 export default function MembershipTable({ memberships }: MembershipsListProps) {
-    
+
     // Si la liste est vide (après filtrage ou au début)
     if (!memberships || memberships.length === 0) {
         return (
-            <EmptyCategory/>
+            <EmptyCategory />
         );
     }
 
@@ -51,6 +52,7 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                     <TableRow>
                         <TableHead>Adhérent</TableHead>
                         <TableHead>Type</TableHead>
+                        <TableHead>Bulletin d'adhesion</TableHead>
                         <TableHead>Certificat</TableHead>
                         <TableHead>Paiement</TableHead>
                         <TableHead>Statut Global</TableHead>
@@ -60,7 +62,7 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                 <TableBody>
                     {memberships.map((m) => (
                         <TableRow key={m.id}>
-                            
+
                             {/* COLONNE 1 : Identité */}
                             <TableCell>
                                 <div className="flex flex-col">
@@ -76,6 +78,21 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                                 <span className="font-medium">
                                     {formatMembershipType(m.type)}
                                 </span>
+                            </TableCell>
+                            <TableCell>
+                                {m.adhesionPdf ? (
+                                    <a
+                                        href={m.adhesionPdf}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                                    >
+                                        <Download className="h-3 w-3" />
+                                        Télécharger
+                                    </a>
+                                ) : (
+                                    <span className="text-muted-foreground text-sm">Non disponible</span>
+                                )}
                             </TableCell>
 
                             {/* COLONNE 3 : Certificat Médical */}

@@ -1,7 +1,5 @@
-
-
 import { useEffect, useRef, useState } from "react"
-import { PDFDocument } from "pdf-lib"
+import { PDFDocument, PDFName, PDFBool } from "pdf-lib"
 import SignatureCanvas from "react-signature-canvas"
 import { Button } from "@/components/ui/button"
 import { Loader2, Eraser } from "lucide-react"
@@ -11,6 +9,7 @@ interface PdfPreviewStepProps {
   userProfile: any
   onSignatureComplete: (signatureDataUrl: string) => void
 }
+
 
 export function PdfPreviewStep({ formData, userProfile, onSignatureComplete }: PdfPreviewStepProps) {
 
@@ -26,20 +25,10 @@ export function PdfPreviewStep({ formData, userProfile, onSignatureComplete }: P
 
         const pdfDoc = await PDFDocument.load(existingPdfBytes);
         const form = pdfDoc.getForm();
-        const fields = form.getFields();
-        console.log("--- DÉBUT DE L'INSPECTION DU PDF ---");
-        fields.forEach(field => {
-          const type = field.constructor.name;
-          const name = field.getName();
-          console.log(`CHAMP: "${name}"  ---> TYPE: ${type}`);
-
-          // Si c'est un bouton radio, on veut voir ses valeurs secrètes
-          if (type === 'PDFRadioGroup') {
-            // @ts-ignore
-            console.log('   Options possibles:', field.getOptions());
-          }
-        });
-        console.log("--- FIN ---");
+        form.acroForm.dict.set(
+          PDFName.of('NeedAppearances'),
+          PDFBool.False
+        )
         // Remplissage des champs du formulaire PDF avec les données du formulaire et user context
         form.getTextField('text_lastname')?.setText(userProfile.lastname || '')
         form.getTextField('text_firstname')?.setText(userProfile.name || '')
@@ -54,6 +43,8 @@ export function PdfPreviewStep({ formData, userProfile, onSignatureComplete }: P
         form.getTextField('text_urgence_phone')?.setText(userProfile.emergencyPhone || '')
         form.getRadioGroup('radio_group_phone_directory').select(formData.showPhoneDirectory)
         form.getRadioGroup('radio_group_email_directory').select(formData.showEmailDirectory)
+
+        
 
         const licenseType = formData.licenseType;
         const ffaNumber = formData.ffa || '';
@@ -74,17 +65,16 @@ export function PdfPreviewStep({ formData, userProfile, onSignatureComplete }: P
         const method = formData.paymentMethod || 'transfer';
 
         try {
-
           const boxCheque = form.getCheckBox('checkbox_check');
           const boxVirement = form.getCheckBox('checkbox_transfer');
 
           boxCheque.uncheck();
           boxVirement.uncheck();
 
-          // 4. On coche la bonne case selon la sélection
-          if (method === 'check') {
+          // CORRECTION : Vérification sur les valeurs majuscules
+          if (method === 'CHECK') {
             boxCheque.check();
-          } else if (method === 'transfer') {
+          } else if (method === 'TRANSFER') {
             boxVirement.check();
           }
 
@@ -97,8 +87,10 @@ export function PdfPreviewStep({ formData, userProfile, onSignatureComplete }: P
 
         form.getTextField('text_doc_date').setText(dateNow)
 
+        form.updateFieldAppearances()
+        
         const pdfBytes = await pdfDoc.save()
-
+        
         const blob = new Blob([pdfBytes as any], { type: 'application/pdf' })
 
         setPdfUrl(URL.createObjectURL(blob))

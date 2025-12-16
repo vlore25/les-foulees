@@ -21,7 +21,7 @@ const initialState = {
     message: "",
     success: false,
     errors: {}
-    
+
 }
 
 const STEPS = [
@@ -32,13 +32,13 @@ const STEPS = [
 ]
 
 export function MembershipForm({ userProfile, season }: MembershipFormProps) {
-    
+
     const [state, action, pending] = useActionState(createMembershipRequest, initialState)
-    
+
     // --- ÉTATS ---
     const [currentStep, setCurrentStep] = useState(0)
     const [signatureData, setSignatureData] = useState<string>("")
-    
+
     // État accumulé pour l'aperçu PDF
     // On initialise avec les données du profil pour pré-remplir si besoin
     const [formData, setFormData] = useState<any>({
@@ -83,7 +83,7 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
             // 2. Mise à jour des données pour le PDF
             const currentFormData = new FormData(formRef.current)
             const data = Object.fromEntries(currentFormData.entries())
-            
+
             // On fusionne avec l'état existant pour ne rien perdre
             setFormData((prev: any) => ({ ...prev, ...data }))
 
@@ -135,7 +135,7 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
 
                 {/* INPUT CACHÉ POUR LA SIGNATURE (Envoyé au serveur) */}
                 <input type="hidden" name="signature" value={signatureData} />
-                
+
                 {/* INPUT CACHÉ POUR TYPE DE LICENCE (RENEWAL ou MUTATION) */}
                 {hasLicense && <input type="hidden" name="licenseType" value={licenseSource} />}
 
@@ -178,7 +178,7 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
 
                 {/* === ÉTAPE 1 : LICENCE & CONSENTEMENTS === */}
                 <div className={cn("space-y-6", currentStep === 1 ? "block" : "hidden")}>
-                    
+
                     {/* SECTION LICENCE */}
                     <div className="bg-slate-50 p-4 rounded-md border space-y-4">
                         <div className="flex items-center justify-between">
@@ -191,7 +191,7 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                                 </p>
                             </div>
                             <Switch
-                                id="has-license-switch" 
+                                id="has-license-switch"
                                 checked={hasLicense}
                                 onCheckedChange={setHasLicense}
                             />
@@ -199,12 +199,12 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
 
                         {hasLicense && (
                             <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-5 pt-4 border-t border-slate-200">
-                                
+
                                 {/* Choix Renouvellement / Mutation */}
                                 <div className="space-y-3">
                                     <Label className="text-sm font-semibold">Votre situation :</Label>
-                                    <RadioGroup 
-                                        value={licenseSource} 
+                                    <RadioGroup
+                                        value={licenseSource}
                                         onValueChange={(v) => setLicenseSource(v as "RENEWAL" | "MUTATION")}
                                         className="flex flex-col space-y-2"
                                     >
@@ -226,11 +226,11 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                                 {/* Numéro de licence */}
                                 <div className="space-y-2">
                                     <Label htmlFor="ffa">Numéro de licence <span className="text-red-500">*</span></Label>
-                                    <Input 
-                                        id="ffa" 
-                                        name="ffa" 
-                                        placeholder="Votre n° de licence" 
-                                        defaultValue={formData.ffa || userProfile.ffaNumber} 
+                                    <Input
+                                        id="ffa"
+                                        name="ffa"
+                                        placeholder="Votre n° de licence"
+                                        defaultValue={formData.ffa || userProfile.ffaNumber}
                                         required={hasLicense}
                                     />
                                 </div>
@@ -239,10 +239,10 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                                 {licenseSource === "MUTATION" && (
                                     <div className="space-y-2 animate-in fade-in pl-4 border-l-2 border-primary">
                                         <Label htmlFor="club">Ancien club <span className="text-red-500">*</span></Label>
-                                        <Input 
-                                            id="club" 
-                                            name="club" 
-                                            placeholder="Nom du club précédent" 
+                                        <Input
+                                            id="club"
+                                            name="club"
+                                            placeholder="Nom du club précédent"
                                             required={licenseSource === "MUTATION"}
                                         />
                                     </div>
@@ -257,7 +257,7 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                         <p className="text-xs text-muted-foreground">
                             Ces informations seront visibles uniquement par les membres connectés.
                         </p>
-                        
+
                         {/* TÉLÉPHONE */}
                         <div className="space-y-3 p-3 border rounded-md bg-white">
                             <Label className="text-sm font-semibold">
@@ -307,18 +307,19 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                     <h3 className="text-lg font-medium">Règlement</h3>
                     <div className="space-y-2">
                         <Label>Moyen de paiement</Label>
-                        <Select name="paymentMethod" defaultValue={formData.paymentMethod || "transfer"}>
+                        <Select name="paymentMethod" defaultValue={formData.paymentMethod || "TRANSFER"}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Choisir..." />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="check">Chèque</SelectItem>
-                                <SelectItem value="transfer">Virement Bancaire</SelectItem>
+                                {/* CORRECTION : Valeurs en majuscules pour matcher l'ENUM */}
+                                <SelectItem value="CHECK">Chèque</SelectItem>
+                                <SelectItem value="TRANSFER">Virement Bancaire</SelectItem>
                             </SelectContent>
                         </Select>
                         <p className="text-sm text-gray-500 mt-2 bg-slate-50 p-3 rounded border">
                             <strong>Note :</strong> Le paiement sera validé manuellement par le trésorier à réception.
-                            <br/>Pour les virements, merci d'indiquer "Adhésion 2025 - NOM Prénom" en libellé.
+                            <br />Pour les virements, merci d'indiquer "Adhésion 2025 - NOM Prénom" en libellé.
                         </p>
                     </div>
                 </div>
@@ -327,7 +328,7 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                 {currentStep === 3 && (
                     <div className="animate-in fade-in slide-in-from-right-4 duration-300">
                         <h3 className="text-lg font-medium mb-4">Vérification et Signature</h3>
-                        
+
                         {/* Composant de prévisualisation PDF */}
                         <PdfPreviewStep
                             formData={formData}     // Données du formulaire (avec choix courants)

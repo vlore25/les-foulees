@@ -55,7 +55,6 @@ export default async function getAdhesions(filter: AdhesionFilter = 'ALL') {
                     phone: true,
                 }
             },
-
             // 3. Le paiement
             payment: true
         },
