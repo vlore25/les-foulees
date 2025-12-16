@@ -6,12 +6,16 @@ import MembershipsList from "@/src/features/membership/components/admin/Membersh
 import SeasonsManager from "@/src/features/admin/season/components/SeasonManager";
 
 interface PageProps {
-  searchParams: Promise<{ tab?: string }>; // Mise à jour pour Next.js 15 (Promise)
+  // On change le type pour accepter n'importe quel paramètre (tab, seasonId, etc.)
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function AdminDashboardPage({ searchParams }: PageProps) {
+  // On attend la résolution des paramètres
   const params = await searchParams;
-  const currentTab = params?.tab || "users";
+  
+  // On sécurise la récupération du tab
+  const currentTab = typeof params.tab === 'string' ? params.tab : "users";
 
   return (
     <div className="p-3 md:p-8 max-w-7xl mx-auto">
@@ -20,8 +24,9 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
         usersListNode={<UsersList />}
         eventsListNode={<EventList />}
         legalDocsListNode={<LegalDocsList/>}
-        seasonsListNode={<SeasonsManager />} 
-        membershipListNode={<MembershipsList />} 
+        seasonsListNode={<SeasonsManager />}
+        
+        membershipListNode={<MembershipsList searchParams={searchParams as any} />} 
       />
     </div>
   );

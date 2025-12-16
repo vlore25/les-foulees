@@ -18,7 +18,6 @@ export default function ExportButton({ data, filename = "adherents.csv" }: Expor
 
         // 1. Définir les en-têtes du CSV
         const headers = [
-            "ID", 
             "Nom", 
             "Prénom", 
             "Email", 
@@ -35,10 +34,8 @@ export default function ExportButton({ data, filename = "adherents.csv" }: Expor
             "Statut Dossier"
         ];
 
-        // 2. Convertir les données en lignes CSV
         const rows = data.map(row => [
-            row.id,
-            `"${row.user.lastname}"`, // Guillemets pour gérer les espaces/virgules
+            `"${row.user.lastname}"`, 
             `"${row.user.name}"`,
             row.user.email,
             row.user.phone || "",
@@ -54,9 +51,8 @@ export default function ExportButton({ data, filename = "adherents.csv" }: Expor
             row.status
         ]);
 
-        // 3. Construire le contenu du fichier (avec BOM pour Excel)
         const csvContent = [
-            "\uFEFF" + headers.join(";"), // \uFEFF force l'UTF-8 pour Excel, ; est le séparateur standard en France
+            "\uFEFF" + headers.join(";"), 
             ...rows.map(r => r.join(";"))
         ].join("\n");
 

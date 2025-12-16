@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useState, useEffect } from "react"
 
 interface SeasonFilterProps {
   seasons: { id: string; name: string; isActive: boolean }[];
@@ -17,22 +18,28 @@ interface SeasonFilterProps {
 export default function SeasonFilter({ seasons, currentSeasonId }: SeasonFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [optimisticSeasonId, setOptimisticSeasonId] = useState(currentSeasonId);
+
+
+  useEffect(() => {
+    setOptimisticSeasonId(currentSeasonId);
+  }, [currentSeasonId]);
 
   const handleValueChange = (seasonId: string) => {
+    setOptimisticSeasonId(seasonId);
     const params = new URLSearchParams(searchParams);
     if (seasonId) {
       params.set("seasonId", seasonId);
     } else {
       params.delete("seasonId");
     }
-    // On remplace l'URL, ce qui va recharger la Server Component parente
     router.replace(`?${params.toString()}`);
   }
 
   return (
-    <div className="w-[200px]">
+    <div className="w-[250px]">
       <Select 
-        defaultValue={currentSeasonId} 
+        value={optimisticSeasonId || ""}
         onValueChange={handleValueChange}
       >
         <SelectTrigger>
@@ -41,7 +48,10 @@ export default function SeasonFilter({ seasons, currentSeasonId }: SeasonFilterP
         <SelectContent>
           {seasons.map((s) => (
             <SelectItem key={s.id} value={s.id}>
-              {s.name} {s.isActive && "(Active)"}
+              {/* On coupe le texte s'il est trop long */}
+              <span className="truncate block max-w-[200px]">
+                  {s.name || "Saison sans nom"} {s.isActive && "(Active)"}
+              </span>
             </SelectItem>
           ))}
         </SelectContent>

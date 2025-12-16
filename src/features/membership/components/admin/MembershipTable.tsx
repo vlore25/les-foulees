@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Clock, XCircle, FileText, Download, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import EmptyCategory from "@/components/common/EmptyCategory";
 import MembershipRowActions from "./MembershipRowActions"; // Assurez-vous d'avoir ce composant créé précédemment
 
@@ -21,8 +20,8 @@ interface MembershipWithRelations {
     adhesionPdf: string;
     status: string;
     medicalCertificateVerified: boolean;
-    certificateUrl?: string | null;      
-    ffaLicenseNumber?: string | null;    
+    certificateUrl?: string | null;
+    ffaLicenseNumber?: string | null;
     user: {
         name: string;
         lastname: string;
@@ -38,6 +37,18 @@ interface MembershipWithRelations {
 interface MembershipsListProps {
     memberships: MembershipWithRelations[];
 }
+
+const getStatusBadge = (status: string) => {
+    switch (status) {
+        case 'VALIDATED':
+            return <Badge className="bg-green-100 text-green-800 hover:bg-green-100 border-green-200">Validé</Badge>;
+        case 'REJECTED':
+            return <Badge className="bg-red-100 text-red-800 hover:bg-red-100 border-red-200">Refusé</Badge>;
+        case 'PENDING':
+        default:
+            return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 border-yellow-200">À vérifier</Badge>;
+    }
+};
 
 export default function MembershipTable({ memberships }: MembershipsListProps) {
     console.log(memberships)
@@ -57,8 +68,8 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                         <TableHead>Bulletin d'adhesion</TableHead>
                         <TableHead>Certificat / Licence</TableHead>
                         <TableHead>Paiement</TableHead>
-                        <TableHead>Statut Global</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        <TableHead>Statut</TableHead>
+                        <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -112,12 +123,12 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                                             </span>
                                         )}
                                     </div>
-                                ) : (                             
+                                ) : (
                                     m.certificateUrl ? (
                                         <div className="flex flex-col gap-2 items-start">
-                                            <a 
-                                                href={m.certificateUrl} 
-                                                target="_blank" 
+                                            <a
+                                                href={m.certificateUrl}
+                                                target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="flex items-center gap-1 text-xs text-purple-600 underline hover:text-purple-800 font-medium"
                                             >
@@ -149,18 +160,14 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
 
                             {/* COLONNE 6 : Statut Global */}
                             <TableCell>
-                                {m.status === 'VALIDATED' ? (
-                                    <Badge className="bg-green-600 hover:bg-green-700">Validé</Badge>
-                                ) : (
-                                    <Badge variant="secondary" className="text-slate-500">Incomplet</Badge>
-                                )}
+                                {getStatusBadge(m.status)}
                             </TableCell>
 
                             {/* COLONNE 7 : Actions */}
                             <TableCell className="text-right">
-                                <MembershipRowActions 
-                                    id={m.id} 
-                                    status={m.status} 
+                                <MembershipRowActions
+                                    id={m.id}
+                                    status={m.status}
                                 />
                             </TableCell>
 

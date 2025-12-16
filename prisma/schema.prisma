@@ -135,9 +135,9 @@ model Season {
 // ==============DOSSIER ADHERANT=================
 
 enum MembershipStatus {
-  PENDING // Dossier créé, en attente de validation admin
-  VALIDATED // Tout est bon (certificat + paiement)
-  REJECTED // Dossier refusé
+  PENDING 
+  VALIDATED 
+  REJECTED 
 }
 
 enum MembershipType {

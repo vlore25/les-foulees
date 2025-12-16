@@ -5,26 +5,29 @@ import { getSession } from "@/src/lib/session";
 type AdhesionFilter = 'ALL' | 'VALIDATED' | 'TO_HANDLE';
 
 export default async function getAdhesions(
-    filter: 'ALL' | 'VALIDATED' | 'TO_HANDLE' = 'ALL', 
-    seasonId?: string 
+    filter: AdhesionFilter = 'ALL', 
+    seasonId?: string // <--- C'EST ICI QUE CA MANQUAIT
 ) {
 
     let whereCondition: any = {};
 
+    // 1. LOGIQUE DE SAISON (C'est ce qui fait marcher le select)
     if (seasonId) {
         whereCondition.seasonId = seasonId;
     } else {
         whereCondition.season = { isActive: true };
     }
 
-    // 2. Application des filtres de statut (inchangé)
+    // 2. LOGIQUE DE FILTRE (Statut)
     switch (filter) {
         case 'VALIDATED':
             whereCondition.status = 'VALIDATED';
             break;
+
         case 'TO_HANDLE':
             whereCondition.status = { not: 'VALIDATED' };
             break;
+
         case 'ALL':
         default:
             break;
@@ -41,36 +44,43 @@ export default async function getAdhesions(
                     lastname: true,
                     email: true,
                     phone: true,
-                    birthdate: true, 
-                    address: true,   
-                    city: true,     
-                    zipCode: true  
+                    // Champs utiles pour l'export CSV
+                    birthdate: true,
+                    address: true,
+                    zipCode: true,
+                    city: true
                 }
             },
             payment: true
         },
         orderBy: {
-            createdAt: 'desc' 
+            createdAt: 'desc'
         }
     })
 
     return adhesions;
 }
 
-export async function getAdhesionStats() {
-    const activeSeasonWhere = { season: { isActive: true } };
+export async function getAdhesionStats(seasonId?: string) {
+    
+    // On construit la condition dynamique
+    const whereCondition: any = {};
+    if (seasonId) {
+        whereCondition.seasonId = seasonId;
+    } else {
+        whereCondition.season = { isActive: true };
+    }
 
     const [total, validated, toHandle] = await Promise.all([
-
         prisma.membership.count({
-            where: activeSeasonWhere
+            where: whereCondition // <-- On utilise la condition dynamique
         }),
         prisma.membership.count({
-            where: { ...activeSeasonWhere, status: 'VALIDATED' }
+            where: { ...whereCondition, status: 'VALIDATED' }
         }),
         prisma.membership.count({
             where: { 
-                ...activeSeasonWhere, 
+                ...whereCondition, 
                 status: { not: 'VALIDATED' } 
             }
         })
@@ -80,7 +90,6 @@ export async function getAdhesionStats() {
 }
 
 export async function getUserMembershipForActiveSeason(userId: string) {
-    const activeSeasonWhere = { season: { isActive: true } };
     try {
         const session = await getSession();
 
@@ -95,12 +104,15 @@ export async function getUserMembershipForActiveSeason(userId: string) {
         const memberShip = await prisma.membership.findFirst({
             where: {
                 userId: session.userId,
+                // --- AJOUT OBLIGATOIRE ICI ---
+                season: { isActive: true } 
+                // Sans ça, vous récupérez les vieux dossiers !
             },
         })
 
         return memberShip
 
-    }catch(e){
-        return e;
+    } catch(e) {
+        return null;
     }
 }

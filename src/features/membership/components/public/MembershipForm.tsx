@@ -15,6 +15,7 @@ import { PdfPreviewStep } from "../../service/PdfPreview"
 interface MembershipFormProps {
     userProfile: any;
     season: any
+    initialData?: any;
 }
 
 const initialState = {
@@ -31,7 +32,7 @@ const STEPS = [
     { id: 3, title: "Signature", fields: [] }
 ]
 
-export function MembershipForm({ userProfile, season }: MembershipFormProps) {
+export function MembershipForm({ userProfile, season, initialData }: MembershipFormProps) {
 
     const [state, action, pending] = useActionState(createMembershipRequest, initialState)
 
@@ -41,10 +42,15 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
 
     const [formData, setFormData] = useState<any>({
         ...userProfile,
-        type: 'INDIVIDUAL',
-        paymentMethod: 'CHECK',
-        showPhoneDirectory: 'off',
-        showEmailDirectory: 'off'
+        firstName: userProfile.name,  
+        lastName: userProfile.lastname,   
+        type: initialData?.type || "INDIVIDUAL",
+        paymentMethod: initialData?.payment?.method || "CHECK",
+        showPhoneDirectory: initialData ? initialData.sharePhone : true,
+        showEmailDirectory: initialData ? initialData.shareEmail : true,
+        ffa: initialData?.ffaLicenseNumber || "",
+        club: initialData?.previousClub || "",
+        signature: ""
     })
 
     const [hasLicense, setHasLicense] = useState(!!userProfile.ffaNumber);
@@ -267,7 +273,7 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                             </Label>
                             <RadioGroup
                                 name="showPhoneDirectory"
-                                defaultValue={formData.showPhoneDirectory || "off"}
+                                defaultValue="off"
                                 className="flex flex-row gap-6"
                             >
                                 <div className="flex items-center space-x-2">
@@ -287,7 +293,7 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                             </Label>
                             <RadioGroup
                                 name="showEmailDirectory"
-                                defaultValue={formData.showEmailDirectory || "off"}
+                                defaultValue="off"
                                 className="flex flex-row gap-6"
                             >
                                 <div className="flex items-center space-x-2">

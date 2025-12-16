@@ -25,6 +25,7 @@ export type MembershipState = {
 
 export async function createMembershipRequest(prevState: any, formData: FormData): Promise<MembershipState> {
 
+    // 1. Vérification Session & Utilisateur
     const session = await getSession();
     if (!session?.userId) return { message: "Vous devez être connecté pour faire cette demande." };
     const user = await getProfile(session.userId);
@@ -40,11 +41,10 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         signature: formData.get("signature") as string,
     }
 
-
     const medicalFile = formData.get("medicalCertificate") as File | null;
-
     const hasValidLicense = !!rawFormData.ffaLicenseNumber;
 
+    // 3. Validation Fichier Médical
     if (!hasValidLicense) {
         if (!medicalFile || medicalFile.size === 0) {
             return { message: "Le certificat médical est obligatoire si vous n'avez pas de licence." };
@@ -55,7 +55,7 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         }
     }
 
-
+    // 4. Validation Zod (Types et Contraintes)
     const validatedFields = membershipSchema.safeParse(rawFormData);
 
     if (!validatedFields.success) {
@@ -74,10 +74,8 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         showEmailDirectory
     } = validatedFields.data;
 
-    // 4. Validation Conditionnelle : Mutation oblige d'avoir un ancien club
-    // Cette info n'est pas dans le schéma Zod principal, on la récupère manuellement
+    // 5. Validation Conditionnelle (Mutation)
     const licenseType = formData.get("licenseType") as string;
-
     if (licenseType === 'MUTATION' && !previousClub) {
         return {
             errors: { previousClub: ["Le nom de l'ancien club est obligatoire pour une mutation."] },
@@ -85,32 +83,29 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         };
     }
 
-    // 5. Récupération de la saison active
+    // 6. Récupération de la Saison Active
     const season = await getActiveSeasonData();
     if (!season) {
         return { message: "Aucune saison active pour l'instant. Inscriptions fermées." }
     }
 
+    // 7. Upload du Certificat (si nécessaire)
     let certificateUrl = null;
-
     if (!hasValidLicense && medicalFile && medicalFile.size > 0) {
         try {
-            // On utilise notre service propre
-            // On stocke dans : public/uploads/docs/certificates
-            // Avec un préfixe : certif_NOM_ID
+            // Stockage : public/uploads/docs/certificates/certif_NOM_ID
             certificateUrl = await saveUploadedFile(
                 medicalFile,
                 "uploads/docs/certificates",
                 `certif_${user.lastname}_${session.userId}`
             );
-
         } catch (e) {
             console.error("Erreur upload certif", e);
             return { message: "Erreur technique lors de la sauvegarde du certificat." };
         }
     }
 
-    // 6. Calcul du montant
+    // 8. Calcul du Montant
     let amount = 0;
     switch (type) {
         case "INDIVIDUAL": amount = season.priceStandard; break;
@@ -120,22 +115,19 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         default: amount = season.priceStandard;
     }
 
-    // 7. Génération du PDF
+    // 9. Génération du PDF
     let pdfPath = null;
     try {
         pdfPath = await generateSignedMembershipPdf({
-            user: user,                // Utilisé pour le nom du fichier
+            user: user,
             seasonName: season.name,
             signatureBase64: rawFormData.signature,
-            userProfile: user,         // Utilisé pour remplir le contenu du PDF
+            userProfile: user,
             formData: {
                 ...validatedFields.data,
-                // On passe le type de licence (RENEWAL/MUTATION)
                 licenseType: licenseType,
-                // Mapping des champs pour correspondre aux attentes du pdf-service
                 ffa: ffaLicenseNumber,
                 club: previousClub,
-                // On passe la méthode de paiement (ex: "CHECK" ou "TRANSFER")
                 paymentMethod: paymentMethod
             }
         });
@@ -144,15 +136,72 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         return { message: "Erreur lors de la création du document PDF." };
     }
 
+    // 10. Enregistrement en Base de Données (Transaction)
     try {
         await prisma.$transaction(async (tx) => {
-            // Vérification doublon
+            
+            // A. Vérification de l'existence
             const existing = await tx.membership.findUnique({
-                where: { userId_seasonId: { userId: session.userId, seasonId: season.id } }
+                where: { userId_seasonId: { userId: session.userId, seasonId: season.id } },
+                include: { payment: true }
             });
-            if (existing) throw new Error("Dossier déjà existant pour cette saison");
 
-            // Création Membership
+            // B. Logique : Création ou Mise à jour (si rejeté)
+            if (existing) {
+                // Si le dossier a été REJETÉ, on le met à jour pour permettre une nouvelle tentative
+                if (existing.status === 'REJECTED') {
+    
+    // On détermine si on doit nettoyer les champs opposés
+    // Si on a un certificat, on DOIT supprimer l'ancienne licence (null)
+    const newLicenseNumber = hasValidLicense ? ffaLicenseNumber : null; 
+    
+    // Si on a une licence, on peut nettoyer l'ancien certificat (null)
+    // Note : certificateUrl est null ici si on n'a pas uploadé de fichier, 
+    // mais si on passe en mode licence, on veut forcer le nettoyage.
+    const newCertificateUrl = hasValidLicense ? null : certificateUrl;
+
+    await tx.membership.update({
+        where: { id: existing.id },
+        data: {
+            type,
+            // --- CORRECTION ICI ---
+            // On force 'null' si ce n'est pas une licence, pour effacer l'ancienne valeur
+            ffaLicenseNumber: newLicenseNumber, 
+            
+            previousClub,
+            sharePhone: showPhoneDirectory,
+            shareEmail: showEmailDirectory,
+            status: "PENDING", 
+            adhesionPdf: pdfPath,
+            
+            // --- ET ICI ---
+            // On utilise la nouvelle URL ou on nettoie si on est passé en mode licence
+            certificateUrl: newCertificateUrl, 
+            
+            medicalCertificateVerified: hasValidLicense // false si c'est un certificat
+        }
+    });
+
+                    // Mise à jour Paiement (on force le statut PENDING pour re-vérification)
+                    if (existing.payment) {
+                        await tx.payment.update({
+                            where: { id: existing.payment.id },
+                            data: {
+                                amount,
+                                method: paymentMethod,
+                                status: "PENDING"
+                            }
+                        });
+                    }
+                    // On sort de la transaction ici car le travail est fait
+                    return; 
+                } 
+                
+                // Si le dossier existe et n'est pas REJETÉ (donc PENDING ou VALIDATED)
+                throw new Error("Dossier déjà existant pour cette saison");
+            }
+
+            // C. Si aucun dossier n'existe : Création normale
             const membership = await tx.membership.create({
                 data: {
                     userId: session.userId,
@@ -169,7 +218,7 @@ export async function createMembershipRequest(prevState: any, formData: FormData
                 }
             })
 
-            // Création Paiement
+            // Création Paiement associé
             await tx.payment.create({
                 data: {
                     userId: session.userId,
@@ -181,20 +230,23 @@ export async function createMembershipRequest(prevState: any, formData: FormData
             })
         })
 
-        revalidatePath('/dashboard')
+        // Rafraichissement des caches
+        revalidatePath('/dashboard?tab=membership')
         return { success: true, message: "Demande d'adhésion enregistrée avec succès !" }
 
     } catch (e: any) {
         console.error(e)
         // Gestion message d'erreur doublon
-        if (e.message.includes("déjà existant")) {
+        if (e.message && e.message.includes("déjà existant")) {
             return { success: false, message: e.message }
         }
         return { success: false, message: "Une erreur est survenue lors de l'enregistrement." }
     }
 }
 
-// --- ACTION ADMIN (inchangée) ---
+
+// --- ACTION ADMIN ---
+
 export async function validateMembershipAction(membershipId: string) {
     try {
         await prisma.$transaction(async (tx) => {
@@ -217,5 +269,27 @@ export async function validateMembershipAction(membershipId: string) {
         return { success: true }
     } catch (e) {
         return { success: false, message: "Erreur validation" }
+    }
+}
+
+
+export async function refuseMembershipAction(membershipId: string) {
+    try {
+        await prisma.membership.update({
+            where: { id: membershipId },
+            data: {
+                status: "REJECTED",
+                medicalCertificateVerified: false 
+            }
+        });
+
+        revalidatePath('/admin/dashboard?tab=membership');
+        revalidatePath('/dashboard/adhesion'); 
+        
+        return { success: true, message: "Dossier refusé avec succès." };
+
+    } catch (e) {
+        console.error("Erreur refus dossier:", e);
+        return { success: false, message: "Erreur technique lors du refus." };
     }
 }
