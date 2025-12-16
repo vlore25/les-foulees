@@ -5,15 +5,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Check, Loader2 } from "lucide-react"
+import { Check, Loader2, UploadCloud } from "lucide-react" // J'ai ajouté l'icone UploadCloud
 import { cn } from "@/src/lib/utils"
 import { createMembershipRequest } from "../../memberships.actions"
 import { Label } from "@radix-ui/react-label"
-import { Switch } from "@/components/ui/swtich"
+import { Switch } from "@/components/ui/swtich" // Attention à votre typo 'swtich' dans le nom du fichier
 import { PdfPreviewStep } from "../../service/PdfPreview"
 
 interface MembershipFormProps {
-    userProfile: any; // Typez ceci avec votre vraie interface UserProfile si possible
+    userProfile: any;
     season: any
 }
 
@@ -21,12 +21,12 @@ const initialState = {
     message: "",
     success: false,
     errors: {}
-
 }
 
 const STEPS = [
     { id: 0, title: "Type", fields: ["type"] },
-    { id: 1, title: "Infos & Licence", fields: ["ffa", "club", "showPhoneDirectory", "showEmailDirectory"] },
+    // On ajoute 'medicalCertificate' aux champs à valider pour l'étape 1
+    { id: 1, title: "Infos & Licence", fields: ["ffa", "club", "medicalCertificate", "showPhoneDirectory", "showEmailDirectory"] },
     { id: 2, title: "Paiement", fields: ["paymentMethod"] },
     { id: 3, title: "Signature", fields: [] }
 ]
@@ -39,8 +39,6 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
     const [currentStep, setCurrentStep] = useState(0)
     const [signatureData, setSignatureData] = useState<string>("")
 
-    // État accumulé pour l'aperçu PDF
-    // On initialise avec les données du profil pour pré-remplir si besoin
     const [formData, setFormData] = useState<any>({
         ...userProfile,
         type: 'INDIVIDUAL',
@@ -49,8 +47,7 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
         showEmailDirectory: 'off'
     })
 
-    // Logique Licence
-    const [hasLicense, setHasLicense] = useState(!!userProfile.ffaNumber); // Pré-coché si l'user a déjà un n°
+    const [hasLicense, setHasLicense] = useState(!!userProfile.ffaNumber);
     const [licenseSource, setLicenseSource] = useState<"RENEWAL" | "MUTATION">("RENEWAL");
 
     const formRef = useRef<HTMLFormElement>(null)
@@ -59,35 +56,28 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
     const handleNext = () => {
         if (!formRef.current) return
 
-        // 1. Validation HTML native des champs de l'étape courante
         const currentFields = STEPS[currentStep].fields
         let isValid = true
         const form = formRef.current
 
-        // On vérifie chaque champ requis pour l'étape actuelle
         currentFields.forEach(fieldName => {
             const field = form.elements.namedItem(fieldName) as HTMLInputElement | RadioNodeList
             if (field) {
+                // Si le champ existe dans le DOM (donc affiché), on le valide
                 if (field instanceof RadioNodeList && field.value === "") {
-                    // Pour les RadioGroups, la validation HTML 'required' gère souvent l'affichage
-                    // mais on peut ajouter une logique custom ici si besoin
+                    // Validation custom si besoin
                 }
                 else if (field instanceof HTMLInputElement && !field.checkValidity()) {
-                    field.reportValidity() // Affiche la bulle d'erreur native du navigateur
+                    field.reportValidity()
                     isValid = false
                 }
             }
         })
 
         if (isValid) {
-            // 2. Mise à jour des données pour le PDF
             const currentFormData = new FormData(formRef.current)
             const data = Object.fromEntries(currentFormData.entries())
-
-            // On fusionne avec l'état existant pour ne rien perdre
             setFormData((prev: any) => ({ ...prev, ...data }))
-
-            // 3. Changement d'étape
             setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1))
         }
     }
@@ -133,13 +123,9 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
             {/* --- FORMULAIRE --- */}
             <form action={action} ref={formRef} className="space-y-6 bg-white p-6 rounded-lg border shadow-sm mt-10">
 
-                {/* INPUT CACHÉ POUR LA SIGNATURE (Envoyé au serveur) */}
                 <input type="hidden" name="signature" value={signatureData} />
-
-                {/* INPUT CACHÉ POUR TYPE DE LICENCE (RENEWAL ou MUTATION) */}
                 {hasLicense && <input type="hidden" name="licenseType" value={licenseSource} />}
 
-                {/* Feedback Serveur */}
                 {state?.message && (
                     <div className={cn(
                         "p-4 rounded-md text-sm mb-4 flex items-center gap-2",
@@ -179,7 +165,7 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                 {/* === ÉTAPE 1 : LICENCE & CONSENTEMENTS === */}
                 <div className={cn("space-y-6", currentStep === 1 ? "block" : "hidden")}>
 
-                    {/* SECTION LICENCE */}
+                    {/* SECTION : STATUT LICENCE ET DOCUMENT */}
                     <div className="bg-slate-50 p-4 rounded-md border space-y-4">
                         <div className="flex items-center justify-between">
                             <div className="space-y-0.5">
@@ -197,10 +183,9 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                             />
                         </div>
 
-                        {hasLicense && (
+                        {/* --- OPTION A : OUI, J'AI UNE LICENCE --- */}
+                        {hasLicense ? (
                             <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-5 pt-4 border-t border-slate-200">
-
-                                {/* Choix Renouvellement / Mutation */}
                                 <div className="space-y-3">
                                     <Label className="text-sm font-semibold">Votre situation :</Label>
                                     <RadioGroup
@@ -223,7 +208,6 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                                     </RadioGroup>
                                 </div>
 
-                                {/* Numéro de licence */}
                                 <div className="space-y-2">
                                     <Label htmlFor="ffa">Numéro de licence <span className="text-red-500">*</span></Label>
                                     <Input
@@ -235,7 +219,6 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                                     />
                                 </div>
 
-                                {/* Club (Uniquement si Mutation) */}
                                 {licenseSource === "MUTATION" && (
                                     <div className="space-y-2 animate-in fade-in pl-4 border-l-2 border-primary">
                                         <Label htmlFor="club">Ancien club <span className="text-red-500">*</span></Label>
@@ -248,6 +231,26 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                                     </div>
                                 )}
                             </div>
+                        ) : (
+                            /* --- OPTION B : NON, PAS DE LICENCE (Upload Certificat) --- */
+                            <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-4 pt-4 border-t border-slate-200">
+                                <div className="bg-orange-100 border border-orange-200 rounded p-3 text-sm text-orange-800">
+                                    <strong>Document requis :</strong> Comme vous n'avez pas de licence active, vous devez fournir un certificat médical de moins d'un an.
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="medicalCertificate" className="flex items-center gap-2">
+                                        <UploadCloud className="w-4 h-4" /> Charger votre certificat (PDF/Photo) <span className="text-red-500">*</span>
+                                    </Label>
+                                    <Input
+                                        id="medicalCertificate"
+                                        name="medicalCertificate"
+                                        type="file"
+                                        accept=".pdf,image/*"
+                                        required={!hasLicense}
+                                        className="cursor-pointer bg-white file:text-primary hover:file:bg-primary/10"
+                                    />
+                                </div>
+                            </div>
                         )}
                     </div>
 
@@ -258,7 +261,6 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                             Ces informations seront visibles uniquement par les membres connectés.
                         </p>
 
-                        {/* TÉLÉPHONE */}
                         <div className="space-y-3 p-3 border rounded-md bg-white">
                             <Label className="text-sm font-semibold">
                                 Diffuser mon téléphone ? <span className="text-red-500">*</span>
@@ -279,7 +281,6 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                             </RadioGroup>
                         </div>
 
-                        {/* EMAIL */}
                         <div className="space-y-3 p-3 border rounded-md bg-white">
                             <Label className="text-sm font-semibold">
                                 Diffuser mon e-mail ? <span className="text-red-500">*</span>
@@ -312,7 +313,6 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                                 <SelectValue placeholder="Choisir..." />
                             </SelectTrigger>
                             <SelectContent>
-                                {/* CORRECTION : Valeurs en majuscules pour matcher l'ENUM */}
                                 <SelectItem value="CHECK">Chèque</SelectItem>
                                 <SelectItem value="TRANSFER">Virement Bancaire</SelectItem>
                             </SelectContent>
@@ -324,15 +324,13 @@ export function MembershipForm({ userProfile, season }: MembershipFormProps) {
                     </div>
                 </div>
 
-                {/* === ÉTAPE 3 : SIGNATURE & PREVIEW === */}
+                {/* === ÉTAPE 3 : SIGNATURE === */}
                 {currentStep === 3 && (
                     <div className="animate-in fade-in slide-in-from-right-4 duration-300">
                         <h3 className="text-lg font-medium mb-4">Vérification et Signature</h3>
-
-                        {/* Composant de prévisualisation PDF */}
                         <PdfPreviewStep
-                            formData={formData}     // Données du formulaire (avec choix courants)
-                            userProfile={userProfile} // Données fixes (Nom, Prénom, Adresse...)
+                            formData={formData}
+                            userProfile={userProfile}
                             onSignatureComplete={(data) => setSignatureData(data)}
                         />
                     </div>

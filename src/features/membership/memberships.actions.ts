@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache"
 import { getActiveSeasonData } from "../admin/season/dal"
 import { generateSignedMembershipPdf } from "./service/pdf-service"
 import { getProfile } from "../account/dal"
+import { saveUploadedFile } from "@/src/lib/file-storage"
 
 // Type pour le retour de l'action
 export type MembershipState = {
@@ -24,26 +25,37 @@ export type MembershipState = {
 
 export async function createMembershipRequest(prevState: any, formData: FormData): Promise<MembershipState> {
 
-    // 1. Vérification Session & Utilisateur
     const session = await getSession();
     if (!session?.userId) return { message: "Vous devez être connecté pour faire cette demande." };
     const user = await getProfile(session.userId);
     if (!user) return { message: "Utilisateur introuvable." };
 
-    // 2. Extraction et nettoyage des données
     const rawFormData = {
         type: formData.get("type") as MembershipType,
-        // On s'assure que la méthode est en MAJUSCULE pour matcher l'Enum Prisma
         paymentMethod: (formData.get("paymentMethod") as string)?.toUpperCase() as PaymentMethod,
         showPhoneDirectory: formData.get('showPhoneDirectory') === 'on',
         showEmailDirectory: formData.get('showEmailDirectory') === 'on',
-        // Conversion des chaînes vides ou nulles en undefined pour Zod
         ffaLicenseNumber: (formData.get("ffa") as string) || undefined,
         previousClub: (formData.get("club") as string) || undefined,
         signature: formData.get("signature") as string,
     }
 
-    // 3. Validation Zod (Schéma de base)
+
+    const medicalFile = formData.get("medicalCertificate") as File | null;
+
+    const hasValidLicense = !!rawFormData.ffaLicenseNumber;
+
+    if (!hasValidLicense) {
+        if (!medicalFile || medicalFile.size === 0) {
+            return { message: "Le certificat médical est obligatoire si vous n'avez pas de licence." };
+        }
+        const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+        if (!validTypes.includes(medicalFile.type)) {
+            return { message: "Format de fichier invalide (PDF ou Image uniquement)." };
+        }
+    }
+
+
     const validatedFields = membershipSchema.safeParse(rawFormData);
 
     if (!validatedFields.success) {
@@ -53,23 +65,23 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         }
     }
 
-    const { 
-        type, 
-        paymentMethod, 
-        ffaLicenseNumber, 
-        previousClub, 
-        showPhoneDirectory, 
-        showEmailDirectory 
+    const {
+        type,
+        paymentMethod,
+        ffaLicenseNumber,
+        previousClub,
+        showPhoneDirectory,
+        showEmailDirectory
     } = validatedFields.data;
 
     // 4. Validation Conditionnelle : Mutation oblige d'avoir un ancien club
     // Cette info n'est pas dans le schéma Zod principal, on la récupère manuellement
     const licenseType = formData.get("licenseType") as string;
-    
+
     if (licenseType === 'MUTATION' && !previousClub) {
         return {
-             errors: { previousClub: ["Le nom de l'ancien club est obligatoire pour une mutation."] },
-             message: "Veuillez vérifier les champs du formulaire."
+            errors: { previousClub: ["Le nom de l'ancien club est obligatoire pour une mutation."] },
+            message: "Veuillez vérifier les champs du formulaire."
         };
     }
 
@@ -77,6 +89,25 @@ export async function createMembershipRequest(prevState: any, formData: FormData
     const season = await getActiveSeasonData();
     if (!season) {
         return { message: "Aucune saison active pour l'instant. Inscriptions fermées." }
+    }
+
+    let certificateUrl = null;
+
+    if (!hasValidLicense && medicalFile && medicalFile.size > 0) {
+        try {
+            // On utilise notre service propre
+            // On stocke dans : public/uploads/docs/certificates
+            // Avec un préfixe : certif_NOM_ID
+            certificateUrl = await saveUploadedFile(
+                medicalFile,
+                "uploads/docs/certificates",
+                `certif_${user.lastname}_${session.userId}`
+            );
+
+        } catch (e) {
+            console.error("Erreur upload certif", e);
+            return { message: "Erreur technique lors de la sauvegarde du certificat." };
+        }
     }
 
     // 6. Calcul du montant
@@ -100,12 +131,12 @@ export async function createMembershipRequest(prevState: any, formData: FormData
             formData: {
                 ...validatedFields.data,
                 // On passe le type de licence (RENEWAL/MUTATION)
-                licenseType: licenseType, 
+                licenseType: licenseType,
                 // Mapping des champs pour correspondre aux attentes du pdf-service
-                ffa: ffaLicenseNumber, 
+                ffa: ffaLicenseNumber,
                 club: previousClub,
                 // On passe la méthode de paiement (ex: "CHECK" ou "TRANSFER")
-                paymentMethod: paymentMethod 
+                paymentMethod: paymentMethod
             }
         });
     } catch (e) {
@@ -113,7 +144,6 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         return { message: "Erreur lors de la création du document PDF." };
     }
 
-    // 8. Enregistrement en Base de Données (Transaction)
     try {
         await prisma.$transaction(async (tx) => {
             // Vérification doublon
@@ -126,14 +156,16 @@ export async function createMembershipRequest(prevState: any, formData: FormData
             const membership = await tx.membership.create({
                 data: {
                     userId: session.userId,
-                    seasonId: season.id, 
+                    seasonId: season.id,
                     type,
                     ffaLicenseNumber,
                     previousClub,
                     sharePhone: showPhoneDirectory,
                     shareEmail: showEmailDirectory,
                     status: "PENDING",
-                    adhesionPdf: pdfPath
+                    adhesionPdf: pdfPath,
+                    certificateUrl: certificateUrl,          
+                    medicalCertificateVerified: hasValidLicense
                 }
             })
 
@@ -180,7 +212,8 @@ export async function validateMembershipAction(membershipId: string) {
             })
         })
 
-        revalidatePath('/admin/dashboard')
+        revalidatePath('/admin/dashboard?tab=membership')
+        revalidatePath('/dashboard/adhesion')
         return { success: true }
     } catch (e) {
         return { success: false, message: "Erreur validation" }

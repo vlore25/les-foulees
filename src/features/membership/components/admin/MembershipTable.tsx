@@ -9,17 +9,20 @@ import {
     TableRow
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Clock, XCircle, AlertCircle, FileText, Download } from "lucide-react";
+import { CheckCircle2, Clock, XCircle, FileText, Download, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EmptyCategory from "@/components/common/EmptyCategory";
+import MembershipRowActions from "./MembershipRowActions"; // Assurez-vous d'avoir ce composant créé précédemment
 
-// On définit le type attendu (incluant les relations)
+// Mise à jour de l'interface pour inclure les nouveaux champs
 interface MembershipWithRelations {
     id: string;
     type: string;
     adhesionPdf: string;
     status: string;
     medicalCertificateVerified: boolean;
+    certificateUrl?: string | null;      
+    ffaLicenseNumber?: string | null;    
     user: {
         name: string;
         lastname: string;
@@ -37,8 +40,7 @@ interface MembershipsListProps {
 }
 
 export default function MembershipTable({ memberships }: MembershipsListProps) {
-
-    // Si la liste est vide (après filtrage ou au début)
+    console.log(memberships)
     if (!memberships || memberships.length === 0) {
         return (
             <EmptyCategory />
@@ -53,7 +55,7 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                         <TableHead>Adhérent</TableHead>
                         <TableHead>Type</TableHead>
                         <TableHead>Bulletin d'adhesion</TableHead>
-                        <TableHead>Certificat</TableHead>
+                        <TableHead>Certificat / Licence</TableHead>
                         <TableHead>Paiement</TableHead>
                         <TableHead>Statut Global</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
@@ -69,43 +71,62 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                                     <span className="font-semibold text-slate-900">
                                         {m.user.lastname.toUpperCase()} {m.user.name}
                                     </span>
-                                    <span className="text-xs text-slate-500">{m.user.email}</span>
                                 </div>
                             </TableCell>
 
                             {/* COLONNE 2 : Type d'adhésion */}
                             <TableCell>
-                                <span className="font-medium">
+                                <span className="font-medium text-sm">
                                     {formatMembershipType(m.type)}
                                 </span>
                             </TableCell>
+
+                            {/* COLONNE 3 : Bulletin PDF */}
                             <TableCell>
                                 {m.adhesionPdf ? (
                                     <a
                                         href={m.adhesionPdf}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                                        className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline border border-blue-100 bg-blue-50 px-2 py-1 rounded"
                                     >
-                                        <Download className="h-3 w-3" />
-                                        Télécharger
+                                        <FileText className="h-3 w-3" />
+                                        Bulletin
                                     </a>
                                 ) : (
-                                    <span className="text-muted-foreground text-sm">Non disponible</span>
+                                    <span className="text-muted-foreground text-xs">N/A</span>
                                 )}
                             </TableCell>
 
-                            {/* COLONNE 3 : Certificat Médical */}
+                            {/* COLONNE 4 : LOGIQUE CERTIFICAT / LICENCE */}
                             <TableCell>
-                                {m.medicalCertificateVerified ? (
-                                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
-                                        <CheckCircle2 className="w-3 h-3" /> OK
-                                    </Badge>
-                                ) : (
-                                    // Si c'est une licence FFA, pas besoin de certif, sinon Alerte
-                                    m.type === 'LICENSE_RUNNING' ? (
-                                        <Badge variant="outline" className="text-slate-500">Licence FFA</Badge>
+                                {/* CAS 1 : C'est une LICENCE (Type 'LICENSE_RUNNING' OU numéro de licence présent) */}
+                                {(m.type === 'LICENSE_RUNNING' || m.ffaLicenseNumber) ? (
+                                    <div className="flex flex-col gap-1">
+                                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 w-fit gap-1">
+                                            <CheckCircle2 className="w-3 h-3" /> Licence FFA
+                                        </Badge>
+                                        {m.ffaLicenseNumber && (
+                                            <span className="text-[10px] text-muted-foreground font-mono">
+                                                N° {m.ffaLicenseNumber}
+                                            </span>
+                                        )}
+                                    </div>
+                                ) : (                             
+                                    m.certificateUrl ? (
+                                        <div className="flex flex-col gap-2 items-start">
+                                            <a 
+                                                href={m.certificateUrl} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-1 text-xs text-purple-600 underline hover:text-purple-800 font-medium"
+                                            >
+                                                <ExternalLink className="w-3 h-3" />
+                                                Voir le document
+                                            </a>
+                                        </div>
                                     ) : (
+                                        /* CAS 3 : RIEN (Anomalie ou dossier incomplet) */
                                         <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 gap-1">
                                             <XCircle className="w-3 h-3" /> Manquant
                                         </Badge>
@@ -113,32 +134,34 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                                 )}
                             </TableCell>
 
-                            {/* COLONNE 4 : Paiement */}
+                            {/* COLONNE 5 : Paiement */}
                             <TableCell>
                                 {m.payment?.status === 'PAID' ? (
                                     <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
                                         <CheckCircle2 className="w-3 h-3" /> {m.payment.amount}€
                                     </Badge>
                                 ) : (
-                                    <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 gap-1">
+                                    <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 gap-1">
                                         <Clock className="w-3 h-3" /> En attente
                                     </Badge>
                                 )}
                             </TableCell>
 
-                            {/* COLONNE 5 : Statut Global */}
+                            {/* COLONNE 6 : Statut Global */}
                             <TableCell>
                                 {m.status === 'VALIDATED' ? (
                                     <Badge className="bg-green-600 hover:bg-green-700">Validé</Badge>
                                 ) : (
-                                    <Badge variant="secondary">Incomplet</Badge>
+                                    <Badge variant="secondary" className="text-slate-500">Incomplet</Badge>
                                 )}
                             </TableCell>
 
-                            {/* COLONNE 6 : Actions */}
+                            {/* COLONNE 7 : Actions */}
                             <TableCell className="text-right">
-                                {/* Tu pourras mettre ici ton composant d'édition */}
-                                <Button variant="ghost" size="sm">Gérer</Button>
+                                <MembershipRowActions 
+                                    id={m.id} 
+                                    status={m.status} 
+                                />
                             </TableCell>
 
                         </TableRow>
@@ -149,13 +172,12 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
     );
 }
 
-
 function formatMembershipType(type: string) {
     const map: Record<string, string> = {
-        'INDIVIDUAL': 'Individuel (35€)',
-        'COUPLE': 'Couple (60€)',
-        'YOUNG': 'Jeune (25€)',
-        'LICENSE_RUNNING': 'Licence FFA (98€)'
+        'INDIVIDUAL': 'Individuel',
+        'COUPLE': 'Couple',
+        'YOUNG': 'Jeune (-18)',
+        'LICENSE_RUNNING': 'Licence FFA'
     };
     return map[type] || type;
 }

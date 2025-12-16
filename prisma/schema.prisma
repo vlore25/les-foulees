@@ -135,9 +135,9 @@ model Season {
 // ==============DOSSIER ADHERANT=================
 
 enum MembershipStatus {
-  PENDING   // Dossier créé, en attente de validation admin
+  PENDING // Dossier créé, en attente de validation admin
   VALIDATED // Tout est bon (certificat + paiement)
-  REJECTED  // Dossier refusé
+  REJECTED // Dossier refusé
 }
 
 enum MembershipType {
@@ -148,36 +148,35 @@ enum MembershipType {
 }
 
 model Membership {
-  id          String   @id @default(cuid())
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  season      Season   @relation(fields: [seasonId], references: [id])
-  seasonId    String
-  ffaLicenseNumber String? 
-  previousClub     String? 
-  sharePhone  Boolean   @default(false)
-  shareEmail  Boolean   @default(false)
-  imageRights Boolean   @default(false)
-  medicalCertificateVerified Boolean @default(false)
-  status      MembershipStatus @default(PENDING)
-  type        MembershipType   @default(INDIVIDUAL)
-  payment     Payment?
-  adhesionPdf String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                         String           @id @default(cuid())
+  user                       User             @relation(fields: [userId], references: [id])
+  userId                     String
+  season                     Season           @relation(fields: [seasonId], references: [id])
+  seasonId                   String
+  ffaLicenseNumber           String?
+  previousClub               String?
+  sharePhone                 Boolean          @default(false)
+  shareEmail                 Boolean          @default(false)
+  imageRights                Boolean          @default(false)
+  medicalCertificateVerified Boolean          @default(false)
+  certificateUrl             String?
+  status                     MembershipStatus @default(PENDING)
+  type                       MembershipType   @default(INDIVIDUAL)
+  payment                    Payment?
+  adhesionPdf                String
+  createdAt                  DateTime         @default(now())
+  updatedAt                  DateTime         @updatedAt
+
   @@unique([userId, seasonId])
 }
 
-
-
- // ==============CENTRALISED ALL PAYEMENTS=================
-
+// ==============CENTRALISED ALL PAYEMENTS=================
 
 enum PaymentMethod {
-  CHECK     
-  TRANSFER  
-  CASH    
-  ONLINE   
+  CHECK
+  TRANSFER
+  CASH
+  ONLINE
 }
 
 enum PaymentStatus {
@@ -187,16 +186,16 @@ enum PaymentStatus {
 }
 
 model Payment {
-  id            String        @id @default(cuid())
-  amount        Float
-  method        PaymentMethod
-  status        PaymentStatus @default(PENDING)
-  reference     String?
-  date          DateTime      @default(now())
-  user          User          @relation(fields: [userId], references: [id])
-  userId        String
-  membership    Membership    @relation(fields: [membershipId], references: [id])
-  membershipId  String        @unique 
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id           String        @id @default(cuid())
+  amount       Float
+  method       PaymentMethod
+  status       PaymentStatus @default(PENDING)
+  reference    String?
+  date         DateTime      @default(now())
+  user         User          @relation(fields: [userId], references: [id])
+  userId       String
+  membership   Membership    @relation(fields: [membershipId], references: [id])
+  membershipId String        @unique
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }

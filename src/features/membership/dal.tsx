@@ -2,65 +2,55 @@ import { prisma } from "@/src/lib/prisma";
 import { getSession } from "@/src/lib/session";
 
 
-type AdhesionFilter = 'ALL' | 'VALIDATED' | 'PENDING_PAYMENT' | 'MISSING_CERTIF';
+type AdhesionFilter = 'ALL' | 'VALIDATED' | 'TO_HANDLE';
 
-export default async function getAdhesions(filter: AdhesionFilter = 'ALL') {
+export default async function getAdhesions(
+    filter: 'ALL' | 'VALIDATED' | 'TO_HANDLE' = 'ALL', 
+    seasonId?: string 
+) {
 
-    let whereCondition: any = {
-        season: { isActive: true }
-    };
+    let whereCondition: any = {};
 
+    if (seasonId) {
+        whereCondition.seasonId = seasonId;
+    } else {
+        whereCondition.season = { isActive: true };
+    }
+
+    // 2. Application des filtres de statut (inchangé)
     switch (filter) {
         case 'VALIDATED':
             whereCondition.status = 'VALIDATED';
             break;
-
-        case 'PENDING_PAYMENT':
-            whereCondition.payment = {
-                status: 'PENDING'
-            };
-            whereCondition.status = {
-                not: 'VALIDATED'
-            };
+        case 'TO_HANDLE':
+            whereCondition.status = { not: 'VALIDATED' };
             break;
-
-        case 'MISSING_CERTIF':
-            whereCondition.medicalCertificateVerified = false;
-            whereCondition.type = { not: 'LICENSE_RUNNING' };
-            break;
-
         case 'ALL':
         default:
             break;
     }
 
-
     const adhesions = await prisma.membership.findMany({
         where: whereCondition,
         include: {
-            // 1. On inclut la saison (C'est ça qui manquait !)
-            season: {
-                select: {
-                    name: true // On a juste besoin du nom pour l'afficher
-                }
-            },
-
-            // 2. Ton user (Attention à la casse lastname vs lastName selon ton schema)
+            season: { select: { name: true } },
             user: {
                 select: {
                     id: true,
-                    name: true, // Vérifie si c'est firstName ou name dans ton schema
-                    lastname: true,  // Vérifie si c'est lastName ou lastname dans ton schema
+                    name: true,
+                    lastname: true,
                     email: true,
                     phone: true,
+                    birthdate: true, 
+                    address: true,   
+                    city: true,     
+                    zipCode: true  
                 }
             },
-            // 3. Le paiement
             payment: true
         },
         orderBy: {
-            // Attention ici aussi à la casse
-            user: { lastname: 'asc' }
+            createdAt: 'desc' 
         }
     })
 
@@ -70,34 +60,23 @@ export default async function getAdhesions(filter: AdhesionFilter = 'ALL') {
 export async function getAdhesionStats() {
     const activeSeasonWhere = { season: { isActive: true } };
 
-    const [total, validated, pendingPayment, missingCertif] = await Promise.all([
+    const [total, validated, toHandle] = await Promise.all([
 
         prisma.membership.count({
             where: activeSeasonWhere
         }),
-
         prisma.membership.count({
             where: { ...activeSeasonWhere, status: 'VALIDATED' }
         }),
-
         prisma.membership.count({
-            where: {
-                ...activeSeasonWhere,
-                status: { not: 'VALIDATED' },
-                payment: { status: 'PENDING' }
-            }
-        }),
-
-        prisma.membership.count({
-            where: {
-                ...activeSeasonWhere,
-                medicalCertificateVerified: false,
-                type: { not: 'LICENSE_RUNNING' }
+            where: { 
+                ...activeSeasonWhere, 
+                status: { not: 'VALIDATED' } 
             }
         })
     ]);
 
-    return { total, validated, pendingPayment, missingCertif };
+    return { total, validated, toHandle };
 }
 
 export async function getUserMembershipForActiveSeason(userId: string) {
@@ -117,11 +96,6 @@ export async function getUserMembershipForActiveSeason(userId: string) {
             where: {
                 userId: session.userId,
             },
-            select: {
-                status: true,
-                type: true,
-                ffaLicenseNumber: true,
-            }
         })
 
         return memberShip
