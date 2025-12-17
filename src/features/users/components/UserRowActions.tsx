@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { useTransition } from "react";
 import { Pencil, Trash2, MoreVertical } from "lucide-react";
-import { deleteUserAction } from "../../user.action";
+import { deleteUserAction } from "../user.action";
 
 export function UserRowActions({ userId }: { userId: string }) {
     const [isPending, startTransition] = useTransition();

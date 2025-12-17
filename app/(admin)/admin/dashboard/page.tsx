@@ -1,4 +1,4 @@
-import UsersList from "@/src/features/users/components/users-gestion/UsersList";
+import UsersList from "@/src/features/users/components/UsersList";
 import EventList from "@/src/features/events/components/admin/EventList";
 import AdminDashboard from "@/src/features/admin/AdminDashboard";
 import LegalDocsList from "@/src/features/docs/components/admin/LegalDocsList";

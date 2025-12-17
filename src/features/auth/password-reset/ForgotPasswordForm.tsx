@@ -5,12 +5,12 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { ArrowLeft, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useActionState } from "react";
-import ErrorBox from "../../../../components/common/feedback/ErrorBox";
+import ErrorBox from "../../../../components/common/ErrorBox";
 import Link from "next/link";
 import FouleesLogo from "@/components/common/logo/FouleesLogo";
 import Image from "next/image";
 import hero from '../../../../public/images/login-hero.jpg';
-import SuccesCard from "@/components/common/feedback/SuccesCard";
+import SuccesCard from "@/components/common/SuccesCard";
 
 export default function ForgotPasswordForm() {
 

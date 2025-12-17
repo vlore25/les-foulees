@@ -1,7 +1,7 @@
 import { verifyRecoveryToken } from "@/src/features/auth/actions"; // Vérifie le chemin
 import Image from "next/image";
 import hero from '@/public/images/login-hero.jpg'; // Vérifie le chemin
-import ErrorCard from "@/components/common/feedback/ErrorCard"; // Vérifie le chemin
+import ErrorCard from "@/components/common/ErrorCard"; // Vérifie le chemin
 import ResetPasswordForm from "./components/ResetPasswordForm";
 import FouleesLogo from "@/components/common/logo/FouleesLogo"; // ✅ On importe le Logo ici
 

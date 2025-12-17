@@ -9,7 +9,7 @@ import { useActionState } from 'react';
 import Image from 'next/image';
 import hero from '../../../../../public/images/login-hero.jpg';
 import FouleesLogo from '@/components/common/logo/FouleesLogo';
-import ErrorBox from '../../../../../components/common/feedback/ErrorBox';
+import ErrorBox from '../../../../../components/common/ErrorBox';
 
 const LoginForm = () => {
     const [state, action, pending] = useActionState(loginUser, undefined);
