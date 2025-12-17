@@ -6,18 +6,42 @@ const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/web
 const ACCEPTED_DOC_TYPES = [...ACCEPTED_IMAGE_TYPES, "application/pdf"];
 const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
 
-// Base reusable schemas
+//=============Base reusable schemas=====================
 export const emailSchema = z
   .string()
-  .toLowerCase()
-  .email({ message: 'Email invalide.' })
   .trim()
+  .toLowerCase()
+  .pipe(
+    z.email({ message: 'Email invalide.' })
+  );
+
+export const passwordSchema = z.string()
+  .min(8, "Le mot de passe doit faire 8 caractères minimum")
+  .regex(/[A-Z]/, "Au moins une majuscule")
+  .regex(/[0-9]/, "Au moins un chiffre")
+  .regex(/[^a-zA-Z0-9]/, "Au moins un caractère spécial (@, !, #, etc.)"
+  );
+
+//=============End base reusable schemas=====================
 
 // Login schema
 export const loginSchema = z.object({
   email: z.string().email({ message: "Email invalide" }),
   password: z.string().min(1, { message: "Mot de passe requis" }),
 });
+
+
+//New Password schema
+export const newPasswordSchema = z.object({
+  password: passwordSchema,
+  confirmPassword: z
+    .string()
+    .min(1, { message: "La confirmation du mot de passe est requise." }),
+})
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas",
+    path: ["confirmPassword"],
+  });
 
 
 
@@ -82,10 +106,10 @@ export const registerFormSchema = z.object({
   showEmailDirectory: z.boolean().default(false),
 
 })
-.refine((data) => data.password === data.confirmPassword, {
-  message: "Les mots de passe ne correspondent pas.",
-  path: ["confirmPassword"],
-});
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas.",
+    path: ["confirmPassword"],
+  });
 
 
 
@@ -146,15 +170,14 @@ const eventBase = z.object({
     ),
 });
 
-// --- 2. On exporte le schéma de Création (avec le refine de dates) ---
+
 export const eventSchema = eventBase.refine((data) => data.dateEnd > data.dateStart, {
   message: "La date de fin doit être postérieure à la date de début.",
   path: ["dateEnd"],
 });
 
 
-// --- 3. On exporte le schéma de Mise à jour ---
-// On part de 'eventBase' (et non eventSchema), on étend, PUIS on réapplique le refine
+
 export const eventUpdateSchema = eventBase
   .extend({
     picture: z
@@ -214,7 +237,6 @@ export const profileFormSchema = z.object({
 });
 
 
-// On définit les Enums ici pour qu'ils matchent votre Prisma Schema
 export const MembershipTypeEnum = z.enum([
   "INDIVIDUAL",
   "COUPLE",
@@ -246,7 +268,7 @@ export type ProfileFormState = {
     name?: string[];
     lastname?: string[];
     phone?: string[];
-    adress?: string[];
+    address?: string[];
     zipCode?: string[];
     city?: string[];
     birthdate?: string[];

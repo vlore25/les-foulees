@@ -54,15 +54,15 @@ export async function sendInviteAction(prevState: InviteUserState, formData: For
     await prisma.invitation.upsert({
       where: { email },
       update: { token, createdAt: new Date() },
-      create: { 
-        email, 
-        token 
+      create: {
+        email,
+        token
       },
     });
 
     const invitationLink = `${APP_URL}/inscription?token=${token}`;
     const emailHtml = await render(<InviteUser InvitationLink={invitationLink} />);
-    
+
     await resend.emails.send({
       from: 'Les Foulées Avrillaises <onboarding@resend.dev>',
       to: [email],

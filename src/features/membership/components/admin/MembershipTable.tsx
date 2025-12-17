@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Clock, XCircle, FileText, Download, ExternalLink } from "lucide-react";
-import EmptyCategory from "@/components/common/EmptyCategory";
+import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import MembershipRowActions from "./MembershipRowActions"; // Assurez-vous d'avoir ce composant créé précédemment
 
 // Mise à jour de l'interface pour inclure les nouveaux champs

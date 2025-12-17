@@ -15,7 +15,7 @@ export async function updateProfile(state: ProfileFormState, formData: FormData)
         lastname: formData.get('lastname'),
         phone: formData.get('phone'),
         birthdate: formData.get('birthdate'),
-        adress: formData.get('adress'),
+        address: formData.get('address'),
         zipCode: formData.get('zipCode'),
         city: formData.get('city'),
         emergencyName: formData.get('emergencyName'),

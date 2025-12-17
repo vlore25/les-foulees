@@ -86,7 +86,6 @@ const MobileMenu = ({ user }: MenuProps) => {
                 <SheetContent className="w-full">
                     <SheetHeader>
                         <SheetTitle className="sr-only">Navigation utilisateur</SheetTitle>
-                        <FouleesLogo />
                         <SheetDescription className="sr-only">
                         </SheetDescription>
                     </SheetHeader>

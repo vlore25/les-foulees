@@ -36,10 +36,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <UserProvider user={user}>
-          <Header />
-          <div className="flex min-h-screen mx-1 lg:mx-15">
             {children}
-          </div>
         </UserProvider>
       </body>
     </html>

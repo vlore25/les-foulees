@@ -1,15 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const FouleesLogo = () => {
+interface FouleesLogoProps {
+  size?: number; 
+  className?: string; 
+}
+
+const FouleesLogo = ({ size, className }: FouleesLogoProps) => {
     return (
         <Link href="/">
             <Image
-                width={"150"}
-                height="70"
+                width={size} 
+                height={size} 
                 src="/logo/foulees-logo.png"
-                alt="Les Foulees avrillaises logo"
-                className="w-[75px] h-auto sm:w-[75px] lg:w-[100px]"
+                alt="Les Foulées avrillaises logo"
+                className={`h-auto w-auto ${className}`}
             />
         </Link>
     );

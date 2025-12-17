@@ -8,18 +8,19 @@ import AdminNav from "../../../../src/features/admin/admin-menu/components/Admin
 
 
 const AdminMenu = () => {
-    
+
     return (
 
         <div className="lg:hidden">
             <Sheet>
                 <SheetTrigger>
-                   <BrickWallShield />
+                    <BrickWallShield />
                 </SheetTrigger>
                 <SheetContent className="w-full">
                     <SheetHeader>
-                        <SheetTitle className="sr-only">Menu Connexion</SheetTitle> 
-                        <FouleesLogo />
+                        <SheetTitle className="sr-only">Menu Connexion</SheetTitle>
+                        <FouleesLogo size={100}
+                            className="!w-[90px] lg:!w-[120px]" />
                         <SheetDescription className="sr-only">
                         </SheetDescription>
                     </SheetHeader>
