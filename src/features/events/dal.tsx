@@ -66,23 +66,28 @@ export const getEventById = cache(async (eventId: string) => {
 });
 
 export const getEventWithParticipationStatus = cache(async (eventId: string) => {
-  const session = await verifySession(); // Récupérer session côté serveur
+  if (!eventId) return null;
+  const session = await verifySession(); 
 
   const event = await prisma.event.findUnique({
     where: { id: eventId },
     include: {
       participants: {
-        where: { id: session?.userId || "invalid-id" }, // Filtre pour voir si JE suis dedans
-        select: { id: true }
+        select: { 
+            id: true, 
+            name: true, 
+            lastname: true 
+        }
       },
-      _count: { select: { participants: true } } // Compter le total
+      _count: { select: { participants: true } }
     }
   });
 
   if (!event) return null;
 
-  // Si le tableau participants contient au moins un élément, c'est que je suis inscrit
-  const isParticipant = event.participants.length > 0;
+  const isParticipant = session?.userId 
+    ? event.participants.some((participant) => participant.id === session.userId)
+    : false;
 
   return { ...event, isParticipant };
 });

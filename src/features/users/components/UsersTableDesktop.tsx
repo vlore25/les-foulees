@@ -1,12 +1,20 @@
+"use client"
+
+import { useUser } from "@/components/providers/UserProvider";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { UserDTO } from "@/src/lib/dto"; // Assure-toi d'importer ton type
-import { Mail, Phone } from "lucide-react";
+import { UserRowActions } from "./UserRowActions";
 
 interface UserProps {
     data: UserDTO[];
 }
 
 export default function UsersTableDesktop({ data }: UserProps) {
+    const user =  useUser();
+
+    const isAdmin = user?.role == 'ADMIN' ? true : false
+
+
     return (
         <div className='overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hidden lg:block'>
             <Table>
@@ -16,6 +24,9 @@ export default function UsersTableDesktop({ data }: UserProps) {
                         <TableHead className="w-[200px] font-semibold text-gray-700">Nom</TableHead>
                         <TableHead className="font-semibold text-gray-700">Contact</TableHead>
                         <TableHead className="w-[150px] font-semibold text-gray-700">Téléphone</TableHead>
+                        {isAdmin && 
+                            <TableHead className="w-[150px] font-semibold text-gray-700">Actions</TableHead>
+                        }
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -35,10 +46,9 @@ export default function UsersTableDesktop({ data }: UserProps) {
                                     {email ? (
                                         <a 
                                             href={`mailto:${email}`} 
-                                            className="inline-flex items-center gap-2 text-gray-600 hover:text-primary transition-colors font-medium"
+                                            className="inline-flex items-center gap-2 text-gray-600 font-medium"
                                         >
                                             {email}
-                                            <Mail className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
                                         </a>
                                     ) : (
                                         <span className="text-gray-400 italic">-</span>
@@ -48,7 +58,7 @@ export default function UsersTableDesktop({ data }: UserProps) {
                                     {phone ? (
                                         <a 
                                             href={`tel:${phone}`} 
-                                            className="inline-flex items-center gap-2 text-gray-600 hover:text-primary transition-colors"
+                                            className="inline-flex items-center gap-2 text-gray-600"
                                         >
                                             {phone}
                                         </a>
@@ -56,6 +66,9 @@ export default function UsersTableDesktop({ data }: UserProps) {
                                         <span className="text-gray-400">-</span>
                                     )}
                                 </TableCell>
+                                {isAdmin && 
+                                    <UserRowActions userId= {user.id} />
+                                }
                             </TableRow>
                         );
                     })}

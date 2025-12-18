@@ -16,6 +16,7 @@ type SessionPayload = {
   userId: string
   expiresAt: Date
 }
+
 type Token = {
   token: String
 }
@@ -84,6 +85,7 @@ export async function verifySession(){
   return { userId: session.userId as string }
 
 }
+
 
 export async function deleteSession() {
 

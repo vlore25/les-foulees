@@ -26,8 +26,6 @@ function UserMobileCard({ user }: { user: UserDTO }) {
     const email = "email" in user ? user.email : "Non renseigné";
     const phone = "phone" in user && user.phone ? user.phone : "Non renseigné";
     
-    // Calcul des initiales (ex: Gontran Brunet -> GB)
-    const initials = `${user.name?.charAt(0) || ''}${user.lastname?.charAt(0) || ''}`.toUpperCase();
 
     return (
         <Collapsible

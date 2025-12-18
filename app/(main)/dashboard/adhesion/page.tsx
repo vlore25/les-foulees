@@ -20,12 +20,10 @@ export default async function AdhesionPage() {
 
   // 2. Render Feature Component
   return (
-    <div className="container max-w-3xl py-10">
         <UserMembershipDashboard 
             user={user} 
             season={season} 
             membership={membership} 
         />
-    </div>
   );
 }

@@ -96,8 +96,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
     return (
         <div className="w-full max-w-lg mx-auto">
-
-            {/* --- PROGRESS BAR --- */}
             <div className="mb-8">
                 <div className="flex justify-between items-center mb-2 relative">
                     {STEPS.map((step, index) => (
@@ -126,7 +124,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                 </div>
             </div>
 
-            {/* --- FORMULAIRE --- */}
             <form action={action} ref={formRef} className="space-y-6 bg-white p-6 rounded-lg border shadow-sm mt-10">
 
                 <input type="hidden" name="signature" value={signatureData} />
@@ -172,7 +169,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                 <div className={cn("space-y-6", currentStep === 1 ? "block" : "hidden")}>
 
                     {/* SECTION : STATUT LICENCE ET DOCUMENT */}
-                    <div className="bg-slate-50 p-4 rounded-md border space-y-4">
+                    <div className="p-2 lg:p-2 space-y-2">
                         <div className="flex items-center justify-between">
                             <div className="space-y-0.5">
                                 <Label htmlFor="has-license-switch" className="text-base font-medium">

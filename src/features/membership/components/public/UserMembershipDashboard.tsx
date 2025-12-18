@@ -124,7 +124,6 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
         );
     }
 
-    // 3. CAS : Pas de dossier OU Dossier REFUSÉ -> Affichage du Formulaire
     return (
         <div className="space-y-6">
 

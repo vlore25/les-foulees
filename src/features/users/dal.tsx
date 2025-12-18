@@ -43,7 +43,6 @@ export const getAllUsers = cache(async (): Promise<UserDTO[]> => {
 
 export type CurrentUser = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>;
 
-// Retrieve user based on session
 export const getCurrentUser = cache(async () => {
   const session = await getSession();
   if (!session?.userId) return null;
