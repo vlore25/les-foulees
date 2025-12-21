@@ -227,10 +227,11 @@ export const profileFormSchema = z.object({
     .refine((date) => !isNaN(date.getTime()), {
       message: "Format de date invalide."
     }),
-  adress: z.string().min(5, "Adresse requise").trim(),
+  address: z.string().min(5, "Adresse requise").trim(),
   zipCode: z.string().regex(/^\d{5}$/, "Code postal invalide"),
   city: z.string().min(1, "Ville requise").trim(),
-
+  showPhoneDirectory: z.boolean().default(false),
+  showEmailDirectory: z.boolean().default(false),  
   emergencyName: z.string().optional().or(z.literal('')),
   emergencyLastName: z.string().optional().or(z.literal('')),
   emergencyPhone: z.string().optional().or(z.literal('')).refine(val => !val || phoneRegex.test(val), "Numéro invalide"),

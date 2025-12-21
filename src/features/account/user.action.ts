@@ -21,8 +21,8 @@ export async function updateProfile(state: ProfileFormState, formData: FormData)
         emergencyName: formData.get('emergencyName'),
         emergencyLastName: formData.get('emergencyLastName'),
         emergencyPhone: formData.get('emergencyPhone'),
-        showPhoneDirectory: formData.get('showPhoneDirectory'),
-        showEmailDirectory: formData.get('showEmailDirectory'),
+        showPhoneDirectory: formData.get('showPhoneDirectory') === 'on',
+        showEmailDirectory: formData.get('showEmailDirectory') === 'on',
     };
     console.log(rawData);
 
@@ -43,19 +43,27 @@ export async function updateProfile(state: ProfileFormState, formData: FormData)
                 lastname: data.lastname,
                 phone: data.phone,
                 birthdate: data.birthdate,
-                address: data.adress, 
+                address: data.address, 
                 zipCode: data.zipCode,
                 city: data.city,
                 emergencyName: data.emergencyName || null,
                 emergencyLastName: data.emergencyLastName || null,
                 emergencyPhone: data.emergencyPhone || null,
+                showPhoneDirectory: data.showPhoneDirectory,
+                showEmailDirectory: data.showEmailDirectory,
             }
         });
 
-        revalidatePath('/dashboard/account');
-        return { success: true, message: "Profil mis à jour avec succès" };
+        revalidatePath('/espace-membre/compte');
+        return { 
+            success: true, 
+            message: "Profil mis à jour avec succès"
+            
+        };
+        
     } catch (error) {
         console.error(error);
         return { message: "Erreur lors de la mise à jour." };
     }
+    
 }

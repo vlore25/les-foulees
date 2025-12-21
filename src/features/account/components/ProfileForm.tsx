@@ -12,8 +12,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { updateProfile } from '../user.action'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@radix-ui/react-label'
+import SuccesCard from '@/components/common/feedback/SuccesCard'
+import SuccesBox from '@/components/common/feedback/SuccesBox'
 
-// --- TYPES ---
+
 interface ProfileFormProps {
     defaultValues: {
         name: string;
@@ -21,13 +23,15 @@ interface ProfileFormProps {
         email: string;
         phone?: string | null;
         birthdate?: Date | null;
-        address?: string; // Correction orthographe ici et dans le form
+        address?: string; 
         zipCode?: string;
         city?: string;
         imageUrl?: string | null;
         emergencyName?: string | null;
         emergencyLastName?: string | null;
         emergencyPhone?: string | null;
+        showPhoneDirectory?: boolean;
+        showEmailDirectory?: boolean;
     }
 }
 
@@ -35,30 +39,29 @@ interface ProfileFormProps {
 export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
     const [state, action, pending] = useActionState(updateProfile, undefined);
     const [isDirty, setIsDirty] = useState(false);
+    console.log(defaultValues)
 
     const handleFormChange = () => {
         if (!isDirty) setIsDirty(true);
     };
 
     return (
-        <form action={action} onChange={handleFormChange} className="space-y-8 max-w-4xl mx-auto pb-10" noValidate>
+        <form action={action} onChange={handleFormChange} className="space-y-8 max-w-4xl  pb-10" noValidate>
 
             {/* EN-TÊTE */}
             <div className="flex flex-col md:flex-row gap-6 items-center md:items-start mb-8">
                 <div className="text-center md:text-left space-y-1">
                     <h1 className="text-3xl font-bold capitalize">{defaultValues.name} {defaultValues.lastname}</h1>
                     <p className="text-muted-foreground">{defaultValues.email}</p>
-                    {state?.message && (
-                        <p className={cn("text-sm font-medium mt-2", state.success ? "text-green-600" : "text-red-500")}>
-                            {state.message}
-                        </p>
-                    )}
+                    {state?.message && state.success &&
+                        <SuccesBox message ={state?.message}/>
+                    }
                 </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
                 {/* 1. INFO PERSONNELLES */}
-                <Card className='md:col-span-2'>
+                <Card className='md:col-span-2 border-0 shadow-none'>
                     <CardHeader>
                         <CardTitle>Informations Personnelles</CardTitle>
                         <CardDescription>Vos informations d'identification pour le club.</CardDescription>
@@ -92,11 +95,19 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                                 Ces informations seront visibles uniquement par les membres connectés.
                             </p>
                             <div className="flex items-center gap-3">
-                                <Checkbox id="showPhoneDirectory" />
+                                <Checkbox
+                                    id="showPhoneDirectory"
+                                    name="showPhoneDirectory"
+                                    defaultChecked={defaultValues.showPhoneDirectory}
+                                />
                                 <Label htmlFor="showPhoneDirectory">Diffuser mon téléphone</Label>
                             </div>
                             <div className="flex items-center gap-3">
-                                <Checkbox id="showEmailDirectory" />
+                                <Checkbox
+                                    id="showEmailDirectory"
+                                    name="showEmailDirectory"
+                                    defaultChecked={defaultValues.showEmailDirectory} 
+                                />
                                 <Label htmlFor="showEmailDirectory">Diffuser mon Courriel</Label>
                             </div>
                         </div>
@@ -104,7 +115,7 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                 </Card>
 
                 {/* 2. ADRESSE */}
-                <Card>
+                <Card className='border-0 shadow-none'>
                     <CardHeader>
                         <CardTitle>Adresse</CardTitle>
                     </CardHeader>
@@ -133,13 +144,13 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                 </Card>
 
                 {/* 3. CONTACT D'URGENCE */}
-                <Card>
+                <Card className='border-0 shadow-none'>
                     <CardHeader>
                         <CardTitle>Contact d'urgence</CardTitle>
                         <CardDescription>Personne à contacter en cas de problème.</CardDescription>
                         {(!defaultValues.emergencyName || !defaultValues.emergencyPhone) && (
                             <p className='text-orange-600 text-xs mt-1 font-medium'>
-                                ⚠️ Pensez à renseigner un contact à prévenir !
+                                Pensez à renseigner un contact à prévenir !
                             </p>
                         )}
                     </CardHeader>
@@ -182,12 +193,11 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
 
 // --- COMPOSANTS UTILITAIRES ---
 
-// 1. Input Réutilisable pour alléger le code principal
 interface FormInputProps {
     label: string;
     name: string;
     defaultValue?: string;
-    error?: string[] | string; // Accepte string ou array d'erreurs
+    error?: string[] | string; 
     placeholder?: string;
 }
 
@@ -226,7 +236,7 @@ function BirthDayPicker({ name, defaultValue, onDateChange }: BirthDayPickerProp
                     <Button
                         variant="outline"
                         className={cn(
-                            "w-full justify-between text-left font-normal mt-1", // mt-1 pour aligner avec les inputs
+                            "w-full justify-between text-left font-normal mt-1", 
                             !date && "text-muted-foreground"
                         )}
                     >

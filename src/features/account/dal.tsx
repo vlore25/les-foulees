@@ -15,25 +15,27 @@ export const getProfile = cache(async (userId: string) => {
       email: true,
       phone: true,
       birthdate: true,
-      address: true, 
+      address: true,
       zipCode: true,
       city: true,
       emergencyName: true,
       emergencyLastName: true,
       emergencyPhone: true,
+      showPhoneDirectory: true,
+      showEmailDirectory: true,
       role: true,
       createdAt: true,
       memberships: {
         where: {
           season: {
-            isActive: true 
+            isActive: true
           }
         },
         select: {
           id: true,
-          type: true,       
-          ffaLicenseNumber: true, 
-          status: true,          
+          type: true,
+          ffaLicenseNumber: true,
+          status: true,
           medicalCertificateVerified: true,
           season: {
             select: {
@@ -42,7 +44,7 @@ export const getProfile = cache(async (userId: string) => {
             }
           }
         },
-        take: 1 // On prend la seule adhésion active
+        take: 1
       }
     },
   });

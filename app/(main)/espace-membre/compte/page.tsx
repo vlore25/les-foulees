@@ -16,5 +16,5 @@ export default async function ProfilePage() {
     return <div>Profil introuvable</div>;
   }
 
-  return <ProfileForm defaultValues={user} />;
+  return <ProfileForm key={user.email} defaultValues={user} />;
 }
