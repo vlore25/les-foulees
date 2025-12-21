@@ -26,34 +26,34 @@ export function UserRowActions({ userId }: { userId: string }) {
     };
 
     return (
-            <div>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Ouvrir menu</span>
-                            <MoreVertical className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Options</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {/* Option delete */}
-                        <DropdownMenuItem >
-                            <Link href={`/admin/dashboard/utilisateur/${userId}`} className="flex flex-row">
-                            <Eye/>
+        <div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Ouvrir menu</span>
+                        <MoreVertical className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Options</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {/* Option delete */}
+                    <DropdownMenuItem >
+                        <Link href={`/admin/utilisateurs/${userId}`} className="flex flex-row">
+                            <Eye />
                             <span>Voir details</span>
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            onClick={handleDelete}
-                            disabled={isPending}
-                            className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
-                        >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            <span>Supprimer</span>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={handleDelete}
+                        disabled={isPending}
+                        className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
+                    >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>Supprimer</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
     );
 }

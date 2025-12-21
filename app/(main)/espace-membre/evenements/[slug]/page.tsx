@@ -1,7 +1,5 @@
-// app/(main)/dashboard/evenements/[id]/page.tsx
-
 import { notFound } from "next/navigation";
-import { getEventWithParticipationStatus } from "@/src/features/events/dal"; // Assure-toi que le chemin est correct
+import { getEventWithParticipationStatus } from "@/src/features/events/dal"; 
 
 
 import EventDetails from "@/src/features/events/components/public/EventDetails";

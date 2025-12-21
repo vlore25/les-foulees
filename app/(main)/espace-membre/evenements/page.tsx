@@ -4,9 +4,7 @@ import EventListPublic from "@/src/features/events/components/public/EventListPu
 export default function EventsPage(){
     return(
         <div>
-            <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium">Événements</h3>
-            </div>
+           <h3>Événements</h3>
             <EventListPublic />
         </div>
     );

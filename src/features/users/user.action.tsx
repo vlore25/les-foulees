@@ -70,7 +70,10 @@ export async function sendInviteAction(prevState: InviteUserState, formData: For
       html: emailHtml,
     });
 
-    return { success: true, message: "Invitation envoyée avec succès !" };
+    return { 
+      success: true, 
+      message: `Invitation envoyée avec succès à ${email}`,
+    };
 
   } catch (error) {
     console.log(error)

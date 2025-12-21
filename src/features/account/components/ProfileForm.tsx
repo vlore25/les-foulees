@@ -10,6 +10,8 @@ import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/src/lib/utils'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { updateProfile } from '../user.action'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@radix-ui/react-label'
 
 // --- TYPES ---
 interface ProfileFormProps {
@@ -39,8 +41,8 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
     };
 
     return (
-        <form action={action} onChange={handleFormChange} className="space-y-8 max-w-4xl mx-auto pb-10">
-            
+        <form action={action} onChange={handleFormChange} className="space-y-8 max-w-4xl mx-auto pb-10" noValidate>
+
             {/* EN-TÊTE */}
             <div className="flex flex-col md:flex-row gap-6 items-center md:items-start mb-8">
                 <div className="text-center md:text-left space-y-1">
@@ -63,13 +65,13 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid md:grid-cols-2 gap-4">
-                            <FormInput 
-                                label="Prénom" name="name" 
-                                defaultValue={defaultValues.name} error={state?.error?.name} 
+                            <FormInput
+                                label="Prénom" name="name"
+                                defaultValue={defaultValues.name} error={state?.error?.name}
                             />
-                            <FormInput 
-                                label="Nom" name="lastname" 
-                                defaultValue={defaultValues.lastname} error={state?.error?.lastname} 
+                            <FormInput
+                                label="Nom" name="lastname"
+                                defaultValue={defaultValues.lastname} error={state?.error?.lastname}
                             />
                         </div>
 
@@ -77,12 +79,26 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                             <BirthDayPicker
                                 name="birthdate"
                                 defaultValue={defaultValues.birthdate}
-                                onDateChange={() => setIsDirty(true)} 
+                                onDateChange={() => setIsDirty(true)}
                             />
-                            <FormInput 
+                            <FormInput
                                 label="Téléphone" name="phone" placeholder="06..."
-                                defaultValue={defaultValues.phone || ''} error={state?.error?.phone} 
+                                defaultValue={defaultValues.phone || ''} error={state?.error?.phone}
                             />
+                        </div>
+                        <div>
+                            <p>Annuaire des adhérents</p>
+                            <p className="text-xs text-muted-foreground">
+                                Ces informations seront visibles uniquement par les membres connectés.
+                            </p>
+                            <div className="flex items-center gap-3">
+                                <Checkbox id="showPhoneDirectory" />
+                                <Label htmlFor="showPhoneDirectory">Diffuser mon téléphone</Label>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Checkbox id="showEmailDirectory" />
+                                <Label htmlFor="showEmailDirectory">Diffuser mon Courriel</Label>
+                            </div>
                         </div>
                     </CardContent>
                 </Card>
@@ -93,24 +109,25 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                         <CardTitle>Adresse</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <FormInput 
-                            label="Rue & Numéro" name="address" 
-                            defaultValue={defaultValues.address || ''} error={state?.error?.address} 
+                        <FormInput
+                            label="Rue & Numéro" name="address"
+                            defaultValue={defaultValues.address || ''} error={state?.error?.address}
                         />
-                        
+
                         <div className="grid grid-cols-3 gap-4">
                             <div className="col-span-1">
-                                <FormInput 
-                                    label="CP" name="zipCode" 
-                                    defaultValue={defaultValues.zipCode || ''} error={state?.error?.zipCode} 
+                                <FormInput
+                                    label="CP" name="zipCode"
+                                    defaultValue={defaultValues.zipCode || ''} error={state?.error?.zipCode}
                                 />
                             </div>
                             <div className="col-span-2">
-                                <FormInput 
-                                    label="Ville" name="city" 
-                                    defaultValue={defaultValues.city || ''} error={state?.error?.city} 
+                                <FormInput
+                                    label="Ville" name="city"
+                                    defaultValue={defaultValues.city || ''} error={state?.error?.city}
                                 />
                             </div>
+
                         </div>
                     </CardContent>
                 </Card>
@@ -128,18 +145,18 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
-                            <FormInput 
-                                label="Prénom" name="emergencyName" 
-                                defaultValue={defaultValues.emergencyName || ''} 
+                            <FormInput
+                                label="Prénom" name="emergencyName"
+                                defaultValue={defaultValues.emergencyName || ''}
                             />
-                            <FormInput 
-                                label="Nom" name="emergencyLastName" 
-                                defaultValue={defaultValues.emergencyLastName || ''} 
+                            <FormInput
+                                label="Nom" name="emergencyLastName"
+                                defaultValue={defaultValues.emergencyLastName || ''}
                             />
                         </div>
-                        <FormInput 
-                            label="Téléphone d'urgence" name="emergencyPhone" 
-                            defaultValue={defaultValues.emergencyPhone || ''} error={state?.error?.emergencyPhone} 
+                        <FormInput
+                            label="Téléphone d'urgence" name="emergencyPhone"
+                            defaultValue={defaultValues.emergencyPhone || ''} error={state?.error?.emergencyPhone}
                         />
                     </CardContent>
                 </Card>
@@ -201,9 +218,9 @@ function BirthDayPicker({ name, defaultValue, onDateChange }: BirthDayPickerProp
         <div className="flex flex-col gap-1.5 flex-1">
             {/* Utilisation de FieldLabel pour la cohérence au lieu de Label Radix */}
             <FieldLabel>Date de naissance</FieldLabel>
-            
+
             <input type="hidden" name={name} value={date ? date.toISOString() : ''} />
-            
+
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button

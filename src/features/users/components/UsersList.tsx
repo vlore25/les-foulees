@@ -1,14 +1,12 @@
-import UsersTableDesktop from "./UsersTableDesktop";
 import { getAllUsers } from "../dal";
-import UsersCardsMobile from "./UsersCardMobile";
+import { UserTable } from "./UserTable";
+import { columnsUsers } from "./ColumnsUsers";
 
 
 export default async function UsersList() {
     const activeUsers = await getAllUsers();
+    console.log(activeUsers[0])
     return (
-        <div>
-            <UsersTableDesktop data={activeUsers} />
-            <UsersCardsMobile users={activeUsers} />
-        </div>
+        <UserTable data= {activeUsers} columns={columnsUsers} />
     );
 }

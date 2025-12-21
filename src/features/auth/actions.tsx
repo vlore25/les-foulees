@@ -208,7 +208,7 @@ export async function loginUser(state: LoginFormState, formData: FormData): Prom
 
   await createSession(user.id)
 
-  redirect('/dashboard')
+  redirect('/espace-membre')
 }
 
 //===LOGOUT===== 

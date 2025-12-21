@@ -19,9 +19,7 @@ export default function LegalDocRowActions({ docId }: { docId: string }) {
   };
 
   return (
-    <>
-      {/* --- VERSION MOBILE (Dropdown) ---*/}
-      <div className="lg:hidden">
+      <div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -34,7 +32,7 @@ export default function LegalDocRowActions({ docId }: { docId: string }) {
             <DropdownMenuSeparator />
             {/* Action Editer */}
             <DropdownMenuItem asChild>
-              <Link href={`/admin/dashboard/evenement/${docId}/modifier`} className="cursor-pointer w-full flex items-center">
+              <Link href={`/admin/documents/${docId}`} className="cursor-pointer w-full flex items-center">
                 <Pencil className="mr-2 h-4 w-4" />
                 <span>Modifier</span>
               </Link>
@@ -52,17 +50,5 @@ export default function LegalDocRowActions({ docId }: { docId: string }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {/* --- VERSION DESKTOP (Boutons) --- */}
-      <div className="hidden lg:flex gap-1">
-        <Button variant="outline" size="sm" asChild>
-          <Link href={`/admin/dashboard/document/${docId}/modifier`}>
-            <Pencil className="h-4 w-4" />
-          </Link>
-        </Button>
-        <Button variant="destructive" size="sm" onClick={handleDelete} disabled={isPending}>
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
-    </>
   );
 }

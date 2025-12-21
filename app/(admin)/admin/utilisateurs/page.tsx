@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AdminUsersTable from "@/src/features/users/admin/user-gestion/AdminUsersTable";
+import AdminUsersList from "@/src/features/users/admin/user-gestion/AdminUsersList";
 import InviteForm from "@/src/features/users/invite/InviteForm";
 
 export default function UsersPage() {
@@ -9,7 +9,7 @@ export default function UsersPage() {
       name: 'Gestion de utilisateurs',
       value: 'user-gestion',
       content: (
-        <AdminUsersTable />
+        <AdminUsersList />
       )
     },
     {
@@ -21,7 +21,8 @@ export default function UsersPage() {
     },
   ]
   return (
-    <div className='w-full max-w-md'>
+    <div className='w-full'>
+      <h3>Gestion des utilisateurs</h3>
       <Tabs defaultValue='user-gestion' className='gap-4'>
         <TabsList className='bg-background'>
           {/** Tabs Buttons*/}

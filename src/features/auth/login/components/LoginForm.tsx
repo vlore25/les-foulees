@@ -9,7 +9,7 @@ import { useActionState } from 'react';
 import Image from 'next/image';
 import hero from '../../../../../public/images/login-hero.jpg';
 import FouleesLogo from '@/components/common/logo/FouleesLogo';
-import ErrorBox from '../../../../../components/common/ErrorBox';
+import ErrorBox from '../../../../../components/common/feedback/ErrorBox';
 
 const LoginForm = () => {
     const [state, action, pending] = useActionState(loginUser, undefined);
@@ -29,7 +29,7 @@ const LoginForm = () => {
                     </h1>
                 </div>
 
-                <form action={action} className='w-full space-y-5'>
+                <form action={action} className='w-full space-y-5' noValidate>
 
                     {/* Input Email */}
                     <div className="space-y-1">

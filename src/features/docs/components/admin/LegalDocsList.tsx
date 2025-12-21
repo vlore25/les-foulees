@@ -1,6 +1,5 @@
 
 import LegalDocsTableDesktop from "./LegalDocsTableDesktop";
-import LegalDocsCardMobile from "../shared/LegalDocsCardMobile";
 import { getLegalDocs } from "../../dal";
 
 export default async function LegalDocsList() {
@@ -9,12 +8,7 @@ export default async function LegalDocsList() {
 
   return (
     <div>
-      <div className="hidden md:block">
         <LegalDocsTableDesktop docs={docs} />
-      </div>
-      <div className="md:hidden">
-        <LegalDocsCardMobile docs={docs} />
-      </div>
     </div>
   );
 }

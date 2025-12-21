@@ -6,9 +6,9 @@ import { getLegalDocById } from "@/src/features/docs/dal";
 import LegalDocForm from "@/src/features/docs/components/admin/LegalDocsForm";
 
 interface PageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 export default async function EditLegalDocPage({ params }: PageProps) {
@@ -21,10 +21,10 @@ export default async function EditLegalDocPage({ params }: PageProps) {
     }
 
     return (
-        <div className="max-w-2xl mx-auto py-8">
+        <div>
             <div className="mb-6">
                 <Button variant="ghost" asChild>
-                    <Link href="/admin/dashboard?tab=docs" className="flex items-center gap-2">
+                    <Link href="/admin/documents" className="flex items-center gap-2">
                         <ArrowLeft className="h-4 w-4" />
                         Retour aux documents
                     </Link>

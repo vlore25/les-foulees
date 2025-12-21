@@ -1,17 +1,15 @@
-import DesktopMenu from "./navigation/DesktopMenu";
-import MobileMenu from "./navigation/Mobilemenu";
+
 import FouleesLogo from "../../common/logo/FouleesLogo";
-import HeaderActions from "./HeaderActions";
 import { SidebarTrigger } from "@/components/ui/side-bat";
 
 const HeaderUser = () => {
     return (
-        <nav className="p-2 lg:p-3 border-b-2">
-            <div className="flex items-center min-w-0 max-w-7xl mx-auto px-4 lg:px-8">
-                <SidebarTrigger className="self-start" />
+        <nav className=" border-b-1">
+            <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-2 sm:px-6">
+                <SidebarTrigger />
                 <FouleesLogo
                     size={100}
-                    className="!w-[90px] lg:!w-[120px]"
+                    className="!w-[90px] lg:!w-[100px]"
                 />
             </div>
         </nav>

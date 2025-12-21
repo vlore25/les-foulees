@@ -21,7 +21,10 @@ export async function updateProfile(state: ProfileFormState, formData: FormData)
         emergencyName: formData.get('emergencyName'),
         emergencyLastName: formData.get('emergencyLastName'),
         emergencyPhone: formData.get('emergencyPhone'),
+        showPhoneDirectory: formData.get('showPhoneDirectory'),
+        showEmailDirectory: formData.get('showEmailDirectory'),
     };
+    console.log(rawData);
 
     const validated = profileFormSchema.safeParse(rawData);
 

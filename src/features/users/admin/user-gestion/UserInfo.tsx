@@ -61,9 +61,12 @@ export default function UserInfo({ userData }: UserInfoProps) {
               <p className="text-base">{userData.phone || "Non renseigné"}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Visibilité Annuaire</p>
+              <p className="text-sm font-medium text-muted-foreground">Visibilité annuaire</p>
               <p className="text-sm italic">
-                {userData.showPhoneDirectory ? "Visible" : "Masqué"}
+                Telephone: {userData.showPhoneDirectory ? "Visible" : "Masqué"}
+              </p>
+              <p className="text-sm italic">
+                Email: {userData.showEmailDirectory ? "Visible" : "Masqué"}
               </p>
             </div>
           </div>

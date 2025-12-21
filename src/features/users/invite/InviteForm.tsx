@@ -6,6 +6,8 @@ import { MailIcon } from "lucide-react";
 import { useActionState } from "react";
 import { sendInviteAction } from "../user.action";
 import { InviteUserState } from "@/src/lib/definitions";
+import ErrorBox from "@/components/common/feedback/ErrorBox";
+import SuccesBox from "@/components/common/feedback/SuccesBox";
 
 const initialState: InviteUserState = {
     message: null,
@@ -14,14 +16,13 @@ const initialState: InviteUserState = {
 };
 
 export default function InviteForm() {
-    // AU LIEU DE 'undefined', on passe 'initialState'
     const [state, action, pending] = useActionState(sendInviteAction, initialState);
 
     return (
         <div>
             <h2>Inviter un nouveau membre</h2>
             <p>La personne recevra un lien unique dans sa boite email.</p>
-            <form action={action}>
+            <form action={action} noValidate>
                 <InputGroup>
                     <InputGroupInput 
                         name="email" 
@@ -35,11 +36,12 @@ export default function InviteForm() {
                 {state?.errors?.email && (
                     <p className="text-red-500 text-xs mt-1">{state.errors.email[0]}</p>
                 )}
-                {state?.message && (
-                    <p className={`text-sm font-bold mt-2 ${state.success ? 'text-green-600' : 'text-red-500'}`}>
-                        {state.message}
-                    </p>
-                )}
+                {state?.message && !state.success &&
+                    <ErrorBox error ={state.message}/> 
+                }
+                {state?.message && state.success &&
+                    <SuccesBox message ={state.message}/> 
+                }
                 <Button disabled={pending} type="submit" className="p-2 rounded w-full disabled:opacity-50 mt-4">
                     {pending ? 'Envoi en cours...' : 'Envoyer invitation'}
                 </Button>

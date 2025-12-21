@@ -10,7 +10,9 @@ export default function MainGroupLayout({ children }: { children: React.ReactNod
       <SidebarApp navItems={ItemsNavUser} />
       <div className="min-h-screen w-full bg-background font-sans antialiased">
           <HeaderUser />
+          <main className="p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto">
           {children}
+        </main>
       </div>
     </SidebarProvider>
   );

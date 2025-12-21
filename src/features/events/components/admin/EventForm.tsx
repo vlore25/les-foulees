@@ -30,7 +30,7 @@ export default function EventForm({ event }: EventFormProps) {
     );
 
     return (
-        <form action={action} className="space-y-6 max-w-2xl">
+        <form action={action} className="space-y-6 max-w-2xl" noValidate>
             <div className="flex flex-col gap-2">
                 <label htmlFor="title" className="block text-sm font-medium">
                     Titre
