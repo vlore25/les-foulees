@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { decrypt } from '@/src/lib/session'
  
 // 1. Specify protected and public routes
-const protectedPaths = ['/dashboard', '/admin']
+const protectedPaths = ['/espace-membre', '/admin']
 const publicPaths = ['/login', '/']
  
 export default async function proxy(req: NextRequest) {
@@ -24,9 +24,9 @@ export default async function proxy(req: NextRequest) {
   if (
     isPublicRoute &&
     session?.userId &&
-    !req.nextUrl.pathname.startsWith('/dashboard')
+    !req.nextUrl.pathname.startsWith('/espace-membre')
   ) {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
+    return NextResponse.redirect(new URL('/espace-membre', req.nextUrl))
   }
  
   return NextResponse.next()

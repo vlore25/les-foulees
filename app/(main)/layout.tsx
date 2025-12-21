@@ -1,13 +1,17 @@
 import Header from "@/components/layout/header/Header";
+import HeaderUser from "@/components/layout/header/HeaderUser";
+import { ItemsNavUser } from "@/components/layout/sidebar/ItemsNav";
+import { SidebarApp } from "@/components/layout/sidebar/Sidebar";
+import { SidebarProvider } from "@/components/ui/side-bat";
 
 export default function MainGroupLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50/50">
-      <Header />
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </main>
-      
-    </div>
+    <SidebarProvider>
+      <SidebarApp navItems={ItemsNavUser} />
+      <div className="min-h-screen w-full bg-background font-sans antialiased">
+          <HeaderUser />
+          {children}
+      </div>
+    </SidebarProvider>
   );
 }

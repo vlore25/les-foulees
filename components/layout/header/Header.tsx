@@ -1,7 +1,7 @@
 import DesktopMenu from "./navigation/DesktopMenu";
 import MobileMenu from "./navigation/Mobilemenu";
 import FouleesLogo from "../../common/logo/FouleesLogo";
-import HeaderActions from "./HeaderActions";
+import LoginButton from "@/src/features/auth/login/components/LoginButtonNav";
 
 const Header = () => {
     return (
@@ -15,7 +15,7 @@ const Header = () => {
                     />
                 </div>
                 <DesktopMenu />
-                <HeaderActions />
+                <LoginButton />
             </div>
         </nav>
     )

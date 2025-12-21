@@ -12,7 +12,7 @@ export default function LogoutButton() {
             size="responsive"
             className="bg-transparent text-red-600"
             onClick={() => logout()}>
-            Se déconnecter
+            <span>Se déconnecter</span>
             <LogOut color="red"/>
         </Button>
     );

@@ -3,7 +3,6 @@
 
 import { useUser } from "@/components/providers/UserProvider";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { ChevronsUpDown } from "lucide-react";
 
 
 export default function UserCard() {
@@ -20,8 +19,8 @@ export default function UserCard() {
 
     return (
         <div className="flex gap-2.5 items-center">
-            <Avatar>
-                <AvatarFallback>{initials}</AvatarFallback>
+            <Avatar >
+                <AvatarFallback className='bg-primary/10'>{initials}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start overflow-hidden">
                 <div className="flex gap-1.5 font-medium whitespace-nowrap truncate w-full">
@@ -29,7 +28,6 @@ export default function UserCard() {
                 </div>
                 <p className="text-xs lowercase">{user.email}</p>
             </div>
-            <ChevronsUpDown className="hidden lg:flex" />
         </div>
     );
 }

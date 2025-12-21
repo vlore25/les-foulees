@@ -13,7 +13,7 @@ const initialState: InviteUserState = {
     errors: {}
 };
 
-export default function InviteMember() {
+export default function InviteForm() {
     // AU LIEU DE 'undefined', on passe 'initialState'
     const [state, action, pending] = useActionState(sendInviteAction, initialState);
 

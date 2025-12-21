@@ -9,10 +9,10 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
 import { useTransition } from "react";
-import { Pencil, Trash2, MoreVertical } from "lucide-react";
-import { deleteUserAction } from "../user.action";
+import { Trash2, MoreVertical, Eye } from "lucide-react";
+import { deleteUserAction } from "../../user.action";
+import Link from "next/link";
 
 export function UserRowActions({ userId }: { userId: string }) {
     const [isPending, startTransition] = useTransition();
@@ -26,9 +26,7 @@ export function UserRowActions({ userId }: { userId: string }) {
     };
 
     return (
-        <>
-            {/* --- VERSION MOBILE (Dropdown) ---*/}
-            <div className="lg:hidden">
+            <div>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -37,9 +35,15 @@ export function UserRowActions({ userId }: { userId: string }) {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuLabel>Options</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        {/* Action Supprimer */}
+                        {/* Option delete */}
+                        <DropdownMenuItem >
+                            <Link href={`/admin/dashboard/utilisateur/${userId}`} className="flex flex-row">
+                            <Eye/>
+                            <span>Voir details</span>
+                            </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={handleDelete}
                             disabled={isPending}
@@ -51,18 +55,5 @@ export function UserRowActions({ userId }: { userId: string }) {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-
-            {/* --- VERSION DESKTOP (Boutons) --- */}
-            <div className="hidden lg:flex gap-1">
-                <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={handleDelete}
-                    disabled={isPending}
-                >
-                    <Trash2 className="h-4 w-4" />
-                </Button>
-            </div>
-        </>
     );
 }

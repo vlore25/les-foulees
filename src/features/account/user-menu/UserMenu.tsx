@@ -99,14 +99,3 @@ const MobileMenu = ({ user }: MenuProps) => {
 export default UserMenu;
 
 
-function AdminLink() {
-    return (
-        <Button variant="ghost" size="sm" asChild className="gap-2">
-            <Link href="/admin/dashboard">
-                <Columns3Cog className="size-4" />
-                <span>Espace Admin</span>
-            </Link>
-        </Button>
-    );
-}
-

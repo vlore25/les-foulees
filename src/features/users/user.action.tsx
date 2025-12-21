@@ -1,6 +1,6 @@
 "use server"
 import * as React from 'react';
-import { InviteUser } from "@/components/email-templates/InviteUser";
+import { InviteUser } from "@/components/email-templates/InviteUserTemplate";
 import { inviteSchema, InviteUserState } from "@/src/lib/definitions";
 import { prisma } from "@/src/lib/prisma";
 import { SignJWT } from 'jose';

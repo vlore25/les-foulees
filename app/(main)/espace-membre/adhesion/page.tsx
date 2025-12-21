@@ -1,4 +1,4 @@
-import { getActiveSeasonData } from "@/src/features/admin/season/dal";
+import { getActiveSeasonData } from "@/src/features/season/dal";
 import { getUserMembershipForActiveSeason } from "@/src/features/membership/dal";
 import { getProfile } from "@/src/features/account/dal";
 import { getSession } from "@/src/lib/session";

@@ -12,7 +12,6 @@ export default async function MembershipsList({
     searchParams: Promise<{ seasonId?: string }>
 }) {
     
-    // 1. Lire l'URL
     const params = await searchParams;
     const urlSeasonId = params?.seasonId;
 
