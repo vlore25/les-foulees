@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useActionState } from "react";
-import { resetPassword } from "../../actions";
+import { resetPassword } from "../../auth.actions";
 import ErrorCard from "@/components/common/feedback/ErrorCard";
 import FouleesLogo from "@/components/common/logo/FouleesLogo";
 import SuccesCard from "@/components/common/feedback/SuccesCard";

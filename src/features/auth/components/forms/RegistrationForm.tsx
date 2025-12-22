@@ -1,6 +1,6 @@
 'use client'
 
-import { registerUser } from '@/src/features/auth/actions'
+import { registerUser } from '@/src/features/auth/auth.actions'
 import { Button } from '@/components/ui/button'
 import { useActionState, useState } from 'react' // Import useState
 import { Field, FieldLabel } from '@/components/ui/field'
@@ -8,13 +8,15 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { AlertCircle, CalendarIcon, Check, CheckCircle2, ChevronLeft, ChevronRight, Globe } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
-import { Label } from '@radix-ui/react-dropdown-menu'
 import { cn } from '@/src/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import Link from 'next/link'
+import { Label } from '@/components/ui/Label'
+import ErrorText from '@/components/common/feedback/ErrorText'
+import ErrorBox from '@/components/common/feedback/ErrorBox'
 
 const STEPS = [
-  { id: 0, title: "Identité", fields: ["name", "lastname", "phone", "birthday"] },
+  { id: 0, title: "Identité", fields: ["name", "lastname", "phone", "birthdate"] },
   { id: 1, title: "Adresse", fields: ["address", "zip-code", "city"] },
   { id: 2, title: "Contact d'urgence", fields: ["emergencyName", "emergencyLastName", "emergencyPhone"] },
   { id: 3, title: "Sécurité", fields: ["password", "confirmPassword"] }
@@ -88,15 +90,13 @@ export default function RegistrationForm({ email, token }: { email: string, toke
         </div>
       </div>
 
+      {/* --- GLOBAL ERROR MESSAGE --- */}
       {state?.message && !state.success && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md flex items-center gap-3 text-red-700">
-          <AlertCircle className="w-5 h-5 shrink-0" />
-          <p className="text-sm font-medium">{state.message}</p>
-        </div>
+        <ErrorBox error={state.message}></ErrorBox>
       )}
 
       {/* --- FORMULAIRE --- */}
-      <form action={action} className="flex flex-col gap-6 min-h-[400px]">
+      <form action={action} className="flex flex-col gap-6 min-h-[400px]" noValidate>
         <input type="hidden" name="token" value={token} />
 
         {/* IDENTITÉ */}
@@ -106,29 +106,29 @@ export default function RegistrationForm({ email, token }: { email: string, toke
             <div className="flex-1">
               <Field>
                 <FieldLabel>Prénom</FieldLabel>
-                <Input id="name" name="name" placeholder="Votre prénom" required />
+                <Input id="name" name="name" placeholder="Votre prénom" defaultValue={state?.fields?.name} required />
               </Field>
-              <ErrorMessage errors={state?.errors?.name} />
+              <ErrorText>{state?.errors?.name}</ErrorText>
             </div>
             <div className="flex-1">
               <Field>
                 <FieldLabel>Nom</FieldLabel>
-                <Input id="lastname" name="lastname" placeholder="Nom" required />
+                <Input id="lastname" name="lastname" placeholder="Nom" defaultValue={state?.fields?.lastname} required />
               </Field>
-              <ErrorMessage errors={state?.errors?.lastname} />
+              <ErrorText>{state?.errors?.lastname}</ErrorText>
             </div>
           </div>
           <div className="flex flex-col md:flex-row gap-4 w-full items-start">
             <div className="flex-1">
-              <BirthDayPicker name="birthdate" />
-              <ErrorMessage errors={state?.errors?.birthdate} />
+              <BirthDayPicker name="birthdate" initialValue={state?.fields?.birthdate} />
+              <ErrorText>{state?.errors?.birthdate}</ErrorText>
             </div>
             <div className="flex-1">
               <Field>
                 <FieldLabel>Téléphone</FieldLabel>
-                <Input id="phone" name="phone" placeholder="06 12 34 56 78" required />
+                <Input id="phone" name="phone" placeholder="06 12 34 56 78" defaultValue={state?.fields?.phone} required />
               </Field>
-              <ErrorMessage errors={state?.errors?.phone} />
+              <ErrorText>{state?.errors?.phone}</ErrorText>
             </div>
           </div>
         </div>
@@ -139,24 +139,24 @@ export default function RegistrationForm({ email, token }: { email: string, toke
           <div>
             <Field>
               <FieldLabel>Adresse</FieldLabel>
-              <Input id="address" name="address" placeholder="N° et rue" required />
+              <Input id="address" name="address" placeholder="N° et rue" defaultValue={state?.fields?.address} required />
             </Field>
-            <ErrorMessage errors={state?.errors?.address} />
+            <ErrorText>{state?.errors?.address}</ErrorText>
           </div>
           <div className='flex flex-col md:flex-row gap-4 w-full'>
             <div className="w-full md:w-1/3">
               <Field>
                 <FieldLabel>Code Postal</FieldLabel>
-                <Input id="zip-code" name="zip-code" placeholder="75000" />
+                <Input id="zip-code" name="zip-code" placeholder="75000" defaultValue={state?.fields?.zipCode} />
               </Field>
-              <ErrorMessage errors={state?.errors?.zipCode} />
+              <ErrorText>{state?.errors?.zipCode}</ErrorText>
             </div>
             <div className="flex-1">
               <Field>
                 <FieldLabel>Ville</FieldLabel>
-                <Input id="city" name="city" placeholder="Ville" />
+                <Input id="city" name="city" placeholder="Ville" defaultValue={state?.fields?.city} />
               </Field>
-              <ErrorMessage errors={state?.errors?.city} />
+              <ErrorText>{state?.errors?.city}</ErrorText>
             </div>
           </div>
         </div>
@@ -168,59 +168,86 @@ export default function RegistrationForm({ email, token }: { email: string, toke
             <div className="flex-1">
               <Field>
                 <FieldLabel>Prénom</FieldLabel>
-                <Input name="emergencyName" />
+                <Input name="emergencyName" defaultValue={state?.fields?.emergencyName} />
               </Field>
-              <ErrorMessage errors={state?.errors?.emergencyName} />
+              <ErrorText>{state?.errors?.emergencyName}</ErrorText>
             </div>
             <div className="flex-1">
               <Field>
                 <FieldLabel>Nom</FieldLabel>
-                <Input name="emergencyLastName" />
+                <Input name="emergencyLastName" defaultValue={state?.fields?.emergencyLastName} />
               </Field>
-              <ErrorMessage errors={state?.errors?.emergencyLastName} />
+              <ErrorText>{state?.errors?.emergencyLastName}</ErrorText>
             </div>
           </div>
           <div>
             <Field>
               <FieldLabel>Téléphone d'urgence</FieldLabel>
-              <Input name="emergencyPhone" />
+              <Input name="emergencyPhone" defaultValue={state?.fields?.emergencyPhone} />
             </Field>
-            <ErrorMessage errors={state?.errors?.emergencyPhone} />
+            <ErrorText>{state?.errors?.emergencyPhone} </ErrorText>
           </div>
         </div>
 
         {/* ÉTAPE 3 : SÉCURITÉ */}
         <div className={cn("space-y-4", currentStep === 3 ? "block" : "hidden")}>
           <h2 className="text-xl font-semibold mb-4">Sécuriser votre compte</h2>
-
           <Field>
             <FieldLabel>Courriel</FieldLabel>
             <Input id="email" name="email" value={email} readOnly className="bg-muted text-muted-foreground" />
             <p className="text-xs text-muted-foreground mt-1">Lié à votre invitation.</p>
           </Field>
-
           <div className='flex flex-col md:flex-row gap-4 w-full'>
             <div className="flex-1">
               <Field>
                 <FieldLabel>Mot de passe</FieldLabel>
-                <Input id="password" name="password" type="password" required />
+                <Input id="password" name="password" type="password" required defaultValue={state?.fields?.password} />
               </Field>
-              <ErrorMessage errors={state?.errors?.password} />
+              <ErrorText>{state?.errors?.password} </ErrorText>
             </div>
             <div className="flex-1">
               <Field>
                 <FieldLabel>Confirmer</FieldLabel>
-                <Input id="confirmPassword" name="confirmPassword" type="password" required />
+                <Input id="confirmPassword" name="confirmPassword" type="password" defaultValue={state?.fields?.confirmPassword} required />
               </Field>
-              <ErrorMessage errors={state?.errors?.confirmPassword} />
+              <ErrorText>{state?.errors?.confirmPassword}</ErrorText>
+            </div>
+          </div>
+          <div className='flex flex-col gap-4 mt-4'>
+            <div>
+              <p className="font-medium">Annuaire des adhérents</p>
+              <p className="text-xs text-muted-foreground">
+                Ces informations seront visibles uniquement par les membres connectés.
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                id="showPhoneDirectory"
+                name="showPhoneDirectory"
+                defaultChecked={state?.fields?.showPhoneDirectory === true}
+              />
+              <Label htmlFor="showPhoneDirectory" className="cursor-pointer">
+                Diffuser mon téléphone
+              </Label>
+            </div>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                id="showEmailDirectory"
+                name="showEmailDirectory"
+                defaultChecked={state?.fields?.showEmailDirectory === true}
+              />
+              <Label htmlFor="showEmailDirectory" className="cursor-pointer">
+                Diffuser mon Courriel
+              </Label>
             </div>
           </div>
           <div className="flex items-center gap-3 mt-2">
-            <Checkbox id="terms-conditions" required />
+            <Checkbox id="terms-conditions" name="terms-conditions" required />
             <Label className="text-sm">J'accepte les Conditions Générales et la Politique de Confidentialité.</Label>
+            <ErrorText>{state?.errors?.terms}</ErrorText>
           </div>
         </div>
-        
+
         {/* --- NAVIGATION --- */}
         <div className="flex justify-between mt-6 pt-4 border-t">
           <Button
@@ -228,17 +255,17 @@ export default function RegistrationForm({ email, token }: { email: string, toke
             variant="outline"
             onClick={handlePrev}
             disabled={currentStep === 0}
-            className={cn(currentStep === 0 && "invisible")} // Cache le bouton au début
+            className={cn(currentStep === 0 && "invisible")}
           >
             <ChevronLeft className="w-4 h-4 mr-2" /> Retour
           </Button>
 
           {currentStep < STEPS.length - 1 ? (
-            <Button type="button" onClick={handleNext}>
+            <Button key="next-button" type="button" onClick={handleNext}>
               Suivant <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
           ) : (
-            <Button type="submit" disabled={pending}>
+            <Button key="submit-button" type="submit" disabled={pending}>
               {pending ? 'Création...' : 'Finaliser l’inscription'}
             </Button>
           )}
@@ -249,18 +276,14 @@ export default function RegistrationForm({ email, token }: { email: string, toke
   )
 }
 
-function ErrorMessage({ errors }: { errors?: string[] }) {
-  if (!errors || errors.length === 0) return null;
-  return (
-    <p className="text-red-500 text-sm mt-1 animate-in slide-in-from-top-1">
-      {errors[0]}
-    </p>
-  );
-}
 
-function BirthDayPicker({ name }: { name: string }) {
+
+
+function BirthDayPicker({ name, initialValue }: { name: string, initialValue?: string }) {
   const [open, setOpen] = useState(false)
-  const [date, setDate] = useState<Date | undefined>(undefined)
+  const [date, setDate] = useState<Date | undefined>(
+    initialValue ? new Date(initialValue) : undefined
+  )
 
   return (
     <div className="flex flex-col gap-2 flex-1">
@@ -272,6 +295,7 @@ function BirthDayPicker({ name }: { name: string }) {
         <PopoverTrigger asChild>
           <Button
             variant="outline"
+            type="button"
             className={cn(
               "w-full justify-between text-left font-normal",
               !date && "text-muted-foreground"

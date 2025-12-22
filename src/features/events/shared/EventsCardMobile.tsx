@@ -2,7 +2,7 @@
 
 "use client";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { EventListItem } from "../../dal";
+import { EventListItem } from "../dal";
 import JoinEventButton from "../public/JointEventButton";
 import { useUser } from "@/components/providers/UserProvider";
 import { usePathname } from "next/navigation";
@@ -28,8 +28,7 @@ export default function EventsCardMobile({ events }: EventsProps) {
             {events.map((event) => {
                 return (
                     <Card key={event.id} className='border-none gap-1 shadow-md hover:shadow-lg transition-shadow duration-300 pt-0 overflow-hidden flex flex-col h-full'>
-                        {/* On rend l'image et le header cliquables via Link */}
-                        <Link href={`/dashboard/evenements/${event.id}`} className="block cursor-pointer hover:opacity-95 transition-opacity">
+                        <Link href={`/espace-membre/evenements/${event.id}`} className="block cursor-pointer hover:opacity-95 transition-opacity">
                             <div className="relative w-full h-48">
                                 <Image
                                     src={event.imgUrl || '/images/login-hero.jpg'}

@@ -37,7 +37,11 @@ export type RegisterFormState = {
     emergencyName?: string[];
     emergencyLastName?: string[];
     emergencyPhone?: string[];
+    showPhoneDirectory: boolean;
+    showEmailDirectory: boolean;
+    terms: boolean;
   };
+  fields?: Record<string, any>;
   message?: string | null;
   success?: boolean;
 } | undefined;
@@ -132,6 +136,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
     showEmailDirectory: formData.get('showEmailDirectory') === 'on',
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
+    terms: formData.get('terms-conditions')=== 'on',
   }
 
   const validatedFields = registerFormSchema.safeParse(rawFormData);
@@ -139,12 +144,13 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
   if (!validatedFields.success) {
     return {
       success: false,
+      fields: rawFormData,
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Veuillez corriger les erreurs dans le formulaire."
     };
   }
 
-  const { confirmPassword, ...userData } = validatedFields.data;
+  const { confirmPassword, terms, ...userData } = validatedFields.data;
 
 
   const existingUser = await prisma.user.findUnique({ where: { email: emailVerifie } });
@@ -179,7 +185,6 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
   }
 
 }
-
 
 //===LOGIN===== 
 export async function loginUser(state: LoginFormState, formData: FormData): Promise<LoginFormState> {

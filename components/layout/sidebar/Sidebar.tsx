@@ -1,9 +1,10 @@
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/side-bat";
-import UserCard from "@/src/features/account/user-menu/components/UserCard";
+
 import { NavSection } from "./ItemsNav";
 import Link from "next/link";
 import { getCurrentUser } from "@/src/features/users/dal";
-import LogoutButton from "@/src/features/auth/logout/LogoutButton";
+import LogoutButton from "@/src/features/auth/components/buttons/LogoutButton";
+import UserCard from "@/src/features/account/components/UserCard";
 
 interface SidebarAppProps {
   navItems: NavSection[];

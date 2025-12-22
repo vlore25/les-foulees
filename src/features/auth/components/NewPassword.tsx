@@ -1,9 +1,9 @@
-import { verifyRecoveryToken } from "@/src/features/auth/actions"; // Vérifie le chemin
+import { verifyRecoveryToken } from "@/src/features/auth/auth.actions"; 
 import Image from "next/image";
-import hero from '@/public/images/login-hero.jpg'; // Vérifie le chemin
-import ErrorCard from "@/components/common/feedback/ErrorCard"; // Vérifie le chemin
-import ResetPasswordForm from "./components/ResetPasswordForm";
-import FouleesLogo from "@/components/common/logo/FouleesLogo"; // ✅ On importe le Logo ici
+import hero from '@/public/images/login-hero.jpg'; 
+import ErrorCard from "@/components/common/feedback/ErrorCard"; 
+import FouleesLogo from "@/components/common/logo/FouleesLogo"; 
+import ResetPasswordForm from "./forms/ResetPasswordForm";
 
 interface NewPasswordProps {
     token: string;

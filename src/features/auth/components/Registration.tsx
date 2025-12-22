@@ -1,8 +1,8 @@
 import { Card } from "@/components/ui/card";
-import { verifyInvitationToken } from "../../actions";
-import RegistrationForm from "./RegistrationForm";
+import { verifyInvitationToken } from "../auth.actions";
 import { UserPlus } from "lucide-react";
 import ErrorCard from "@/components/common/feedback/ErrorCard";
+import RegistrationForm from "./forms/RegistrationForm";
 
 interface InscriptionFeatureProps {
   token: string | undefined;

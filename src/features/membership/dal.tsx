@@ -6,12 +6,10 @@ type AdhesionFilter = 'ALL' | 'VALIDATED' | 'TO_HANDLE';
 
 export default async function getAdhesions(
     filter: AdhesionFilter = 'ALL', 
-    seasonId?: string // <--- C'EST ICI QUE CA MANQUAIT
+    seasonId?: string 
 ) {
 
     let whereCondition: any = {};
-
-    // 1. LOGIQUE DE SAISON (C'est ce qui fait marcher le select)
     if (seasonId) {
         whereCondition.seasonId = seasonId;
     } else {
@@ -44,7 +42,6 @@ export default async function getAdhesions(
                     lastname: true,
                     email: true,
                     phone: true,
-                    // Champs utiles pour l'export CSV
                     birthdate: true,
                     address: true,
                     zipCode: true,
@@ -73,7 +70,7 @@ export async function getAdhesionStats(seasonId?: string) {
 
     const [total, validated, toHandle] = await Promise.all([
         prisma.membership.count({
-            where: whereCondition // <-- On utilise la condition dynamique
+            where: whereCondition 
         }),
         prisma.membership.count({
             where: { ...whereCondition, status: 'VALIDATED' }
@@ -104,9 +101,7 @@ export async function getUserMembershipForActiveSeason(userId: string) {
         const memberShip = await prisma.membership.findFirst({
             where: {
                 userId: session.userId,
-                // --- AJOUT OBLIGATOIRE ICI ---
                 season: { isActive: true } 
-                // Sans ça, vous récupérez les vieux dossiers !
             },
         })
 

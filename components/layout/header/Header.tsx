@@ -1,7 +1,7 @@
 import DesktopMenu from "./navigation/DesktopMenu";
 import MobileMenu from "./navigation/Mobilemenu";
 import FouleesLogo from "../../common/logo/FouleesLogo";
-import LoginButton from "@/src/features/auth/login/components/LoginButtonNav";
+import LoginButton from "@/src/features/auth/components/buttons/LoginButton";
 
 const Header = () => {
     return (

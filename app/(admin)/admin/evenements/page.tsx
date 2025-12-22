@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import EventForm from "@/src/features/events/components/admin/EventForm";
-import EventList from "@/src/features/events/components/admin/EventList";
+import EventList from "@/src/features/events/admin/EventList";
+import EventForm from "@/src/features/events/admin/forms/EventForm";
 
 export default function eventsPage() {
 

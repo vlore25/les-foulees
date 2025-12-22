@@ -1,4 +1,4 @@
-import NewPassword from "@/src/features/auth/password-reset/NewPassword";
+import NewPassword from "@/src/features/auth/components/NewPassword";
 
 interface PageProps {
     searchParams: { token: string }

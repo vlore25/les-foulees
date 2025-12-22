@@ -100,10 +100,11 @@ export const registerFormSchema = z.object({
   emergencyName: z.string().optional().or(z.literal('')),
   emergencyLastName: z.string().optional().or(z.literal('')),
   emergencyPhone: z.string().optional().or(z.literal('')).refine(val => !val || phoneRegex.test(val), "Numéro invalide"),
-  // --- CHAMPS OPTIONNELS ---
-
   showPhoneDirectory: z.boolean().default(false),
   showEmailDirectory: z.boolean().default(false),
+  terms: z.boolean().refine((val) => val === true, {
+    message: "Vous devez accepter les conditions pour continuer.",
+  }),
 
 })
   .refine((data) => data.password === data.confirmPassword, {
@@ -231,7 +232,7 @@ export const profileFormSchema = z.object({
   zipCode: z.string().regex(/^\d{5}$/, "Code postal invalide"),
   city: z.string().min(1, "Ville requise").trim(),
   showPhoneDirectory: z.boolean().default(false),
-  showEmailDirectory: z.boolean().default(false),  
+  showEmailDirectory: z.boolean().default(false),
   emergencyName: z.string().optional().or(z.literal('')),
   emergencyLastName: z.string().optional().or(z.literal('')),
   emergencyPhone: z.string().optional().or(z.literal('')).refine(val => !val || phoneRegex.test(val), "Numéro invalide"),

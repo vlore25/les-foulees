@@ -13,11 +13,9 @@ import { CheckCircle2, Clock, XCircle, FileText, Download, ExternalLink } from "
 import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import MembershipRowActions from "./MembershipRowActions"; // Assurez-vous d'avoir ce composant créé précédemment
 
-// Mise à jour de l'interface pour inclure les nouveaux champs
 interface MembershipWithRelations {
     id: string;
     type: string;
-    adhesionPdf: string;
     status: string;
     medicalCertificateVerified: boolean;
     certificateUrl?: string | null;
@@ -92,22 +90,6 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                                 </span>
                             </TableCell>
 
-                            {/* COLONNE 3 : Bulletin PDF */}
-                            <TableCell>
-                                {m.adhesionPdf ? (
-                                    <a
-                                        href={m.adhesionPdf}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline border border-blue-100 bg-blue-50 px-2 py-1 rounded"
-                                    >
-                                        <FileText className="h-3 w-3" />
-                                        Bulletin
-                                    </a>
-                                ) : (
-                                    <span className="text-muted-foreground text-xs">N/A</span>
-                                )}
-                            </TableCell>
 
                             {/* COLONNE 4 : LOGIQUE CERTIFICAT / LICENCE */}
                             <TableCell>

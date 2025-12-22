@@ -1,4 +1,4 @@
-import { ProfileForm } from '@/src/features/account/components/ProfileForm';
+import { ProfileForm } from '@/src/features/account/components/forms/AccountUpdateForm';
 import { getProfile } from '@/src/features/account/dal';
 import { getSession } from '@/src/lib/session';
 import { redirect } from 'next/navigation';

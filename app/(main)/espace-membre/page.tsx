@@ -1,8 +1,7 @@
-// app/(main)/dashboard/page.tsx
 import { getCurrentUser } from '@/src/features/users/dal'
 import { redirect } from 'next/navigation'
 
-export default async function DashboardPage() {
+export default async function MemberSpacePage() {
   const user = await getCurrentUser()
   
   if (!user) {

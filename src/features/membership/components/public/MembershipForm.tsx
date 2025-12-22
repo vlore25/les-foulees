@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Check, Loader2, UploadCloud } from "lucide-react" // J'ai ajouté l'icone UploadCloud
+import { Check, Loader2, UploadCloud } from "lucide-react" 
 import { cn } from "@/src/lib/utils"
 import { createMembershipRequest } from "../../memberships.actions"
 import { Label } from "@radix-ui/react-label"
-import { Switch } from "@/components/ui/swtich" // Attention à votre typo 'swtich' dans le nom du fichier
+import { Switch } from "@/components/ui/swtich" 
 import { PdfPreviewStep } from "../../service/PdfPreview"
 
 interface MembershipFormProps {
@@ -26,19 +26,14 @@ const initialState = {
 
 const STEPS = [
     { id: 0, title: "Type", fields: ["type"] },
-    // On ajoute 'medicalCertificate' aux champs à valider pour l'étape 1
-    { id: 1, title: "Infos & Licence", fields: ["ffa", "club", "medicalCertificate", "showPhoneDirectory", "showEmailDirectory"] },
+    { id: 1, title: "Infos & Licence", fields: ["ffa", "club", "medicalCertificate"] },
     { id: 2, title: "Paiement", fields: ["paymentMethod"] },
-    { id: 3, title: "Signature", fields: [] }
 ]
 
 export function MembershipForm({ userProfile, season, initialData }: MembershipFormProps) {
 
     const [state, action, pending] = useActionState(createMembershipRequest, initialState)
-
-    // --- ÉTATS ---
     const [currentStep, setCurrentStep] = useState(0)
-    const [signatureData, setSignatureData] = useState<string>("")
 
     const [formData, setFormData] = useState<any>({
         ...userProfile,
@@ -46,8 +41,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
         lastName: userProfile.lastname,   
         type: initialData?.type || "INDIVIDUAL",
         paymentMethod: initialData?.payment?.method || "CHECK",
-        showPhoneDirectory: initialData ? initialData.sharePhone : true,
-        showEmailDirectory: initialData ? initialData.shareEmail : true,
         ffa: initialData?.ffaLicenseNumber || "",
         club: initialData?.previousClub || "",
         signature: ""
@@ -69,9 +62,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
         currentFields.forEach(fieldName => {
             const field = form.elements.namedItem(fieldName) as HTMLInputElement | RadioNodeList
             if (field) {
-                // Si le champ existe dans le DOM (donc affiché), on le valide
                 if (field instanceof RadioNodeList && field.value === "") {
-                    // Validation custom si besoin
                 }
                 else if (field instanceof HTMLInputElement && !field.checkValidity()) {
                     field.reportValidity()
@@ -126,7 +117,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
             <form action={action} ref={formRef} className="space-y-6 bg-white p-6 rounded-lg border shadow-sm mt-10">
 
-                <input type="hidden" name="signature" value={signatureData} />
                 {hasLicense && <input type="hidden" name="licenseType" value={licenseSource} />}
 
                 {state?.message && (
@@ -256,54 +246,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                             </div>
                         )}
                     </div>
-
-                    {/* SECTION CONSENTEMENTS (RGPD) */}
-                    <div className="space-y-4 border-t pt-4">
-                        <h3 className="text-lg font-medium">Annuaire des adhérents</h3>
-                        <p className="text-xs text-muted-foreground">
-                            Ces informations seront visibles uniquement par les membres connectés.
-                        </p>
-
-                        <div className="space-y-3 p-3 border rounded-md bg-white">
-                            <Label className="text-sm font-semibold">
-                                Diffuser mon téléphone ? <span className="text-red-500">*</span>
-                            </Label>
-                            <RadioGroup
-                                name="showPhoneDirectory"
-                                defaultValue="off"
-                                className="flex flex-row gap-6"
-                            >
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="on" id="phone-yes" />
-                                    <Label htmlFor="phone-yes" className="cursor-pointer font-normal">Oui</Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="off" id="phone-no" />
-                                    <Label htmlFor="phone-no" className="cursor-pointer font-normal">Non</Label>
-                                </div>
-                            </RadioGroup>
-                        </div>
-
-                        <div className="space-y-3 p-3 border rounded-md bg-white">
-                            <Label className="text-sm font-semibold">
-                                Diffuser mon e-mail ? <span className="text-red-500">*</span>
-                            </Label>
-                            <RadioGroup
-                                name="showEmailDirectory"
-                                defaultValue="off"
-                                className="flex flex-row gap-6"
-                            >
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="on" id="email-yes" />
-                                    <Label htmlFor="email-yes" className="cursor-pointer font-normal">Oui</Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="off" id="email-no" />
-                                    <Label htmlFor="email-no" className="cursor-pointer font-normal">Non</Label>
-                                </div>
-                            </RadioGroup>
-                        </div>
-                    </div>
                 </div>
 
                 {/* === ÉTAPE 2 : PAIEMENT === */}
@@ -327,17 +269,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                     </div>
                 </div>
 
-                {/* === ÉTAPE 3 : SIGNATURE === */}
-                {currentStep === 3 && (
-                    <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-                        <h3 className="text-lg font-medium mb-4">Vérification et Signature</h3>
-                        <PdfPreviewStep
-                            formData={formData}
-                            userProfile={userProfile}
-                            onSignatureComplete={(data) => setSignatureData(data)}
-                        />
-                    </div>
-                )}
 
                 {/* === BOUTONS DE NAVIGATION === */}
                 <div className="flex justify-between pt-4 border-t mt-6">
@@ -355,7 +286,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                         <Button
                             type="submit"
                             className="ml-auto bg-green-600 hover:bg-green-700 w-40"
-                            disabled={pending || !signatureData}
+                            disabled={pending}
                         >
                             {pending ? (
                                 <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Envoi...</>

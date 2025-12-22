@@ -1,11 +1,11 @@
 "use client"
 
-import { sendPasswordResetEmail } from "../actions";
+import { sendPasswordResetEmail } from "../../auth.actions";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { ArrowLeft, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useActionState } from "react";
-import ErrorBox from "../../../../components/common/feedback/ErrorBox";
+import ErrorBox from "../../../../../components/common/feedback/ErrorBox";
 import Link from "next/link";
 import FouleesLogo from "@/components/common/logo/FouleesLogo";
 import Image from "next/image";

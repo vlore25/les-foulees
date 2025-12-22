@@ -115,7 +115,7 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                         )}
                     </CardContent>
                     <CardFooter>
-                        <Link href="/dashboard" className="w-full">
+                        <Link href="/espace-membre/" className="w-full">
                             <Button variant="outline" className="w-full">Retour au tableau de bord</Button>
                         </Link>
                     </CardFooter>

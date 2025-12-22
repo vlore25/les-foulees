@@ -1,4 +1,4 @@
-import { getAllevents } from "../../dal";
+import { getAllevents } from "../dal";
 import EventsCardMobile from "../shared/EventsCardMobile";
 
 export default async function EventListPublic(){

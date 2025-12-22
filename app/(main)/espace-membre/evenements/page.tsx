@@ -1,5 +1,4 @@
-import EventListPublic from "@/src/features/events/components/public/EventListPublic";
-
+import EventListPublic from "@/src/features/events/public/EventListPublic";
 
 export default function EventsPage(){
     return(

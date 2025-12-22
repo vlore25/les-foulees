@@ -1,4 +1,4 @@
-import { InscriptionFeature } from "@/src/features/auth/inscription/components/inscription-feature";
+import { InscriptionFeature } from "@/src/features/auth/components/Registration";
 
 type Params = Promise<{ token?: string }>;
 

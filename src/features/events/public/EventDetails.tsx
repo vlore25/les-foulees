@@ -32,7 +32,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
         <div className="max-w-4xl mx-auto pb-10 space-y-8">
             <div>
                 <Button variant="ghost" asChild className="pl-0 gap-2 text-muted-foreground hover:text-foreground">
-                    <Link href="/dashboard/evenements">← Retour aux événements</Link>
+                    <Link href="/espace-membre/evenements">← Retour aux événements</Link>
                 </Button>
             </div>
             <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-md bg-muted">

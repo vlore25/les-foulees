@@ -1,6 +1,6 @@
 "use client"
 
-import { loginUser } from '@/src/features/auth/actions';
+import { loginUser } from '@/src/features/auth/auth.actions';
 import { Button } from '@/components/ui/button';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { LockKeyhole, UserCircle } from 'lucide-react';

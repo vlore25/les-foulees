@@ -35,7 +35,7 @@ export function toPublicDTO(user: any): PublicUserDTO {
     name: user.name,
     lastname: user.lastname,
     phone: user.showPhoneDirectory ? user.phone : null,
-    email: user.showPhoneDirectory ? user.email : null,
+    email: user.showEmailDirectory ? user.email : null,
   }
 }
 
@@ -47,7 +47,7 @@ export function toAdminDTO(user: any): AdminUserDTO {
     birthdate: user.birthdate,
     phone: user.phone,
     email: user.email,
-    address: user.adress,
+    address: user.address,
     zipCode: user.zipCode,
     city: user.city,
     status: user.status,

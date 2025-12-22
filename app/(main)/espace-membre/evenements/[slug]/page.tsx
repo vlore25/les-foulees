@@ -1,8 +1,6 @@
 import { notFound } from "next/navigation";
 import { getEventWithParticipationStatus } from "@/src/features/events/dal"; 
-
-
-import EventDetails from "@/src/features/events/components/public/EventDetails";
+import EventDetails from "@/src/features/events/public/EventDetails";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
