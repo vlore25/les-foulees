@@ -46,8 +46,8 @@ export const newPasswordSchema = z.object({
 
 
 export const registerFormSchema = z.object({
-  // --- CHAMPS OBLIGATOIRES ---
-  //Non email, the email liked to the user is where is received his invitation, he can change in profile configuration
+
+  //No email, the email liked to the user is where is received his invitation, he can change in profile configuration
   name: z
     .string()
     .min(2, { message: "Le prénom doit comporter au moins 2 caractères." })
@@ -241,7 +241,6 @@ export const profileFormSchema = z.object({
 
 export const MembershipTypeEnum = z.enum([
   "INDIVIDUAL",
-  "COUPLE",
   "YOUNG",
   "LICENSE_RUNNING"
 ]);

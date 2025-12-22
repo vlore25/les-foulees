@@ -37,9 +37,9 @@ export type RegisterFormState = {
     emergencyName?: string[];
     emergencyLastName?: string[];
     emergencyPhone?: string[];
-    showPhoneDirectory: boolean;
-    showEmailDirectory: boolean;
-    terms: boolean;
+    showPhoneDirectory?: string[]; 
+    showEmailDirectory?: string[];
+    terms?: string[];
   };
   fields?: Record<string, any>;
   message?: string | null;

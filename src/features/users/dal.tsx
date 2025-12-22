@@ -93,3 +93,24 @@ export const getCurrentUser = cache(async () => {
   return user;
 });
 
+export async function searchPartnerByName(query: string) {
+  if (query.length < 2) return [];
+
+  const users = await prisma.user.findMany({
+    where: {
+      OR: [
+        { name: { contains: query, mode: 'insensitive' } },
+        { lastname: { contains: query, mode: 'insensitive' } } 
+      ]
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+    take: 3
+  });
+
+  return users;
+}
+

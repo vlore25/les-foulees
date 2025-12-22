@@ -31,7 +31,6 @@ export default function eventsPage() {
                         <TabsTrigger
                             key={tab.value}
                             value={tab.value}
-                            className='data-[state=active]:bg-primary/20 data-[state=active]:text-primary dark:data-[state=active]:text-primary dark:data-[state=active]:bg-primary/20 data-[state=active]:shadow-none dark:data-[state=active]:border-transparent'
                         >
                             {tab.name}
                         </TabsTrigger>

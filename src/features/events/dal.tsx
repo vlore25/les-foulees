@@ -1,6 +1,5 @@
-import { verifySession } from "@/src/lib/dal";
 import { prisma } from "@/src/lib/prisma";
-import { getSession } from "@/src/lib/session";
+import { getSession, verifySession } from "@/src/lib/session";
 import { cache } from "react";
 
 
@@ -55,6 +54,7 @@ export async function getAllevents(): Promise<EventListItem[]> {
 
 }
 
+//GET EVENT BY ID
 export const getEventById = cache(async (eventId: string) => {
   const event = await prisma.event.findUnique({
     where: {
@@ -65,6 +65,7 @@ export const getEventById = cache(async (eventId: string) => {
   return event;
 });
 
+//GET EVENT AND PARTICIPANTS
 export const getEventWithParticipationStatus = cache(async (eventId: string) => {
   if (!eventId) return null;
   const session = await verifySession(); 

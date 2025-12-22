@@ -1,4 +1,5 @@
-import { getAllevents } from "../../dal";
+
+import { getAllevents } from "../dal";
 import EventsTableDesktop from "./EventsTableDesktop";
 
 export default async function EventList() {

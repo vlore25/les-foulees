@@ -72,20 +72,15 @@ export const getSession = cache(async () => {
   return { isAuth: true, userId: session.userId as string }
 })
 
-
-
-export async function verifySession(){
-
-  const token = (await cookies()).get(cookie.name)?.value
-  const session = await decrypt(token)
-
-  if(!session?.userId){
+export const verifySession = cache(async () => {
+  const cookie = (await cookies()).get('lesFoulees')?.value
+  const session = await decrypt(cookie)
+ 
+  if (!session?.userId) {
     redirect('/login')
   }
-  return { userId: session.userId as string }
-
-}
-
+  return { isAuth: true, userId: session.userId as string }
+})
 
 export async function deleteSession() {
 

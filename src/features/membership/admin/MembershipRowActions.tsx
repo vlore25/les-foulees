@@ -20,7 +20,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { MoreHorizontal, CheckCircle, XCircle, Loader2 } from "lucide-react";
-import { validateMembershipAction, refuseMembershipAction } from "../../memberships.actions";
+import { validateMembershipAction, refuseMembershipAction } from "../memberships.actions";
 
 interface MembershipRowActionsProps {
     id: string;

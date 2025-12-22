@@ -5,12 +5,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Check, Loader2, UploadCloud } from "lucide-react" 
+import { Check, Loader2, UploadCloud } from "lucide-react"
 import { cn } from "@/src/lib/utils"
-import { createMembershipRequest } from "../../memberships.actions"
+import { createMembershipRequest } from "../memberships.actions"
 import { Label } from "@radix-ui/react-label"
-import { Switch } from "@/components/ui/swtich" 
-import { PdfPreviewStep } from "../../service/PdfPreview"
+import { Switch } from "@/components/ui/swtich"
 
 interface MembershipFormProps {
     userProfile: any;
@@ -37,13 +36,12 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
     const [formData, setFormData] = useState<any>({
         ...userProfile,
-        firstName: userProfile.name,  
-        lastName: userProfile.lastname,   
+        firstName: userProfile.name,
+        lastName: userProfile.lastname,
         type: initialData?.type || "INDIVIDUAL",
         paymentMethod: initialData?.payment?.method || "CHECK",
         ffa: initialData?.ffaLicenseNumber || "",
         club: initialData?.previousClub || "",
-        signature: ""
     })
 
     const [hasLicense, setHasLicense] = useState(!!userProfile.ffaNumber);
@@ -141,10 +139,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                             <Label htmlFor="t-indi" className="flex-1 cursor-pointer font-normal">Individuel {season.priceStandard} €</Label>
                         </div>
                         <div className="flex items-center space-x-3 border p-3 rounded-md cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-slate-50">
-                            <RadioGroupItem value="COUPLE" id="t-couple" />
-                            <Label htmlFor="t-couple" className="flex-1 cursor-pointer font-normal">Couple {season.priceCouple} €</Label>
-                        </div>
-                        <div className="flex items-center space-x-3 border p-3 rounded-md cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-slate-50">
                             <RadioGroupItem value="YOUNG" id="t-young" />
                             <Label htmlFor="t-young" className="flex-1 cursor-pointer font-normal">Jeune -18 ans {season.priceYoung} €</Label>
                         </div>
@@ -157,8 +151,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
                 {/* === ÉTAPE 1 : LICENCE & CONSENTEMENTS === */}
                 <div className={cn("space-y-6", currentStep === 1 ? "block" : "hidden")}>
-
-                    {/* SECTION : STATUT LICENCE ET DOCUMENT */}
                     <div className="p-2 lg:p-2 space-y-2">
                         <div className="flex items-center justify-between">
                             <div className="space-y-0.5">

@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import getAdhesions from "../../dal";
+import getAdhesions from "../dal";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import MembershipTable from "./MembershipTable";
 import { prisma } from "@/src/lib/prisma";

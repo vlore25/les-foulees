@@ -1,5 +1,5 @@
 import { Season } from "@/app/generated/prisma/client";
-import { Badge } from "@/components/ui/badge";
+import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import { Archive } from "lucide-react";
 
 type SeasonWithCount = Season & {
@@ -15,8 +15,10 @@ interface SeasonListProps {
 export default function SeasonList({ archivedSeasons }: SeasonListProps) {
     return (
         <>
-            {archivedSeasons.length > 0 && (
-                <div className="mt-8">
+            {archivedSeasons.length === 0 ? (
+                <EmptyCategory/>
+            ):(
+                <div>
                     <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-slate-600">
                         <Archive className="w-5 h-5" /> Historique des saisons
                     </h3>

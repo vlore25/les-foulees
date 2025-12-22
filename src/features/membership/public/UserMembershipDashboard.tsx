@@ -1,14 +1,14 @@
 'use client'
 
-import { MembershipForm } from "./MembershipForm";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AlertCircle, CheckCircle, Clock } from "lucide-react";
 import { MembershipStatus, MembershipType } from "@/app/generated/prisma/enums";
+import ErrorCard from "@/components/common/feedback/ErrorCard";
+import { MembershipForm } from "./MembershipForm";
 
-// --- Types et Constantes (Locaux à la feature) ---
 
 const STATUS_INFO = {
     [MembershipStatus.PENDING]: {
@@ -30,7 +30,6 @@ const STATUS_INFO = {
 
 const TYPE_LABELS: Record<string, string> = {
     INDIVIDUAL: "Individuel",
-    COUPLE: "Couple",
     YOUNG: "Jeune (-18)",
     LICENSE_RUNNING: "Licence Running (FFA)"
 };
@@ -38,29 +37,22 @@ const TYPE_LABELS: Record<string, string> = {
 interface UserMembershipDashboardProps {
     user: any;
     season: any;
-    membership: any; // On passe l'adhésion complète
+    membership: any;
 }
 
 export default function UserMembershipDashboard({ user, season, membership }: UserMembershipDashboardProps) {
 
-    // 1. CAS : Pas de saison active -> Inscriptions fermées
     if (!season) {
         return (
-            <Card className="border-red-200 bg-red-50">
-                <CardHeader>
-                    <CardTitle className="text-red-700 flex items-center gap-2">
-                        <AlertCircle className="w-5 h-5" /> Inscriptions fermées
-                    </CardTitle>
-                    <CardDescription className="text-red-600">
-                        Aucune saison n'est ouverte aux inscriptions pour le moment.
-                    </CardDescription>
-                </CardHeader>
-            </Card>
+            //Retour card if no season 
+            <ErrorCard
+                title="Inscriptions fermées"
+                message="Aucune saison n'est ouverte aux inscriptions pour le moment."
+            />
         );
     }
 
-    // 2. CAS : Dossier existant (PENDING ou VALIDATED) -> On affiche le Statut
-    // Note : Si REJECTED, on passe à la suite pour afficher le formulaire de correction
+    //Dossier (PENDING ou VALIDATED) 
     if (membership && membership.status !== 'REJECTED') {
 
         const status = membership.status as MembershipStatus;
@@ -126,19 +118,10 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
 
     return (
         <div className="space-y-6">
-
-            {/* Alerte Spéciale Refus */}
             {membership && membership.status === 'REJECTED' && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex gap-3 text-red-800 animate-in fade-in slide-in-from-top-2">
-                    <AlertCircle className="w-6 h-6 shrink-0" />
-                    <div className="space-y-1">
-                        <h3 className="font-semibold">Action requise : Dossier refusé</h3>
-                        <p className="text-sm opacity-90">
-                            Votre précédente demande n'a pas pu être validée (pièce illisible ou erreur).
-                            Veuillez corriger les informations ci-dessous et soumettre à nouveau.
-                        </p>
-                    </div>
-                </div>
+                <ErrorCard title="Action requise : Dossier refusé"
+                    message="Votre précédente demande n'a pas pu être validée (pièce illisible ou erreur). Veuillez corriger les informations ci-dessous et soumettre à nouveau."
+                />
             )}
 
             <div className="space-y-2">
@@ -150,18 +133,13 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                 </p>
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Formulaire d'inscription</CardTitle>
-                    <CardDescription>Veuillez remplir les informations requises.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <MembershipForm 
-                    userProfile={user} 
-                    season={season} 
-                    initialData={membership}/>
-                </CardContent>
-            </Card>
+            <h3>Formulaire d'inscription</h3>
+            <p className="text-sm-muted">Veuillez remplir les informations requises.</p>
+
+            <MembershipForm
+                userProfile={user}
+                season={season}
+                initialData={membership} />
         </div>
     );
 }

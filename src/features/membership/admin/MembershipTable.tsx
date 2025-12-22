@@ -164,7 +164,6 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
 function formatMembershipType(type: string) {
     const map: Record<string, string> = {
         'INDIVIDUAL': 'Individuel',
-        'COUPLE': 'Couple',
         'YOUNG': 'Jeune (-18)',
         'LICENSE_RUNNING': 'Licence FFA'
     };

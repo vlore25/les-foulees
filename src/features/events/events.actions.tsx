@@ -1,9 +1,9 @@
 'use server'
 
 import { EventType } from "@/app/generated/prisma/enums";
-import { verifySession } from "@/src/lib/dal";
 import { eventSchema, eventUpdateSchema } from "@/src/lib/definitions";
 import { prisma } from "@/src/lib/prisma";
+import { verifySession } from "@/src/lib/session";
 import { writeFile } from "fs/promises";
 import { revalidatePath } from "next/cache";
 import { join } from "path";
@@ -139,11 +139,8 @@ export async function deleteEventAction(eventId: string) {
 
 export async function joinEventAction(eventId: string) {
   
-  // 2. On récupère la session
   const session = await verifySession();
-  
-  // 3. VÉRIFICATION STRICTE
-  // Si pas de session OU pas d'userId OU userId est vide -> on arrête tout.
+
   if (!session || !session.userId) {
      return { 
        success: false, 
@@ -156,14 +153,13 @@ export async function joinEventAction(eventId: string) {
       where: { id: eventId },
       data: {
         participants: {
-          // 4. Ici, on est sûr que session.userId est une string valide
           connect: { id: session.userId } 
         }
       }
     })
 
-    revalidatePath('/dashboard/evenements')
-    revalidatePath(`/dashboard/evenement/${eventId}`) 
+    revalidatePath('/espace-membre/evenements')
+    revalidatePath(`/espace-membre/evenement/${eventId}`) 
     
     return { success: true, message: "Inscription validée !" }
 
@@ -188,8 +184,8 @@ export async function leaveEventAction(eventId: string) {
       }
     })
 
-    revalidatePath('/dashboard/evenements')
-    revalidatePath(`/dashboard/evenement/${eventId}`)
+    revalidatePath('/espace-membre/evenements')
+    revalidatePath(`/espace-membre/evenement/${eventId}`)
     return { success: true, message: "Désinscription prise en compte." }
   } catch (error) {
     return { success: false, message: "Erreur lors de la désinscription." }

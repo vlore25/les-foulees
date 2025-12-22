@@ -36,13 +36,11 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         showEmailDirectory: formData.get('showEmailDirectory') === 'on',
         ffaLicenseNumber: (formData.get("ffa") as string) || undefined,
         previousClub: (formData.get("club") as string) || undefined,
-        signature: formData.get("signature") as string,
     }
 
     const medicalFile = formData.get("medicalCertificate") as File | null;
     const hasValidLicense = !!rawFormData.ffaLicenseNumber;
 
-    // 3. Validation Fichier Médical
     if (!hasValidLicense) {
         if (!medicalFile || medicalFile.size === 0) {
             return { message: "Le certificat médical est obligatoire si vous n'avez pas de licence." };
@@ -52,6 +50,7 @@ export async function createMembershipRequest(prevState: any, formData: FormData
             return { message: "Format de fichier invalide (PDF ou Image uniquement)." };
         }
     }
+
 
     // 4. Validation Zod (Types et Contraintes)
     const validatedFields = membershipSchema.safeParse(rawFormData);
@@ -86,7 +85,6 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         return { message: "Aucune saison active pour l'instant. Inscriptions fermées." }
     }
 
-    // 7. Upload du Certificat (si nécessaire)
     let certificateUrl = null;
     if (!hasValidLicense && medicalFile && medicalFile.size > 0) {
         try {
@@ -106,26 +104,20 @@ export async function createMembershipRequest(prevState: any, formData: FormData
     let amount = 0;
     switch (type) {
         case "INDIVIDUAL": amount = season.priceStandard; break;
-        case "COUPLE": amount = season.priceCouple; break;
         case "YOUNG": amount = season.priceYoung; break;
         case "LICENSE_RUNNING": amount = season.priceFfa; break;
         default: amount = season.priceStandard;
     }
 
-
-    // 10. Enregistrement en Base de Données 
     try {
         await prisma.$transaction(async (tx) => {
 
-            // A. Vérification de l'existence
             const existing = await tx.membership.findUnique({
                 where: { userId_seasonId: { userId: session.userId, seasonId: season.id } },
                 include: { payment: true }
             });
 
-            // B. Logique : Création ou Mise à jour (si rejeté)
             if (existing) {
-                // Si le dossier a été REJETÉ, on le met à jour pour permettre une nouvelle tentative
                 if (existing.status === 'REJECTED') {
 
                     // Si on a un certificat, on DOIT supprimer l'ancienne licence 
@@ -166,7 +158,7 @@ export async function createMembershipRequest(prevState: any, formData: FormData
                 throw new Error("Dossier déjà existant pour cette saison");
             }
 
-            // C. Si aucun dossier n'existe : Création normale
+            
             const membership = await tx.membership.create({
                 data: {
                     userId: session.userId,
