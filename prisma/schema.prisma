@@ -134,6 +134,7 @@ model Season {
   endDate       DateTime
   isActive      Boolean      @default(false)
   priceStandard Float        @default(35.0)
+  priceCouple   Float        @default(60.0)
   priceYoung    Float        @default(25.0)
   priceFfa      Float        @default(98.0)
   memberships   Membership[]
@@ -151,6 +152,7 @@ enum MembershipStatus {
 
 enum MembershipType {
   INDIVIDUAL
+  COUPLE
   YOUNG
   LICENSE_RUNNING
 }

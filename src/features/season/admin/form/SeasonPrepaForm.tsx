@@ -11,7 +11,7 @@ import { generateNextSeason } from "../../season.actions";
 import { NextSeasonResponse } from "../../dal";
 
 interface SeasonPrepaFormProps {
-  preview: NextSeasonResponse; 
+  preview: NextSeasonResponse | null; 
 }
 
 export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
@@ -49,6 +49,7 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
                                         type="date"
                                         defaultValue={preview.data.startDate.toISOString().split('T')[0]}
                                         className="bg-white"
+                                        readOnly
                                     />
                                 </div>
                                 <div>
@@ -58,6 +59,7 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
                                         type="date"
                                         defaultValue={preview.data.endDate.toISOString().split('T')[0]}
                                         className="bg-white"
+                                        readOnly
                                     />
                                 </div>
                             </div>

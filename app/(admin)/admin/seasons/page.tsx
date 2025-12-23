@@ -6,7 +6,6 @@ import { getSeasonsData } from "@/src/features/season/dal";
 export default async function SeasonsPage() {
 
     const seasonData = await getSeasonsData()
-    const { activeSeason, draftSeason } = seasonData
 
     const tabsContent = [
         {

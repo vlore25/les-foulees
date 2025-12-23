@@ -21,7 +21,7 @@ export default async function SeasonsManager() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                {/* BLOC 1 : SAISON ACTUELLE (Inchangé) */}
+                {/* SAISON ACTUELLE */}
                 <Card className="border-green-200 bg-green-50/30">
                     <CardHeader>
                         <CardTitle className="flex justify-between items-center text-green-800">
@@ -34,7 +34,7 @@ export default async function SeasonsManager() {
                             <div className="space-y-4">
                                 <div className="text-2xl font-bold">{activeSeason.name}</div>
                                 <div className="text-sm text-gray-600">
-                                    Du {format(activeSeason.startDate, 'd MMMM yyyy', { locale: fr })} au {format(activeSeason.endDate, 'd MMMM yyyy', { locale: fr })}
+                                    Du {activeSeason.startDate.toLocaleString('fr-FR')} au {activeSeason.endDate.toLocaleString('fr-FR')}
                                 </div>
                                 <div className="flex items-center gap-2 text-indigo-600 bg-indigo-50 p-3 rounded-lg w-fit">
                                     <Users className="w-5 h-5" />

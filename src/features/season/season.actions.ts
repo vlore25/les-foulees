@@ -1,13 +1,12 @@
 'use server'
 
 import { prisma } from "@/src/lib/prisma"
-import { addYears, getYear } from "date-fns"
 import { revalidatePath } from "next/cache"
 
 
 
 
-export async function generateNextSeason(formData: FormData) {
+export async function generateNextSeason(prevState: any, formData: FormData) {
   try {
 
     const name = formData.get('name') as string
