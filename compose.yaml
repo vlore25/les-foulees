@@ -1,18 +1,17 @@
 services:
-  # Ton application Next.js
+  # --- TON APPLICATION NEXT.JS ---
   app:
     build: .
     restart: always
     ports:
       - 3000:3000
     environment:
-      # L'hôte est "db" car c'est le nom du service défini plus bas
       DATABASE_URL: postgresql://user:example@db:5432/db
       NODE_ENV: production
     depends_on:
       - db
 
-  # Ta base de données PostgreSQL
+  # --- TA BASE DE DONNÉES ---
   db:
     image: postgres
     restart: always
@@ -21,10 +20,9 @@ services:
       POSTGRES_USER: user    
       POSTGRES_DB: db
     volumes:
-      # CORRECTION ICI : Ajout de /data à la fin
-      - postgres_data:/var/lib/postgresql/data 
-    # On expose le port 5432 uniquement en interne pour plus de sécurité
+      - postgres_data:/var/lib/postgresql/data
 
+  # --- ADMINER ---
   adminer:
     image: adminer
     restart: always
@@ -32,5 +30,4 @@ services:
       - 8080:8080
 
 volumes:
-  # Ce volume permet de garder tes données même si tu supprimes le conteneur
   postgres_data:
