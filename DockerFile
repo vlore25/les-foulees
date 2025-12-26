@@ -1,0 +1,40 @@
+# --- ÉTAPE 1 : CONSTRUCTION (BUILD) ---
+# On utilise une image Node légère pour compiler le projet
+FROM node:18-alpine AS builder
+WORKDIR /app
+
+# 1. Installation des dépendances
+COPY package*.json ./
+RUN npm install
+
+# 2. Copie du code source (incluant le dossier src, prisma, etc.)
+COPY . .
+
+# 3. Génération du client Prisma (Indispensable pour ton projet)
+# Cela transforme tes fichiers .prisma en code TypeScript/JS
+RUN npx prisma generate
+
+# 4. Compilation de Next.js
+# Cette étape transforme tout ton code (src/, app/, etc.) en fichiers optimisés dans .next/
+RUN npm run build
+
+# --- ÉTAPE 2 : EXÉCUTION (RUNNER) ---
+# On repart d'une image propre pour ne pas garder les outils de build inutiles
+FROM node:18-alpine AS runner
+WORKDIR /app
+
+# On définit l'environnement en production
+ENV NODE_ENV production
+
+# On ne copie QUE ce qui est strictement nécessaire pour faire tourner l'app
+# Ton dossier src/ n'est plus nécessaire ici car tout est dans .next/
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/public ./public
+
+# On expose le port par défaut de Next.js
+EXPOSE 3000
+
+# On lance le serveur
+CMD ["npm", "start"]
