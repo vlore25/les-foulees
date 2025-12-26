@@ -9,7 +9,6 @@ import ErrorBox from "../../../../../components/common/feedback/ErrorBox";
 import Link from "next/link";
 import FouleesLogo from "@/components/common/logo/FouleesLogo";
 import Image from "next/image";
-import hero from '/images/login-hero.jpg';
 import SuccesCard from "@/components/common/feedback/SuccesCard";
 
 export default function ForgotPasswordForm() {
@@ -76,7 +75,7 @@ export default function ForgotPasswordForm() {
             </div>
             <div className='hidden lg:flex relative bg-gray-900'>
                 <Image
-                    src={hero}
+                    src={"/images/login-hero.jpg"}
                     alt="Image de fond"
                     fill
                     className="object-cover opacity-90"
