@@ -9,7 +9,7 @@ import ErrorBox from "../../../../../components/common/feedback/ErrorBox";
 import Link from "next/link";
 import FouleesLogo from "@/components/common/logo/FouleesLogo";
 import Image from "next/image";
-import hero from '../../../../public/images/login-hero.jpg';
+import hero from '/images/login-hero.jpg';
 import SuccesCard from "@/components/common/feedback/SuccesCard";
 
 export default function ForgotPasswordForm() {

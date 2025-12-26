@@ -2,10 +2,8 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { getLegalDocById } from "@/src/features/docs/dal";
-import LegalDocForm from "@/src/features/docs/components/admin/LegalDocsForm";
 import { getEventById } from "@/src/features/events/dal";
-import EventForm from "@/src/features/events/components/admin/EventForm";
+import EventForm from "@/src/features/events/admin/forms/EventForm";
 
 interface PageProps {
     params: Promise<{
