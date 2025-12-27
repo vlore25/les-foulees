@@ -36,7 +36,6 @@ export const getProfile = cache(async (userId: string) => {
           type: true,
           ffaLicenseNumber: true,
           status: true,
-          medicalCertificateVerified: true,
           season: {
             select: {
               name: true,

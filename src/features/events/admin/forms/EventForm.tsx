@@ -20,12 +20,12 @@ interface EventFormProps {
 }
 
 export default function EventForm({ event }: EventFormProps) {
-    const actionToUse = event 
-        ? updateEventAction.bind(null, event.id) 
+    const actionToUse = event
+        ? updateEventAction.bind(null, event.id)
         : createEvent;
 
     const [state, action, pending] = useActionState<EventFormState, FormData>(
-        actionToUse, 
+        actionToUse,
         undefined
     );
 
@@ -94,13 +94,13 @@ export default function EventForm({ event }: EventFormProps) {
                 <label htmlFor="picture" className="block text-sm font-medium">
                     Image de couverture {event && <span className="text-xs text-muted-foreground font-normal">(Laisser vide pour conserver l'actuelle)</span>}
                 </label>
-                
+
                 {event?.imgUrl && (
                     <div className="relative w-32 h-20 mb-2 rounded overflow-hidden border">
-                        <Image 
-                            src={event.imgUrl} 
-                            alt="Image actuelle" 
-                            fill 
+                        <Image
+                            src={event.imgUrl}
+                            alt="Image actuelle"
+                            fill
                             className="object-cover"
                         />
                     </div>
@@ -131,8 +131,8 @@ export default function EventForm({ event }: EventFormProps) {
                 type="submit"
                 className="w-full mt-4"
             >
-                {pending 
-                    ? "Enregistrement..." 
+                {pending
+                    ? "Enregistrement..."
                     : (event ? "Modifier l'événement" : "Créer l'événement")
                 }
             </Button>

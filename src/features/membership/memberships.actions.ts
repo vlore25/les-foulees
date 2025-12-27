@@ -132,11 +132,8 @@ export async function createMembershipRequest(prevState: any, formData: FormData
                             type,
                             ffaLicenseNumber: newLicenseNumber,
                             previousClub,
-                            sharePhone: showPhoneDirectory,
-                            shareEmail: showEmailDirectory,
                             status: "PENDING",
                             certificateUrl: newCertificateUrl,
-                            medicalCertificateVerified: hasValidLicense
                         }
                     });
                     // Mise à jour Paiement (on force le statut PENDING pour re-vérification)
@@ -166,11 +163,8 @@ export async function createMembershipRequest(prevState: any, formData: FormData
                     type,
                     ffaLicenseNumber,
                     previousClub,
-                    sharePhone: showPhoneDirectory,
-                    shareEmail: showEmailDirectory,
                     status: "PENDING",
                     certificateUrl: certificateUrl,
-                    medicalCertificateVerified: hasValidLicense
                 }
             })
 
@@ -207,7 +201,6 @@ export async function validateMembershipAction(membershipId: string) {
                 where: { id: membershipId },
                 data: {
                     status: "VALIDATED",
-                    medicalCertificateVerified: true
                 }
             })
 
@@ -231,7 +224,6 @@ export async function refuseMembershipAction(membershipId: string) {
             where: { id: membershipId },
             data: {
                 status: "REJECTED",
-                medicalCertificateVerified: false
             }
         });
 

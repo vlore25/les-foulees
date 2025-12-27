@@ -17,7 +17,6 @@ interface MembershipWithRelations {
     id: string;
     type: string;
     status: string;
-    medicalCertificateVerified: boolean;
     certificateUrl?: string | null;
     ffaLicenseNumber?: string | null;
     user: {

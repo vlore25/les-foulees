@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { useTransition } from "react";
 import { Pencil, Trash2, MoreVertical } from "lucide-react";
-import { deleteEventAction } from "../../events.actions";
+import { deleteEventAction } from "../events.actions";
 
 export function EventRowActions({ eventId }: { eventId: string }) {
     const [isPending, startTransition] = useTransition();

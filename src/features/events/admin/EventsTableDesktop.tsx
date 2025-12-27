@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { EventListItem } from "../../dal";
 import { EventRowActions } from "./EventRowAction";
+import { EventListItem } from "../dal";
 
 
 interface EventsProps {
