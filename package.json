@@ -53,7 +53,7 @@
     "zod": "^4.1.13"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.1.0",
