@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { decrypt } from '@/src/lib/session'
  
-// 1. Specify protected and public routes
 const protectedPaths = ['/espace-membre', '/admin']
 const publicPaths = ['/login', '/']
  

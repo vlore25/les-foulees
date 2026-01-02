@@ -1,6 +1,6 @@
 'use server'
 
-import { EventType } from "@/app/generated/prisma/enums";
+import { EventType } from "@/prisma/generated/prisma/enums";
 import { eventSchema, eventUpdateSchema } from "@/src/lib/definitions";
 import { prisma } from "@/src/lib/prisma";
 import { verifySession } from "@/src/lib/session";
