@@ -1,24 +1,19 @@
 services:
-  # --- TON APPLICATION NEXT.JS ---
+  # --- APPLICATION NEXT.JS (DEV MODE) ---
   app:
-    build: .
-    restart: always
-    ports:
-      - 3000:3000
-    environment:
-      DATABASE_URL: postgresql://user:example@db:5432/db
-      NODE_ENV: production
-    depends_on:
-      - db
+    build: 
+      context: .
 
-  # --- TA BASE DE DONNÉES ---
+  # --- BASE DE DONNÉES ---
   db:
-    image: postgres
+    image: postgres:15-alpine
     restart: always
     environment:
       POSTGRES_PASSWORD: example
       POSTGRES_USER: user    
       POSTGRES_DB: db
+    ports:
+      - "5432:5432"          # <--- Optionnel : permet de se connecter via TablePlus/DBeaver depuis ton PC
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -27,7 +22,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - "8080:8080"
 
 volumes:
   postgres_data:

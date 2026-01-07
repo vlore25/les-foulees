@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useActionState } from "react";
-import { LegalDocs } from "@/app/generated/prisma/client";
 import { createLegalDocAction, updateLegalDocAction } from "../../docs.actions";
 import { LegalDocFormState } from "@/src/lib/definitions";
+import { LegalDocs } from "@/prisma/generated/prisma/client";
 
 interface LegalDocFormProps {
   doc?: LegalDocs | null;

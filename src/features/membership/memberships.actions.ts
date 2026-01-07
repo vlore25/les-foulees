@@ -1,6 +1,5 @@
 'use server'
 
-import { MembershipType, PaymentMethod } from "@/app/generated/prisma/enums"
 import { membershipSchema } from "@/src/lib/definitions"
 import { prisma } from "@/src/lib/prisma"
 import { getSession } from "@/src/lib/session"
@@ -8,6 +7,7 @@ import { revalidatePath } from "next/cache"
 import { getActiveSeasonData } from "../season/dal"
 import { getProfile } from "../account/dal"
 import { saveUploadedFile } from "@/src/lib/file-storage"
+import { MembershipType, PaymentMethod } from "@/prisma/generated/prisma/enums"
 
 export type MembershipState = {
     errors?: {

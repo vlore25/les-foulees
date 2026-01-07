@@ -4,9 +4,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import LegalDocRowActions from "../admin/LegalDocRowActions";
-import { LegalDocs } from "@/app/generated/prisma/client";
 import { useUser } from "@/components/providers/UserProvider";
 import { usePathname } from "next/navigation";
+import { LegalDocs } from "@/prisma/generated/prisma/client";
 
 
 interface LegalDocsCardMobileProps {

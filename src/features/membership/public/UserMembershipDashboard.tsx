@@ -5,9 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AlertCircle, CheckCircle, Clock } from "lucide-react";
-import { MembershipStatus, MembershipType } from "@/app/generated/prisma/enums";
 import ErrorCard from "@/components/common/feedback/ErrorCard";
 import { MembershipForm } from "./MembershipForm";
+import { MembershipStatus } from "@/prisma/generated/prisma/enums";
 
 
 const STATUS_INFO = {

@@ -1,5 +1,5 @@
-import { Season } from "@/app/generated/prisma/client";
 import EmptyCategory from "@/components/common/feedback/EmptyCategory";
+import { Season } from "@/prisma/generated/prisma/client";
 import { Archive } from "lucide-react";
 
 type SeasonWithCount = Season & {

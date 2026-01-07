@@ -13,9 +13,6 @@ datasource db {
   provider = "postgresql"
 }
 
-/**
- * ==============USERS=================
- */
 enum Role {
   ADMIN
   USER
@@ -29,7 +26,6 @@ enum Status {
 model User {
   id                 String       @id @default(cuid())
   email              String       @unique @db.VarChar(255)
-  // --- Infos Personnelles ---
   name               String
   lastname           String
   birthdate          DateTime?
@@ -38,7 +34,6 @@ model User {
   address            String
   zipCode            String
   city               String
-  // Contact Urgence
   emergencyName      String?
   emergencyLastName  String?
   emergencyPhone     String?

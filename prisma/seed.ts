@@ -1,16 +1,16 @@
-import { PrismaClient } from "@/app/generated/prisma/client"
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 import { fakerFR as faker } from '@faker-js/faker';
+import { PrismaClient } from './generated/prisma/client';
 
-enum EventType {
-  TRAIL = 'TRAIL',
-  COURSE_ROUTE = 'COURSE_ROUTE',
-  ENTRAINEMENT = 'ENTRAINEMENT',
-  VIE_DU_CLUB = 'VIE_DU_CLUB',
-  SORTIE = 'SORTIE',
-  AUTRE = 'AUTRE'
-}
+const EventType = {
+  TRAIL: 'TRAIL',
+  COURSE_ROUTE: 'COURSE_ROUTE',
+  ENTRAINEMENT: 'ENTRAINEMENT',
+  VIE_DU_CLUB: 'VIE_DU_CLUB',
+  SORTIE: 'SORTIE',
+  AUTRE: 'AUTRE'
+} as const;
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
