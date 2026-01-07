@@ -9,7 +9,7 @@ name: Publish & Deploy Docker container
 on:
   push:
     # Adjust branch name if needed (e.g., master, production)
-    branches: [ "main" ]
+    branches: [ "master" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
 env:
