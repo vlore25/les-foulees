@@ -6,7 +6,7 @@ import { Download } from "lucide-react";
 import LegalDocRowActions from "../admin/LegalDocRowActions";
 import { useUser } from "@/components/providers/UserProvider";
 import { usePathname } from "next/navigation";
-import { LegalDocs } from "@/prisma/generated/prisma/client";
+import { LegalDocs } from "@/prisma/generated/client";
 
 
 interface LegalDocsCardMobileProps {

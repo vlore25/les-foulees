@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Download } from "lucide-react";
 import LegalDocRowActions from "./LegalDocRowActions"; 
-import { LegalDocs } from "@/prisma/generated/prisma/client";
+import { LegalDocs } from "@/prisma/generated/client";
 
 interface LegalDocsTableDesktopProps {
   docs: LegalDocs[];

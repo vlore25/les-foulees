@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache"
 import { getActiveSeasonData } from "../season/dal"
 import { getProfile } from "../account/dal"
 import { saveUploadedFile } from "@/src/lib/file-storage"
-import { MembershipType, PaymentMethod } from "@/prisma/generated/prisma/enums"
+import { MembershipType, PaymentMethod } from "@/prisma/generated/enums"
 
 export type MembershipState = {
     errors?: {
@@ -67,8 +67,6 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         paymentMethod,
         ffaLicenseNumber,
         previousClub,
-        showPhoneDirectory,
-        showEmailDirectory
     } = validatedFields.data;
 
     const licenseType = formData.get("licenseType") as string;

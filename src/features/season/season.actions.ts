@@ -17,7 +17,8 @@ export async function generateNextSeason(prevState: any, formData: FormData) {
     const priceStandard = parseFloat(formData.get('priceStandard') as string)
     const priceYoung = parseFloat(formData.get('priceYoung') as string)
     const priceFfa = parseFloat(formData.get('priceFfa') as string)
-
+    const seasonCount = await prisma.season.count();
+    const shouldBeActive = seasonCount === 0;
     const existingFutureSeason = await prisma.season.findFirst({
       where: {
         isActive: false, // Elle n'est pas active
@@ -42,7 +43,7 @@ export async function generateNextSeason(prevState: any, formData: FormData) {
         name,
         startDate,
         endDate,
-        isActive: false,
+        isActive: shouldBeActive,
         priceStandard,
         priceYoung,
         priceFfa

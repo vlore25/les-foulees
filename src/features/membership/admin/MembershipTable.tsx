@@ -62,7 +62,6 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                     <TableRow>
                         <TableHead>Adhérent</TableHead>
                         <TableHead>Type</TableHead>
-                        <TableHead>Bulletin d'adhesion</TableHead>
                         <TableHead>Certificat / Licence</TableHead>
                         <TableHead>Paiement</TableHead>
                         <TableHead>Statut</TableHead>
@@ -149,6 +148,7 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                                 <MembershipRowActions
                                     id={m.id}
                                     status={m.status}
+                                    paymentStatus={m.payment?.status}
                                 />
                             </TableCell>
 

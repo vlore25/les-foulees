@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useActionState } from "react";
 import { createLegalDocAction, updateLegalDocAction } from "../../docs.actions";
 import { LegalDocFormState } from "@/src/lib/definitions";
-import { LegalDocs } from "@/prisma/generated/prisma/client";
+import { LegalDocs } from "@/prisma/generated/client";
 
 interface LegalDocFormProps {
   doc?: LegalDocs | null;

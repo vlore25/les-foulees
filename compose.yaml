@@ -1,28 +1,29 @@
 services:
-  # --- APPLICATION NEXT.JS (DEV MODE) ---
   app:
-    build: 
+    build:
       context: .
+      target: dev  # <--- On cible l'étape "dev" du Dockerfile
+    volumes:
+      - .:/app           # Synchro des fichiers locaux vers le conteneur
+      - /app/node_modules # On protège les node_modules du conteneur
+      - /app/.next        # On protège le dossier de build
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/lesfoulees
+    depends_on:
+      - db
 
-  # --- BASE DE DONNÉES ---
   db:
     image: postgres:15-alpine
-    restart: always
     environment:
-      POSTGRES_PASSWORD: example
-      POSTGRES_USER: user    
-      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: lesfoulees
     ports:
-      - "5432:5432"          # <--- Optionnel : permet de se connecter via TablePlus/DBeaver depuis ton PC
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  # --- ADMINER ---
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - "8080:8080"
+      - db-data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  db-data:

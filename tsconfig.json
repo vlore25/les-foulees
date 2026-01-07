@@ -23,10 +23,9 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+      "@/*": ["./*"],
+      "*": ["./prisma/generated/*"]
+    },
   },
   "include": [
     "next-env.d.ts",
@@ -36,7 +35,8 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts",
     "seed.mjs",
-    "__tests__/snapshot.jsx"
+    "__tests__/snapshot.jsx",
+    "prisma/seed.ts"
   ],
   "exclude": [
     "node_modules"

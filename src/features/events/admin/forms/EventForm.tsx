@@ -13,7 +13,7 @@ import { CalendarIcon, ChevronDownIcon } from "lucide-react";
 import { useActionState, useState } from "react";
 import Image from "next/image";
 import { createEvent, updateEventAction, type EventFormState } from "../../events.actions";
-import { Event } from "@/prisma/generated/prisma/client";
+import { Event } from "@/prisma/generated/client";
 
 interface EventFormProps {
     event?: Event | null;

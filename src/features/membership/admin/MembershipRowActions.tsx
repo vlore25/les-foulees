@@ -1,13 +1,12 @@
 'use client'
 
-import { useState, useTransition } from "react" // <-- NOUVEAU : pour gérer l'état
+import { useState, useTransition } from "react"
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-    DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
     AlertDialog,
@@ -19,22 +18,24 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { MoreHorizontal, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { MoreHorizontal, CheckCircle, XCircle, Loader2, Banknote } from "lucide-react";
 import { validateMembershipAction, refuseMembershipAction } from "../memberships.actions";
 
 interface MembershipRowActionsProps {
     id: string;
     status: string;
+    paymentStatus?: string; // <-- 1. On ajoute le statut du paiement ici
 }
 
-export default function MembershipRowActions({ id, status }: MembershipRowActionsProps) {
-    // État pour ouvrir/fermer la fenêtre de confirmation
-    const [isRefuseDialogOpen, setIsRefuseDialogOpen] = useState(false); // <-- NOUVEAU
-    const [isPending, startTransition] = useTransition(); // <-- NOUVEAU : Pour l'état de chargement
-    const canValidate = status !== 'VALIDATED' && status !== 'REJECTED';
+export default function MembershipRowActions({ id, status, paymentStatus }: MembershipRowActionsProps) {
+    const [isRefuseDialogOpen, setIsRefuseDialogOpen] = useState(false);
+    const [isPending, startTransition] = useTransition();
+
+    const isPaid = paymentStatus === 'PAID';
+
+    const canValidate = status !== 'VALIDATED' && status !== 'REJECTED' && isPaid;
 
     const handleValidate = async () => {
-        // On utilise startTransition pour éviter de bloquer l'UI
         startTransition(async () => {
             const result = await validateMembershipAction(id);
             if (result.success) {
@@ -45,22 +46,17 @@ export default function MembershipRowActions({ id, status }: MembershipRowAction
         });
     };
 
-
     const handleRefuse = async () => {
         startTransition(async () => {
             const result = await refuseMembershipAction(id);
             if (result.success) {
-                console.log("Dossier refusé");
-                setIsRefuseDialogOpen(false); // On ferme la fenêtre
-            } else {
-                console.error("Erreur refus");
+                setIsRefuseDialogOpen(false);
             }
         });
     };
 
     return (
-        <> {/* <-- On ajoute des fragments <> car on a maintenant 2 éléments (Menu + Dialog) */}
-
+        <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
@@ -70,6 +66,7 @@ export default function MembershipRowActions({ id, status }: MembershipRowAction
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
 
+                    {/* Action de validation (seulement si payé) */}
                     {canValidate && (
                         <DropdownMenuItem onClick={handleValidate} className="text-green-600 focus:text-green-700 focus:bg-green-50 cursor-pointer">
                             {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-2 h-4 w-4" />}
@@ -77,7 +74,15 @@ export default function MembershipRowActions({ id, status }: MembershipRowAction
                         </DropdownMenuItem>
                     )}
 
-                    {/* Le bouton Refuser reste disponible tant que ce n'est pas déjà refusé */}
+                    {/* Feedback visuel si le dossier est en attente mais NON payé */}
+                    {status === 'PENDING' && !isPaid && (
+                        <DropdownMenuItem disabled className="text-muted-foreground opacity-70">
+                            <Banknote className="mr-2 h-4 w-4" />
+                            En attente de paiement
+                        </DropdownMenuItem>
+                    )}
+
+                    {/* Le bouton Refuser */}
                     {status !== 'REJECTED' && status !== 'VALIDATED' && (
                         <DropdownMenuItem
                             onSelect={(e) => {
@@ -91,23 +96,21 @@ export default function MembershipRowActions({ id, status }: MembershipRowAction
                         </DropdownMenuItem>
                     )}
 
-                    {/* Si le dossier est REFUSÉ, on peut afficher un texte informatif (optionnel) */}
                     {status === 'REJECTED' && (
                         <DropdownMenuItem disabled className="opacity-50 cursor-not-allowed italic">
-                            En attente de correction utilisateur...
+                            En attente de correction...
                         </DropdownMenuItem>
                     )}
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* --- NOUVEAU : LA FENÊTRE DE CONFIRMATION --- */}
             <AlertDialog open={isRefuseDialogOpen} onOpenChange={setIsRefuseDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Refuser ce dossier ?</AlertDialogTitle>
                         <AlertDialogDescription>
                             Le statut passera à <strong>REFUSÉ</strong>.<br />
-                            L'adhérent devra corriger ses informations et soumettre à nouveau le formulaire.
+                            L'adhérent devra corriger ses informations.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -125,7 +128,6 @@ export default function MembershipRowActions({ id, status }: MembershipRowAction
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-
         </>
     );
 }

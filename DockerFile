@@ -1,18 +1,38 @@
-FROM node:22-alpine
-
+# 1. Base : On part d'une image Node légère
+FROM node:22-alpine AS base
 WORKDIR /app
-
-# On installe les dépendances en premier (optimisation du cache Docker)
+# On copie les fichiers de dépendances
 COPY package*.json ./
-RUN npm install
-
-# On génère Prisma ici aussi
 COPY prisma ./prisma/
-RUN npx prisma generate
 
-# On copie le reste du code
+# 2. Dépendances (Cache)
+FROM base AS deps
+RUN npm ci
+
+# 3. Development (Cible pour le local)
+FROM base AS dev
+# On installe TOUTES les dépendances (y compris devDependencies)
+RUN npm install
+# On génère le client Prisma
+RUN npx prisma generate
+# On ne copie pas le code ici, on utilisera un volume dans compose.yaml
+CMD ["npm", "run", "dev"]
+
+# 4. Builder (Pour la Prod)
+FROM base AS builder
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN npx prisma generate
+RUN npm run build
+
+# 5. Production (Image finale ultra-légère)
+FROM node:22-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV production
+
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
-
-CMD ["npm", "run", "dev"]
+CMD ["node", "server.js"]

@@ -7,7 +7,7 @@ import Link from "next/link";
 import { AlertCircle, CheckCircle, Clock } from "lucide-react";
 import ErrorCard from "@/components/common/feedback/ErrorCard";
 import { MembershipForm } from "./MembershipForm";
-import { MembershipStatus } from "@/prisma/generated/prisma/enums";
+import { MembershipStatus } from "@/prisma/generated/enums";
 
 
 const STATUS_INFO = {

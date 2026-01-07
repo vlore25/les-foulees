@@ -1,7 +1,7 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 import { fakerFR as faker } from '@faker-js/faker';
-import { PrismaClient } from './generated/prisma/client';
+import { PrismaClient } from '../prisma/generated/client'
 
 const EventType = {
   TRAIL: 'TRAIL',
@@ -25,17 +25,17 @@ async function main() {
   const events = [
     {
       title: "Trail de l'apocalypse",
-      dateStart: new Date('2025-11-15T20:00:00'), // Samedi 15 Novembre 2025 (Nocturne)
+      dateStart: new Date('2025-11-15T20:00:00'),
       dateEnd: new Date('2025-11-15T23:30:00'),
       location: "Angers (49)",
       type: EventType.TRAIL,
       description: "Une course nocturne et urbaine légendaire à travers les rues d'Angers. Préparez-vous à affronter les marches, les pavés et l'ambiance apocalyptique !",
-      imgUrl: "/uploads/apocalipsis.png", // Image par défaut
+      imgUrl: "/uploads/apocalipsis.png", 
     },
     {
       title: "Téléthon défi 24h",
-      dateStart: new Date('2025-12-05T18:00:00'), // Samedi 5 déc
-      dateEnd: new Date('2025-12-06T18:00:00'),   // Dimanche 6 déc
+      dateStart: new Date('2025-12-05T18:00:00'), 
+      dateEnd: new Date('2025-12-06T18:00:00'),  
       location: "Stade d'Avrillé",
       type: EventType.VIE_DU_CLUB,
       description: "Rejoignez-nous pour le grand défi du Téléthon ! 24 heures de course en relais pour la bonne cause. Venez courir ou marcher à n'importe quelle heure du jour ou de la nuit.",
@@ -43,7 +43,7 @@ async function main() {
     },
     {
       title: "Trail Cap Sizun",
-      dateStart: new Date('2026-03-01T08:30:00'), // Dimanche 1er Mars 2026
+      dateStart: new Date('2026-03-01T08:30:00'), 
       dateEnd: null,
       location: "Cléden-Cap-Sizun (29)",
       type: EventType.TRAIL,
@@ -52,7 +52,7 @@ async function main() {
     },
     {
       title: "Trail de la traversée de la baie",
-      dateStart: new Date('2026-05-02T10:00:00'), // Samedi 2 Mai 2026
+      dateStart: new Date('2026-05-02T10:00:00'),
       dateEnd: null,
       location: "Saint-Brieuc (22)",
       type: EventType.TRAIL,
@@ -62,7 +62,6 @@ async function main() {
   ]
 
   for (const event of events) {
-    // Création de l'événement
     await prisma.event.create({
       data: event
     })
@@ -70,12 +69,12 @@ async function main() {
   console.log('✅ Événements créés.');
 
   
-  // --- PARTIE 3 : DOCUMENTS LÉGAUX ---
+  // --- DOCUMENTS LÉGAUX ---
   const documents = [
     {
       title: "Autorisation Parentale 2024-2025",
       description: "Formulaire obligatoire à remplir pour l'inscription des mineurs aux activités du club.",
-      Url: "/uploads/docs/Autorisation_parentale_2024_2025.pdf" // Chemin fictif à adapter
+      Url: "/uploads/docs/Autorisation_parentale_2024_2025.pdf" 
     },
     {
       title: "Bulletin d'Adhésion 2025-2026",
