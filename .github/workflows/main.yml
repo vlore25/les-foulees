@@ -114,7 +114,7 @@ jobs:
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
             
             # ... (Commandes pull, stop, rm comme avant) ...
-            docker pull ghcr.io/tatticoder/terraform-get-time:main
+            docker pull ghcr.io/tatticoder/terraform-get-time:master
             docker stop my_container || true
             docker rm my_container || true
 
@@ -126,4 +126,4 @@ jobs:
               -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
               -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
               -e RESEND_API_KEY="${{ secrets.RESEND_API_KEY }}" \
-              ghcr.io/tatticoder/terraform-get-time:main
+              ghcr.io/tatticoder/terraform-get-time:master
