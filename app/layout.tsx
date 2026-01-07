@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -18,7 +19,6 @@ export const metadata: Metadata = {
   title: "Les foulees avrillaises",
   description: "Association de course à pied de la ville d'Avrillé",
 };
-
 
 export default async function RootLayout({
   children,
