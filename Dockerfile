@@ -20,6 +20,17 @@ CMD ["npm", "run", "dev"]
 
 # 4. Builder (Pour la Prod)
 FROM base AS builder
+
+# --- DÉPLACEZ LES LIGNES ICI (APRÈS LE FROM) ---
+ARG DATABASE_URL
+ARG JWT_SECRET
+ARG RESEND_API_KEY
+
+ENV DATABASE_URL=$DATABASE_URL
+ENV JWT_SECRET=$JWT_SECRET
+ENV RESEND_API_KEY=$RESEND_API_KEY
+# -----------------------------------------------
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npx prisma generate
