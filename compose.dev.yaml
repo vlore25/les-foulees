@@ -19,7 +19,8 @@ services:
       - RESEND_API_KEY=re_123456
     depends_on:
       - db
-
+    env_file:
+      - .env
   db:
     image: postgres:15-alpine
     environment:
