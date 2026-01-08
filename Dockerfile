@@ -31,7 +31,7 @@ ENV DATABASE_URL=$DATABASE_URL
 ENV JWT_SECRET=$JWT_SECRET
 ENV RESEND_API_KEY=$RESEND_API_KEY
 # -----------------------------------------------
-COPY --from=builder /app/prisma.config.ts ./
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npx prisma generate
@@ -46,7 +46,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
-
+COPY --from=builder /app/prisma.config.ts ./
 
 EXPOSE 3000
 CMD ["node", "server.js"]
