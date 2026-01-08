@@ -5,14 +5,14 @@ services:
     build:
       context: .
       target: runner # Cible l'étape finale optimisée
-      # Si votre build a besoin de variables (ex: pour générer des pages statiques), passez-les ici
-      # args:
-      #   NEXT_PUBLIC_API_URL: https://mon-site.com
+      args:
+        JWT_SECRET: ${JWT_SECRET}
+        DATABASE_URL: ${DATABASE_URL}
+        RESEND_API_KEY: ${RESEND_API_KEY}
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://user:password@db:5432/lesfoulees
-      # Ces variables seront lues au démarrage par le serveur standalone
-      - JWT_SECRET=${JWT_SECRET} 
+      - JWT_SECRET=${JWT_SECRET}
       - RESEND_API_KEY=${RESEND_API_KEY}
     ports:
       - "3000:3000"
