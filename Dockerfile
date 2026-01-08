@@ -3,16 +3,17 @@ FROM node:22-alpine AS base
 WORKDIR /app
 # On copie les fichiers de dépendances
 COPY package*.json ./
-COPY prisma ./prisma/
-
+COPY prisma ./prisma/  
+COPY .env ./
 # 2. Dépendances (Cache)
 FROM base AS deps
 RUN npm ci
-
 # 3. Development (Cible pour le local)
 FROM base AS dev
 # On installe TOUTES les dépendances (y compris devDependencies)
 RUN npm install
+
+
 # On génère le client Prisma
 RUN npx prisma generate
 # On ne copie pas le code ici, on utilisera un volume dans compose.yaml

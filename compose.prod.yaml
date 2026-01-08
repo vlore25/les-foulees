@@ -11,7 +11,6 @@ services:
         RESEND_API_KEY: ${RESEND_API_KEY}
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://user:password@db:5432/lesfoulees
       - JWT_SECRET=${JWT_SECRET}
       - RESEND_API_KEY=${RESEND_API_KEY}
     ports:
@@ -29,7 +28,6 @@ services:
       POSTGRES_DB: lesfoulees
     volumes:
       - db-data-prod:/var/lib/postgresql/data
-    # En prod, on évite souvent d'exposer le port 5432 à l'extérieur sauf nécessité
 
 volumes:
   db-data-prod:
