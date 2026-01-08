@@ -31,7 +31,7 @@ ENV DATABASE_URL=$DATABASE_URL
 ENV JWT_SECRET=$JWT_SECRET
 ENV RESEND_API_KEY=$RESEND_API_KEY
 # -----------------------------------------------
-
+COPY --from=builder /app/prisma.config.ts ./
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npx prisma generate
