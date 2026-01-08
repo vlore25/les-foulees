@@ -1,0 +1,35 @@
+name: les-foulees-dev
+
+services:
+  app:
+    build:
+      context: .
+      target: dev # Cible l'étape de développement du Dockerfile
+    volumes:
+      - .:/app           # Synchronisation des fichiers pour le dev
+      - /app/node_modules # Isolation des modules du conteneur
+      - /app/.next        # Isolation du build Next.js
+    ports:
+      - "3000:3000"
+    environment:
+      # En dev, on pointe vers le service db local
+      - DATABASE_URL=postgresql://user:password@db:5432/lesfoulees
+      # Ajoutez vos autres variables ici ou utilisez un fichier .env
+      - JWT_SECRET=supersecretdev
+      - RESEND_API_KEY=re_123456
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: lesfoulees
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data-dev:/var/lib/postgresql/data
+
+volumes:
+  db-data-dev:
