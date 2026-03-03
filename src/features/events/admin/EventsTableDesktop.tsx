@@ -11,7 +11,7 @@ interface EventsProps {
 export default function EventsTableDesktop({ events }: EventsProps) {
     return (
         <div className='overflow-hidden rounded-md border'>
-            <Table className="hidden lg:table">
+            <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHead>Nom</TableHead>

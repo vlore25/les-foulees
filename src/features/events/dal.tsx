@@ -17,6 +17,8 @@ export type EventListItem = {
 }
 
 
+
+
 //GET ALL EVENTS
 export async function getAllevents(): Promise<EventListItem[]> {
   const session = await getSession();
@@ -92,3 +94,22 @@ export const getEventWithParticipationStatus = cache(async (eventId: string) => 
 
   return { ...event, isParticipant };
 });
+
+
+
+export async function getEventsCountCurrentYear(): Promise<number> {
+  const currentYear = new Date().getFullYear();
+  const startOfYear = new Date(currentYear, 0, 1);
+  const endOfYear = new Date(currentYear, 11, 31, 23, 59, 59);
+
+  const count = await prisma.event.count({
+    where: {
+      dateStart: {
+        gte: startOfYear, 
+        lte: endOfYear,   
+      },
+    },
+  });
+
+  return count;
+}

@@ -3,7 +3,7 @@
 import { loginUser } from '@/src/features/auth/auth.actions';
 import { Button } from '@/components/ui/button';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
-import { LockKeyhole, UserCircle } from 'lucide-react';
+import { ArrowLeft, LockKeyhole, UserCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useActionState } from 'react';
 import Image from 'next/image';
@@ -15,13 +15,13 @@ const LoginForm = () => {
     const [state, action, pending] = useActionState(loginUser, undefined);
 
     return (
-        // Mobile: Flex column, largeur max-md (carte centrée), marges auto
-        // Desktop (lg): Grid 2 colonnes, largeur max-4xl ou 5xl, hauteur fixe ou min
         <main className='
             flex flex-col w-full max-w-md mx-auto my-10 bg-white shadow-lg rounded-lg overflow-hidden
             lg:grid lg:grid-cols-2 lg:max-w-5xl lg:min-h-[600px]
         '>
-            <div className='flex flex-col items-center justify-center w-full p-3 py-10 lg:p-12 gap-6'>
+
+            <div className='flex flex-col items-center justify-center w-full p-3 py-5 lg:p-12 gap-6'>
+
                 <div className="flex flex-col items-center gap-2">
                     <FouleesLogo size={140} className="w-[100px] lg:w-[140px]" />
                     <h1 className='text-3xl font-bold text-gray-900 lg:text-4xl text-center'>
@@ -50,7 +50,7 @@ const LoginForm = () => {
                         )}
                     </div>
 
-                    {/* Input Password + Lien oubli */}
+
                     <div className="space-y-1">
                         <InputGroup>
                             <InputGroupInput
@@ -86,6 +86,15 @@ const LoginForm = () => {
                             <Link href="/contact" className='text-primary font-bold hover:underline'>
                                 Rejoignez-nous
                             </Link>
+                        </div>
+                        <div className='flex gap-2 text-sm items-center p-3 font-semibold'>
+                            <ArrowLeft className='size-4' />
+                            <Link
+                                href='/'
+                            >
+                                <span>Retour a l'accueil</span>
+                            </Link>
+
                         </div>
                     </div>
                     {state?.message && (

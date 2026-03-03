@@ -1,17 +1,19 @@
 export const dynamic = 'force-dynamic';
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Vend_Sans } from 'next/font/google'
+import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import UserProvider from "@/components/providers/UserProvider";
 import { getCurrentUser } from "@/src/features/users/dal";
+import { Toaster } from "@/components/ui/sonner"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const vendSans = Vend_Sans({
+  variable: "--font-vend-sans",
   subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-main",
   subsets: ["latin"],
 });
 
@@ -32,10 +34,11 @@ export default async function RootLayout({
     <html lang="fr">
 
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${vendSans.variable} ${geistMono.variable} antialiased`}
       >
         <UserProvider user={user}>
-            {children}
+          <Toaster />
+          {children}
         </UserProvider>
       </body>
     </html>

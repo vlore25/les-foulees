@@ -1,4 +1,6 @@
+import { Footer } from "@/components/layout/footer/Footer";
 import Header from "@/components/layout/header/Header";
+
 
 export default function ExternalLayout({
   children,
@@ -8,9 +10,10 @@ export default function ExternalLayout({
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-1 mx-1 lg:mx-15">
+      <main>
         {children}
       </main>
+      <Footer />
     </div>
   );
 }

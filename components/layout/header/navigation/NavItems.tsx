@@ -29,7 +29,7 @@ const navItems: NavItem[]= [
             href: "/contact",
         },
         {
-            title: "Envenements",
+            title: "Évènements",
             href: "/evenements",
         }
     ]

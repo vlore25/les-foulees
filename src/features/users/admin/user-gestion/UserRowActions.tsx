@@ -40,7 +40,7 @@ export function UserRowActions({ userId }: { userId: string }) {
                     {/* Option delete */}
                     <DropdownMenuItem >
                         <Link href={`/admin/utilisateurs/${userId}`} className="flex flex-row">
-                            <Eye />
+                            <Eye className="mr-2 h-4 w-4" />
                             <span>Voir details</span>
                         </Link>
                     </DropdownMenuItem>

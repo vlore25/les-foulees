@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      target: runner
+      target: runner 
       args:
         JWT_SECRET: ${JWT_SECRET}
         DATABASE_URL: ${DATABASE_URL}

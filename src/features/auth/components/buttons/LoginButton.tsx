@@ -4,13 +4,16 @@ import Link from "next/link";
 
 export default function LoginButton() {
     return (
-        <Button variant="ghost" asChild>
+
+        <Button asChild>
             <Link href='/login'>
-                <LogIn className="size-6" />
-                <span className="hidden md:block">
-                    Connexion
-                </span>
+                <div className="flex flex-row gap-2 text-lg items-center">
+                    <span>
+                        Connexion
+                    </span>
+                </div>
             </Link>
         </Button>
     );
 }
+

@@ -143,7 +143,7 @@ const eventBase = z.object({
 
   dateEnd: z.coerce
     .date()
-    .refine((date) => date > new Date(), {
+    .refine((date) => date >= new Date(), {
       message: "La date doit être dans le futur.",
     }),
 
@@ -156,7 +156,7 @@ const eventBase = z.object({
 
   description: z
     .string()
-    .min(10, { message: "La description doit faire au moins 10 caractères." })
+    .min(5, { message: "La description doit faire au moins 10 caractères." })
     .max(3000, { message: "Description trop longue." })
     .optional()
     .or(z.literal("")),

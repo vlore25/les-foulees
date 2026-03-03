@@ -8,6 +8,7 @@ import { sendInviteAction } from "../user.action";
 import { InviteUserState } from "@/src/lib/definitions";
 import ErrorBox from "@/components/common/feedback/ErrorBox";
 import SuccesBox from "@/components/common/feedback/SuccesBox";
+import { Field, FieldDescription } from "@/components/ui/field";
 
 const initialState: InviteUserState = {
     message: null,
@@ -19,30 +20,32 @@ export default function InviteForm() {
     const [state, action, pending] = useActionState(sendInviteAction, initialState);
 
     return (
-        <div>
-            <h2>Inviter un nouveau membre</h2>
-            <p>La personne recevra un lien unique dans sa boite email.</p>
+        <div className="flex flex-col space-y-4 w-full lg:w-[50%]">
+            <h4>Inviter un nouveau membre</h4>
             <form action={action} noValidate>
-                <InputGroup>
-                    <InputGroupInput 
-                        name="email" 
-                        type="email" 
-                        placeholder="Saisir le email du future membre" 
-                    />
-                    <InputGroupAddon>
-                        <MailIcon />
-                    </InputGroupAddon>
-                </InputGroup>
+                <Field>
+                    <InputGroup>
+                        <InputGroupInput
+                            name="email"
+                            type="email"
+                            placeholder="Saisir le email du future membre"
+                        />
+                        <InputGroupAddon>
+                            <MailIcon />
+                        </InputGroupAddon>
+                    </InputGroup>
+                    <FieldDescription>La personne recevra un lien unique dans sa boite email.</FieldDescription>
+                </Field>
                 {state?.errors?.email && (
                     <p className="text-red-500 text-xs mt-1">{state.errors.email[0]}</p>
                 )}
                 {state?.message && !state.success &&
-                    <ErrorBox error ={state.message}/> 
+                    <ErrorBox error={state.message} />
                 }
                 {state?.message && state.success &&
-                    <SuccesBox message ={state.message}/> 
+                    <SuccesBox message={state.message} />
                 }
-                <Button disabled={pending} type="submit" className="p-2 rounded w-full disabled:opacity-50 mt-4">
+                <Button disabled={pending} type="submit" className="disabled:opacity-50 mt-4">
                     {pending ? 'Envoi en cours...' : 'Envoyer invitation'}
                 </Button>
             </form>

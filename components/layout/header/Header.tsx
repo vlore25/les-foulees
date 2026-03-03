@@ -5,17 +5,19 @@ import LoginButton from "@/src/features/auth/components/buttons/LoginButton";
 
 const Header = () => {
     return (
-        <nav className="p-2 lg:p-3 border-b-2">
-            <div className="flex justify-between items-center min-w-0 max-w-7xl mx-auto px-4 lg:px-8">
-                <MobileMenu />
+        <nav className="p-1 lg:p-2">
+            <div className="flex justify-between items-center min-w-0 max-w-7xl mx-auto px-1 lg:px-8">
                 <div className="flex-shrink-0">
                     <FouleesLogo
                         size={100}
-                        className="!w-[90px] lg:!w-[120px]"
+                        className="!w-[90px] lg:!w-[100px]"
                     />
                 </div>
                 <DesktopMenu />
-                <LoginButton />
+                <MobileMenu />
+                <div className="hidden lg:flex">
+                    <LoginButton />
+                </div>
             </div>
         </nav>
     )

@@ -21,7 +21,7 @@ export default function UsersPage() {
     },
   ]
   return (
-    <div className='w-full'>
+    <div className='flex flex-col space-y-4 w-full'>
       <h3>Gestion des utilisateurs</h3>
       <Tabs defaultValue='user-gestion' className='gap-4'>
         <TabsList className='bg-background'>

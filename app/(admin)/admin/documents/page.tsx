@@ -22,7 +22,7 @@ export default function documentsPage() {
     ]
 
     return (
-        <div className='w-full'>
+        <div className='flex flex-col space-y-4 w-full'>
             <h3>Gestion des documents administratifs</h3>
             <Tabs defaultValue='user-gestion' className='gap-4'>
                 <TabsList className='bg-background'>

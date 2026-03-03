@@ -83,16 +83,9 @@ export default async function MembershipsList({
                 />
             </div>
 
-            {/* Titre dynamique pour confirmation visuelle */}
             <h3 className="text-lg font-semibold text-slate-800">
                 Liste pour la saison : <span className="text-primary">{currentSeason?.name}</span>
             </h3>
-
-            {/* --- LA CORRECTION EST ICI --- 
-               Ajouter key={targetSeasonId} force React à détruire et recréer 
-               toute la zone des onglets quand la saison change.
-               Cela garantit que les tableaux affichent les nouvelles données.
-            */}
             <Tabs defaultValue="TO_HANDLE" className="gap-4" key={targetSeasonId}>
                 <TabsList className="h-auto p-2 bg-muted/50 flex flex-wrap gap-2 justify-start w-full sm:w-auto">
                     {tabConfig.map((tab) => (

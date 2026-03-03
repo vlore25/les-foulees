@@ -114,3 +114,12 @@ export async function searchPartnerByName(query: string) {
   return users;
 }
 
+export async function getUsersCount(): Promise<number> {
+  const count = await prisma.user.count({
+    where: {
+      status: "ACTIVE"
+    },
+  });
+
+  return count;
+}
