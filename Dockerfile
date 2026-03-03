@@ -6,17 +6,21 @@ WORKDIR /app
 RUN apk add --no-cache libc6-compat
 
 # 2. Deps : Installation de TOUTES les dépendances (pour le build)
+COPY --from=deps /app/node_modules ./node_modules
+
 FROM base AS deps
 COPY package*.json ./
 COPY prisma ./prisma/
 # On installe tout (dev + prod) pour que le build fonctionne
-RUN npm install --dev typescript && npm install
+RUN npm ci
 
 # 3. Prod-Deps : Installation UNIQUEMENT de la prod (pour l'image finale)
 # C'est ici qu'on fait l'équivalent du "prune" proprement
 FROM base AS prod-deps
 COPY package*.json ./
 COPY prisma ./prisma/
+
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 # --only=production ignore les devDependencies (Tailwind, TS, etc.)
 RUN npm ci --only=production
 # Important : Il faut régénérer le client Prisma pour l'environnement de prod
