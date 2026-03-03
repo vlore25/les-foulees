@@ -1,5 +1,6 @@
 # 1. Base : Image Node Alpine
 FROM node:22-alpine AS base
+
 WORKDIR /app
 # libc6-compat est souvent nécessaire pour Next.js/Prisma sur Alpine
 RUN apk add --no-cache libc6-compat
@@ -9,7 +10,7 @@ FROM base AS deps
 COPY package*.json ./
 COPY prisma ./prisma/
 # On installe tout (dev + prod) pour que le build fonctionne
-RUN npm ci
+RUN npm install --dev typescript && npm install
 
 # 3. Prod-Deps : Installation UNIQUEMENT de la prod (pour l'image finale)
 # C'est ici qu'on fait l'équivalent du "prune" proprement
