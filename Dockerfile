@@ -1,82 +1,72 @@
-# 1. Base : Image Node Alpine
+# 1. Base
 FROM node:22-alpine AS base
-
 WORKDIR /app
-# libc6-compat est souvent nécessaire pour Next.js/Prisma sur Alpine
 RUN apk add --no-cache libc6-compat
 
-# 2. Deps : Installation de TOUTES les dépendances (pour le build)
-COPY --from=deps /app/node_modules ./node_modules
-
+# 2. DEPS : C'est ici que TypeScript arrive !
 FROM base AS deps
 COPY package*.json ./
 COPY prisma ./prisma/
-# On installe tout (dev + prod) pour que le build fonctionne
+
+# "npm ci" installe TOUT (dependencies + devDependencies)
+# DONC : TypeScript est installé ici dans ./node_modules
 RUN npm ci
 
-# 3. Prod-Deps : Installation UNIQUEMENT de la prod (pour l'image finale)
-# C'est ici qu'on fait l'équivalent du "prune" proprement
-FROM base AS prod-deps
-COPY package*.json ./
-COPY prisma ./prisma/
-
-ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
-# --only=production ignore les devDependencies (Tailwind, TS, etc.)
-RUN npm ci --only=production
-# Important : Il faut régénérer le client Prisma pour l'environnement de prod
-RUN npx prisma generate
-
-# 4. Builder : Construction de l'application
+# 3. BUILDER : C'est ici qu'on UTILISE TypeScript
 FROM base AS builder
 WORKDIR /app
 
-ARG DATABASE_URL
-ARG JWT_SECRET
-ARG RESEND_API_KEY
-
-# Les variables d'environnement sont nécessaires au BUILD pour injecter les envs publiques (NEXT_PUBLIC_)
-# Note: Les secrets privés (JWT, DATABASE) ne sont techniquement pas requis au build par Next.js 
-# sauf si vous faites des appels DB dans getStaticProps, mais je les laisse par sécurité.
-ENV DATABASE_URL=$DATABASE_URL
-ENV JWT_SECRET=$JWT_SECRET
-ENV RESEND_API_KEY=$RESEND_API_KEY
-
+# On copie les modules (qui contiennent TypeScript) depuis l'étape deps
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Génération du client Prisma + Build Next.js
+# CORRECTION CRITIQUE : On donne une fausse URL pour que Prisma ne plante pas
+# Prisma a besoin de cette variable pour générer le client, même sans connexion réelle.
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
+# Désactive la télémétrie Next.js pour accélérer le build
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# Génération du client Prisma (utilise les définitions TS)
 RUN npx prisma generate
+
+# Compilation du projet (Next.js utilise TypeScript pour créer le JS optimisé)
 RUN npm run build
-# 5. Runner : L'image finale (Mode Standard)
+
+# 4. PROD-DEPS : On prépare les modules SANS TypeScript pour la fin
+FROM base AS prod-deps
+WORKDIR /app
+COPY package*.json ./
+COPY prisma ./prisma/
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
+# --only=production : On n'installe PAS TypeScript ici, juste le nécessaire pour tourner
+RUN npm ci --only=production
+RUN npx prisma generate
+
+# 5. RUNNER : L'image finale (Sans TypeScript, juste du JS)
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# Création de l'utilisateur pour la sécurité (bonne pratique)
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# --- CHANGEMENTS MAJEURS ICI ---
-
-# A. On copie le dossier public
+# On copie le code compilé (JS) depuis le builder
 COPY --from=builder /app/public ./public
-
-# B. On copie le dossier .next COMPLET (pas juste standalone)
-# On change le propriétaire pour que l'utilisateur nextjs puisse écrire dans le cache si besoin
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 
-# C. On copie les node_modules de production (depuis l'étape prod-deps)
+# On copie les modules LÉGERS (sans TypeScript) depuis prod-deps
 COPY --from=prod-deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 
-# D. On copie package.json et prisma (utile pour les scripts de start)
+# Fichiers de config
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/prisma ./prisma
 
-# On passe sur l'utilisateur sécurisé
 USER nextjs
 
 EXPOSE 3000
 
-# Commande standard de Next.js
 CMD ["npm", "start"]
