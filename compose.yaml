@@ -9,6 +9,14 @@ services:
         JWT_SECRET: ${JWT_SECRET}
         DATABASE_URL: ${DATABASE_URL}
         RESEND_API_KEY: ${RESEND_API_KEY}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.70'
+          memory: 800M
+        reservations:
+          cpus: '0.60'
+          memory: 700M
     environment:
       - NODE_ENV=production
       - JWT_SECRET=${JWT_SECRET}
