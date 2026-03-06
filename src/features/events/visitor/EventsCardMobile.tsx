@@ -73,10 +73,10 @@ export default function EventsCardMobile({ events }: EventsProps) {
                             <CardFooter className='px-4 pb-4 pt-2 justify-between gap-3'>
                                 <div className='flex flex-col'>
                                 </div>
-                                {!isAdminPage && <JoinEventButton
+                                <JoinEventButton
                                     eventId={event.id}
                                     isParticipant={!!event.isParticipant}
-                                />}
+                                />
                             </CardFooter>
                         </div>
                     </Card>
