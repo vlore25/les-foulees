@@ -1,4 +1,4 @@
-name: les-foulees-prod
+name: les-foulees-dev
 
 services:
   db:

@@ -21,17 +21,18 @@ const navItems: NavItem[]= [
         ]
         },
         {
+            title: "Évènements",
+            href: "/evenements",
+        },
+        {
             title: "À Propos",
             href: "/apropos",
         },
         {
             title: "Nous contacter",
             href: "/contact",
-        },
-        {
-            title: "Évènements",
-            href: "/evenements",
         }
+        
     ]
 
 export default navItems;
