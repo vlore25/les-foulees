@@ -7,6 +7,7 @@ RUN apk add --no-cache libc6-compat
 FROM base AS deps
 COPY package*.json ./
 COPY prisma ./prisma/
+COPY prisma.config.ts ./prisma.config.ts
 
 # "npm ci" installe TOUT (dependencies + devDependencies)
 # DONC : TypeScript est installé ici dans ./node_modules
