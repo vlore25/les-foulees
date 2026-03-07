@@ -9,29 +9,20 @@ COPY package*.json ./
 COPY prisma ./prisma/
 COPY prisma.config.ts ./prisma.config.ts
 
-# "npm ci" installe TOUT (dependencies + devDependencies)
-# DONC : TypeScript est installé ici dans ./node_modules
 RUN npm ci
 
-# 3. BUILDER : C'est ici qu'on UTILISE TypeScript
 FROM base AS builder
 WORKDIR /app
 
-# On copie les modules (qui contiennent TypeScript) depuis l'étape deps
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# CORRECTION CRITIQUE : On donne une fausse URL pour que Prisma ne plante pas
-# Prisma a besoin de cette variable pour générer le client, même sans connexion réelle.
 ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 
-# Désactive la télémétrie Next.js pour accélérer le build
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Génération du client Prisma (utilise les définitions TS)
 RUN npx prisma generate
 
-# Compilation du projet (Next.js utilise TypeScript pour créer le JS optimisé)
 RUN npm run build
 
 # 4. PROD-DEPS : On prépare les modules SANS TypeScript pour la fin
