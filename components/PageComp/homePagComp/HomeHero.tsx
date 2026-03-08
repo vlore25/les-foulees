@@ -11,7 +11,7 @@ export default function HomeHero() {
                     alt="Notre club en pleine course"
                     fill
                     priority
-                    className="object-cover object-center sm:hidden" // 'object-center' peut être 'object-left' si l'action est à gauche
+                    className="object-cover object-center sm:hidden"
                     sizes="100vw"
                 />
                 <Image
@@ -19,7 +19,7 @@ export default function HomeHero() {
                     alt="Notre club en pleine course"
                     fill
                     priority
-                    className="object-cover object-center hidden sm:block" // 'object-center' peut être 'object-left' si l'action est à gauche
+                    className="object-cover object-center hidden sm:block" 
                     sizes="100vw"
                 />
                 <div className="absolute inset-0 bg-black/30" />

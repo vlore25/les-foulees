@@ -1,5 +1,5 @@
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronRightIcon, Menu } from "lucide-react";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ChevronRightIcon, Menu, X } from "lucide-react";
 import navItems from "./NavItems";
 import Link from "next/link";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -9,7 +9,7 @@ import LoginButton from "@/src/features/auth/components/buttons/LoginButton";
 const MobileMenu = () => {
     return (
         <div className="lg:hidden">
-            <Sheet >
+            <Sheet>
                 <SheetTrigger asChild>
                     <Button variant="ghost">
                         <Menu className="size-7" />
@@ -45,7 +45,7 @@ const MobileMenu = () => {
                                 </AccordionItem>
                         )}
                     </Accordion>
-                    
+
                 </SheetContent>
 
             </Sheet>
