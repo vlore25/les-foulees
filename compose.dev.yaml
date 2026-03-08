@@ -1,0 +1,17 @@
+name: les-foulees-dev
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - "5432:5432" 
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: lesfoulees
+    volumes:
+      - db-data-prod:/var/lib/postgresql/data
+
+volumes:
+  db-data-prod:

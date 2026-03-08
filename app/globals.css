@@ -5,7 +5,6 @@
 
 @theme inline {
   --color-primary: #9761b8;
-  --color-primary-hover: #8354a1;
   --color-title: #1a1a1a;
   --font-heading: var(--font-vend-sans);
   --font-body: var(--font-geist-sans);
@@ -15,7 +14,6 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
@@ -24,17 +22,12 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  /* TEXT */
+  --color-white-text: var(--white-text);
 }
 
 :root {
   --background: oklch(0.9851 0 0); 
-  --radius: 0.625rem;
   --card: oklch(0.99 0.003 318.23);
   --popover: oklch(0.99 0.003 318.23);
   --foreground: oklch(0.25 0.02 318.23);
@@ -52,6 +45,8 @@
   /* --- DIVERS --- */
   --destructive: oklch(0.60 0.18 25);
   --sidebar: oklch(0.98 0.005 318.23);
+  /* -- TEXT COLOR -- */
+  --white-text: oklch(0.9997 0.0013 106.42);
 }
 @layer base {
   body {
