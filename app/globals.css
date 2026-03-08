@@ -4,6 +4,17 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --color-primary-50: oklch(0.982 0.006 308.72);
+  --color-primary-100: oklch(0.94 0.019 309.89);
+  --color-primary-200: oklch(0.849 0.05 309.07);
+  --color-primary-300: oklch(0.765 0.081 309.36);
+  --color-primary-400: oklch(0.684 0.11 309.52);
+  --color-primary-500: oklch(0.594 0.143 310.41);
+  --color-primary-600: oklch(0.505 0.13 310.6);
+  --color-primary-700: oklch(0.417 0.107 310.09);
+  --color-primary-800: oklch(0.329 0.084 309.63);
+  --color-primary-900: oklch(0.231 0.058 311.28);
+  --color-primary-950: oklch(0.181 0.047 309.8);
   --color-primary: #9761b8;
   --color-title: #1a1a1a;
   --font-heading: var(--font-vend-sans);
