@@ -27,7 +27,7 @@ const buttonVariants = cva(
         icon: "size-9",
         "icon-sm": "size-8",
         "icon-lg": "size-10",
-        responsive: "h-8 px-3 text-xs md:h-12 md:px-8 md:text-base",
+        responsive: "h-8 px-3 md:h-12 md:px-8 md:text-base",
       },
     },
     defaultVariants: {
