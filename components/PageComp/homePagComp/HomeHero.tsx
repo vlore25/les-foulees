@@ -25,7 +25,7 @@ export default function HomeHero() {
                 <div className="absolute inset-0 bg-black/30" />
                 <div className="absolute inset-0 flex flex-col justify-end sm:flex-row md:justify-between sm:items-end px-4 z-10 space-y-1 mb-20 lg:mx-40">
                     <article >
-                        <h1 className="sm:text-2xl text-white-text lg:text-8xl">
+                        <h1 className="text-3xl lg:text-8xl  text-white-text">
                             Les Foulées <br />Avrillaises
                         </h1>
                         <p className="text-xl lg:text-3xl text-white-text leading-relaxed max-w-md">

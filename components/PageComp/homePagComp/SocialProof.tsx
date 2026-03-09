@@ -32,19 +32,18 @@ export default async function SocialProof() {
             <Title >
                 Notre association en quelques chiffres :
             </Title>
-            <div className="flex flex-col lg:flex-row justify-between my-2 gap-6">
+            <div className="flex flex-col lg:flex-row justify-between gap-6 mt-5">
                 {socials.map((item, index) => {
-
                     const IconTag = item.icon;
                     return (
                         <Card
                             key={index}
-                            className="relative overflow-hidden text-left p-2 min-w-[200px] min-h-[150px] shadow-md border-0 rounded-none rounded-tl-xl rounded-br-xl bg-primary/40"
+                            className="relative overflow-hidden p-4 md:p-6 min-w-[200px] min-h-[150px] shadow-md border-0 rounded-none rounded-tl-xl rounded-br-xl bg-primary/40 justify-center items-center"
                         >
                             <div className="z-10 flex flex-col justify-end h-full">
                                 <div className="flex flex-row gap-5 items-center">
-                                    <IconTag className="w-20 h-20 text-primary" />
-                                    <span className="text-6xl font-black text-primary">
+                                    <IconTag className="w-15 h-15 text-primary" />
+                                    <span className="text-4xl font-black text-primary">
                                         {item.number}
                                     </span>
                                 </div>

@@ -15,7 +15,7 @@ function Title({
       data-slot="title"
       className={cn(
         "flex items-center gap-2",
-        "text-2xl sm:text-2xl font-bold tracking-tight text-title select-none ",
+        "text-3xl sm:text-3xl font-bold tracking-tight text-title select-none ",
         className
       )}
       {...props}
