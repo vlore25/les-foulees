@@ -10,7 +10,7 @@ export default function ExternalLayout({
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main>
+      <main className="bg-muted/20 min-h-screen">
         {children}
       </main>
       <Footer />

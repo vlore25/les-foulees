@@ -16,7 +16,7 @@ const navItems: NavItem[]= [
         },
         {
             title: "À Propos",
-            href: "/apropos",
+            href: "/about",
         },
         {
             title: "Nous contacter",

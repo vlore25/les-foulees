@@ -21,7 +21,7 @@ const social = [
 
 const Footer = ({ className }: Footer2Props) => {
   return (
-    <section className={cn("bg-primary-400 text-primary-foreground", className)}>
+    <section className={cn("bg-primary-400 text-primary-foreground mt-10", className)}>
       <div className="container max-w-6xl mx-auto px-4">
 
         <footer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 py-12 items-start">
