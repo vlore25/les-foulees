@@ -28,73 +28,77 @@ export default function TrainingSchedule() {
     ];
 
     return (
-        <section className="my-10 max-w-6xl mx-auto px-4 ">
-            <Title className="lg:">
-                Nos séances d'entraînement :
+        <section className="my-16 max-w-6xl mx-auto px-4">
+            <Title className="mb-2">
+                Nos séances d'entraînement
             </Title>
-            <p className="text-italic md:text-xl">Deux groupes le mardi selon le nombre de coureurs</p>
-            {/*Mobile cards*/}
-            <ul className="flex flex-col gap-7 mt-5  ">
-                {tableItems.map((item, index) => {
-                    return (
-                        <li key={index}>
-                            <div className="relative w-full h-48 lg:w-72 lg:h-40 overflow-visible sm:hidden">
+            <p className="text-primary-600/80 italic md:text-xl mb-10 border-l-4 border-primary-300 pl-4">
+                Deux groupes le mardi selon le nombre de coureurs
+            </p>
+
+            <ul className="flex flex-col gap-12">
+                {tableItems.map((item, index) => (
+                    <li key={index} className="group">
+                        
+                        {/* Vue Mobile : Garde ton style "Badge" superposé */}
+                        <div className="relative w-full h-52 sm:hidden  ">
+                            <Image
+                                src={item.img}
+                                fill
+                                alt={item.day}
+                                // On garde tes coins arrondis spécifiques ici
+                                className="rounded-tl-[2rem] rounded-br-[2rem] object-cover shadow-md"
+                            />
+                            <article className="bg-primary-300 rounded-tl-2xl rounded-br-2xl w-fit p-3 text-primary-900 absolute -bottom-6 -left-2 shadow-lg">
+                                <h4 className="font-bold text-xl leading-none mb-2 uppercase tracking-tight">
+                                    {item.day}
+                                </h4>
+                                <div className="space-y-1 text-sm font-medium opacity-90">
+                                    <div className="flex items-center gap-2">
+                                        <Clock className="w-3.5 h-3.5" />
+                                        <span>{item.hour}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <MapPin className="w-3.5 h-3.5" />
+                                        <span>{item.place}</span>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+
+                        <div className="hidden sm:grid grid-cols-12 gap-8 items-center p-4 rounded-br-[3rem] transition-colors hover:bg-primary-50/50">
+                            
+                            <div className="relative h-40 col-span-3 overflow-hidden rounded-tl-[2rem] rounded-br-[2rem] shadow-sm group-hover:shadow-md transition-shadow">
                                 <Image
                                     src={item.img}
                                     fill
                                     alt={item.day}
-                                    className="rounded-tl-2xl rounded-br-2xl object-cover"
-                                >
-                                </Image>
-                                <article className="font-semibold bg-primary-300 rounded-tl-2xl rounded-br-2xl w-fit p-1 text-primary-700 absolute -bottom-5 -left-2 ">
-                                    <h4 className="text-primary-700 font-bold text-xl">
-                                        {item.day}
-                                    </h4>
-                                    <div>
-                                        <div className="flex flex-row items-center gap-2">
-                                            <Clock className="w-4 h-4" />
-                                            <p>
-                                                {item.hour}
-                                            </p>
-                                        </div>
-                                        <div className="flex flex-row items-center gap-2">
-                                            <MapPin className="w-4 h-4" />
-                                            <p>
-                                                {item.place}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </article>
+                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                />
                             </div>
-                            <div className=" hidden sm:block sm:grid grid-cols-5 sm:gap-5 items-center text-primary-700">
-                                <div className="relative w-full h-48 lg:w-80 lg:h-40 overflow-visible col-span-2">
-                                    <Image
-                                        src={item.img}
-                                        fill
-                                        alt={item.day}
-                                        className="rounded-tl-2xl rounded-br-2xl object-cover"
-                                    >
-                                    </Image>
-                                </div>
-                                <h4 className="text-primary-700 font-bold text-4xl">
+
+                            {/* Jour - On booste la typo pour le côté "Sport" */}
+                            <div className="col-span-3">
+                                <h4 className="text-primary-700 font-black text-3xl lg:text-4xl uppercase italic tracking-tighter group-hover:text-primary-500 transition-colors">
                                     {item.day}
                                 </h4>
-                                <div className="flex flex-row items-center gap-2 text-2xl">
-                                    <Clock className="w-6 h-6" />
-                                    <p>
-                                        {item.hour}
-                                    </p>
-                                </div>
-                                <div className="flex flex-row items-center gap-2 text-2xl">
-                                    <MapPin className="w-10 h-10" />
-                                    <p>
-                                        {item.place}
-                                    </p>
-                                </div>
                             </div>
-                        </li>
-                    )
-                })}
+
+                            {/* Heure */}
+                            <div className="col-span-2 flex items-center gap-3 text-primary-700/80">
+                                <Clock className="w-6 h-6 text-primary-400" />
+                                <p className="text-xl font-semibold italic">{item.hour}</p>
+                            </div>
+
+                            {/* Lieu */}
+                            <div className="col-span-4 flex items-center gap-3 text-primary-700/80">
+                                <MapPin className="w-6 h-6 text-primary-400 shrink-0" />
+                                <p className="text-lg font-medium leading-tight">{item.place}</p>
+                            </div>
+                            
+                        </div>
+                    </li>
+                ))}
             </ul>
         </section>
     );
