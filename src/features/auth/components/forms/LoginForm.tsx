@@ -23,8 +23,6 @@ const LoginForm = () => {
             relative
         '>
             <div className='flex flex-col items-center justify-center w-full p-6 py-10 lg:p-12 gap-6 relative'>
-                
-                {/* LIEN RETOUR HOME */}
                 <Link 
                     href="/" 
                     className="absolute top-6 left-6 flex items-center gap-1 text-sm font-bold text-gray-400 hover:text-primary transition-colors uppercase tracking-widest"
@@ -58,7 +56,7 @@ const LoginForm = () => {
                                 required
                             />
                             <InputGroupAddon>
-                                <UserCircle className="text-primary-500" />
+                                <UserCircle/>
                             </InputGroupAddon>
                         </InputGroup>
                         {state?.error?.email && (
@@ -77,12 +75,12 @@ const LoginForm = () => {
                             <InputGroupInput
                                 name="password"
                                 type="password"
-                                placeholder="••••••••"
+                                placeholder="Mot de passe"
                                 id="credentials-password"
                                 required
                             />
                             <InputGroupAddon>
-                                <LockKeyhole className="text-primary-500" />
+                                <LockKeyhole/>
                             </InputGroupAddon>
                         </InputGroup>
 

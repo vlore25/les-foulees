@@ -1,15 +1,46 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #374151; /* La couleur de ton texte (gray-700) */
-  -webkit-box-shadow: 0 0 0px 1000px transparent inset; /* Force le fond en blanc */
-  transition: background-color 5000s ease-in-out 0s;
-}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* --- COULEURS SHADCN --- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* --- TES AJOUTS PERSONNALISÉS --- */
+  --color-title: var(--title-color);
+  
+  /* --- FONTS --- */
+  --font-heading: var(--font-vend-sans);
+  --font-body: var(--font-geist-sans);
+
+  /* --- PALETTE PRIMARY ETENDUE  --- */
   --color-primary-50: oklch(0.982 0.006 308.72);
   --color-primary-100: oklch(0.94 0.019 309.89);
   --color-primary-200: oklch(0.849 0.05 309.07);
@@ -21,51 +52,54 @@ input:-webkit-autofill:focus {
   --color-primary-800: oklch(0.329 0.084 309.63);
   --color-primary-900: oklch(0.231 0.058 311.28);
   --color-primary-950: oklch(0.181 0.047 309.8);
-  --color-primary: #9761b8;
-  --color-title: #1a1a1a;
-  --font-heading: var(--font-vend-sans);
-  --font-body: var(--font-geist-sans);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-ring: #9761b8;
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  /* TEXT */
-  --color-white-text: var(--white-text);
 }
 
 :root {
+  /* Fond de page */
   --background: oklch(0.9851 0 0); 
-  --card: oklch(0.99 0.003 318.23);
-  --popover: oklch(0.99 0.003 318.23);
+  /* Texte principal */
   --foreground: oklch(0.25 0.02 318.23);
+
+  /* Cartes et Popups */
+  --card: oklch(0.99 0.003 318.23);
   --card-foreground: oklch(0.25 0.02 318.23);
+  --popover: oklch(0.99 0.003 318.23);
   --popover-foreground: oklch(0.25 0.02 318.23);
-  --title-color: oklch(0.20 0.03 318.23);
-  --primary: oklch(0.6211 0.2719 318.23); 
+
+  /* Couleur Principale */
+  --primary: oklch(0.505 0.13 310.6); 
   --primary-foreground: oklch(0.99 0.01 318.23);
+
+  /* Secondaire */
   --secondary: oklch(0.94 0.015 318.23);
   --secondary-foreground: oklch(0.35 0.05 318.23);
+
+  /* Eléments muets */
   --muted: oklch(0.96 0.01 318.23);
   --muted-foreground: oklch(0.50 0.03 318.23);
+
+  /* Accents */
   --accent: oklch(0.94 0.02 318.23);
   --accent-foreground: oklch(0.30 0.10 318.23);
-  /* --- DIVERS --- */
+
+  /* Erreurs */
   --destructive: oklch(0.60 0.18 25);
+  --destructive-foreground: oklch(0.9851 0 0);
+
+  /* Bordures et Inputs */
+  --border: oklch(0.85 0.01 318.23); 
+  --input: oklch(0.85 0.01 318.23); 
+  --ring: oklch(0.505 0.13 310.6);
+  
+  --title-color: oklch(0.20 0.03 318.23);
+
   --sidebar: oklch(0.98 0.005 318.23);
-  /* -- TEXT COLOR -- */
-  --white-text: oklch(0.9997 0.0013 106.42);
 }
+
 @layer base {
+  * {
+    @apply border-border;
+  }
   body {
     @apply bg-background text-foreground font-body;
   }
@@ -75,12 +109,10 @@ input:-webkit-autofill:focus {
   h1 {
     @apply text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight;
   }
-
   h2 {
     @apply text-2xl sm:text-3xl font-semibold tracking-tight;
   }
   h3 {
     @apply text-xl sm:text-2xl font-semibold tracking-tight;
   }
-
 }

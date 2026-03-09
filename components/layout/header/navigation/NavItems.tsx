@@ -7,18 +7,8 @@ type NavItem = {
 
 const navItems: NavItem[]= [
         {
-            title: "Actualités",
-            href: "/actualitées",
-            subItems: [
-            {
-                title: "Blog",
-                href: "/blog",
-            },
-            {
-                title: "Galerie",
-                href: "/galerie",
-            },
-        ]
+            title: "Accueil",
+            href: "/",
         },
         {
             title: "Évènements",

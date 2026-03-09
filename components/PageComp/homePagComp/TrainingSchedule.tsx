@@ -1,4 +1,6 @@
 import { Card } from "@/components/ui/card";
+import { Quote } from "@/components/ui/quote";
+import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Title } from "@/components/ui/title";
 import { Clock, MapPin } from "lucide-react";
@@ -32,21 +34,18 @@ export default function TrainingSchedule() {
             <Title className="mb-2">
                 Nos séances d'entraînement
             </Title>
-            <p className="text-primary-600/80 italic md:text-xl mb-10 border-l-4 border-primary-300 pl-4">
+            <Quote>
                 Deux groupes le mardi selon le nombre de coureurs
-            </p>
-
+            </Quote>
             <ul className="flex flex-col gap-12">
                 {tableItems.map((item, index) => (
                     <li key={index} className="group">
                         
-                        {/* Vue Mobile : Garde ton style "Badge" superposé */}
                         <div className="relative w-full h-52 sm:hidden  ">
                             <Image
                                 src={item.img}
                                 fill
                                 alt={item.day}
-                                // On garde tes coins arrondis spécifiques ici
                                 className="rounded-tl-[2rem] rounded-br-[2rem] object-cover shadow-md"
                             />
                             <article className="bg-primary-300 rounded-tl-2xl rounded-br-2xl w-fit p-3 text-primary-900 absolute -bottom-6 -left-2 shadow-lg">
@@ -77,27 +76,25 @@ export default function TrainingSchedule() {
                                 />
                             </div>
 
-                            {/* Jour - On booste la typo pour le côté "Sport" */}
                             <div className="col-span-3">
                                 <h4 className="text-primary-700 font-black text-3xl lg:text-4xl uppercase italic tracking-tighter group-hover:text-primary-500 transition-colors">
                                     {item.day}
                                 </h4>
                             </div>
 
-                            {/* Heure */}
                             <div className="col-span-2 flex items-center gap-3 text-primary-700/80">
                                 <Clock className="w-6 h-6 text-primary-400" />
                                 <p className="text-xl font-semibold italic">{item.hour}</p>
                             </div>
-
-                            {/* Lieu */}
                             <div className="col-span-4 flex items-center gap-3 text-primary-700/80">
                                 <MapPin className="w-6 h-6 text-primary-400 shrink-0" />
                                 <p className="text-lg font-medium leading-tight">{item.place}</p>
                             </div>
                             
                         </div>
+                        <Separator className="bg-muted-foreground h-05 w-full" />
                     </li>
+                    
                 ))}
             </ul>
         </section>

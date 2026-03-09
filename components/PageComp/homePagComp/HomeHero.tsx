@@ -53,7 +53,7 @@ export default function HomeHero() {
                             <Button 
                                 asChild 
                                 size="lg" 
-                                className="h-16 px-10 text-xl font-bold uppercase italic  hover:scale-105 transition-transform shadow-xl"
+                                className="h-16 px-10 text-xl font-bold uppercase italic  hover:scale-105 shadow-xl"
                             >
                                 <Link href="/inscription">Devenir membre</Link>
                             </Button>
