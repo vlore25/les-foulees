@@ -18,9 +18,8 @@ export default function MapLeaf() {
     return (
         <MapContainer 
             center={[47.5007394121694, -0.5936152669960074]} 
-            zoom={13} 
+            zoom={14} 
             scrollWheelZoom={false} 
-            // 3. HAUTEUR OBLIGATOIRE et z-index bas pour ne pas passer au dessus du menu
             className="h-60 w-full rounded-lg z-0 relative"
         >
             <TileLayer

@@ -6,6 +6,7 @@ import "./globals.css";
 import UserProvider from "@/components/providers/UserProvider";
 import { getCurrentUser } from "@/src/features/users/dal";
 import { Toaster } from "@/components/ui/sonner"
+import { WebVitals } from "@/components/web-vitals";
 
 const vendSans = Vend_Sans({
   variable: "--font-vend-sans",
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1, 
+  maximumScale: 1,
   userScalable: false,
 };
 
@@ -43,11 +44,20 @@ export default async function RootLayout({
       <body
         className={`${vendSans.variable} ${geistMono.variable} antialiased`}
       >
+        <WebVitals />
         <UserProvider user={user}>
           <Toaster />
           {children}
         </UserProvider>
       </body>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-YR1YQ35J7Q"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-YR1YQ35J7Q');
+      </script>
     </html>
   );
 }
