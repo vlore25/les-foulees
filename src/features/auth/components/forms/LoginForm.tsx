@@ -39,7 +39,11 @@ const LoginForm = () => {
                 </div>
 
                 <form action={action} className='w-full space-y-5' noValidate>
-                    
+                    {state?.message && (
+                        <div className="">
+                            <ErrorBox error={state.message} />
+                        </div>
+                    )}
                     <div className="space-y-2">
                         <Label
                             htmlFor="credentials-email" 
@@ -110,12 +114,6 @@ const LoginForm = () => {
                             </Link>
                         </div>
                     </div>
-
-                    {state?.message && (
-                        <div className="pt-2">
-                            <ErrorBox error={state.message} />
-                        </div>
-                    )}
                 </form>
             </div>
 
