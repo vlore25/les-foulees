@@ -6,7 +6,7 @@ import "./globals.css";
 import UserProvider from "@/components/providers/UserProvider";
 import { getCurrentUser } from "@/src/features/users/dal";
 import { Toaster } from "@/components/ui/sonner"
-import { WebVitals } from "@/components/web-vitals";
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 
 const vendSans = Vend_Sans({
   variable: "--font-vend-sans",
@@ -40,24 +40,16 @@ export default async function RootLayout({
 
   return (
     <html lang="fr">
-
+      <GoogleTagManager gtmId="G-YR1YQ35J7Q" />
       <body
         className={`${vendSans.variable} ${geistMono.variable} antialiased`}
       >
-        <WebVitals />
         <UserProvider user={user}>
           <Toaster />
           {children}
         </UserProvider>
       </body>
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-YR1YQ35J7Q"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-YR1YQ35J7Q');
-      </script>
+      
     </html>
   );
 }
