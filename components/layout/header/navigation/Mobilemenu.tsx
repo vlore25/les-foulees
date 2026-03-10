@@ -26,30 +26,37 @@ const MobileMenu = () => {
                                     <AccordionContent>
                                         <ul className="pl-4 flex flex-col gap-1 text-xl">
                                             {item.subItems.map((subItem) => (
-                                                <li key={subItem.title}>
-                                                    <div className="flex flex-row gap-4 items-center ">
-                                                        <Link href={subItem.href}>{subItem.title}</Link>
-                                                        <ChevronRightIcon className="text-muted-foreground size-5 " />
-                                                    </div>
-                                                </li>
+                                                <SheetClose asChild>
+                                                    <li key={subItem.title}>
+                                                        <div className="flex flex-row gap-4 items-center ">
+                                                            <Link href={subItem.href}>{subItem.title}</Link>
+                                                            <ChevronRightIcon className="text-muted-foreground size-5 " />
+                                                        </div>
+                                                    </li>
+                                                </SheetClose>
                                             ))}
                                         </ul>
                                     </AccordionContent>
                                 </AccordionItem>
                             ) :
                                 <AccordionItem key={item.title} value={item.title}>
-                                    <div className="flex flex-row justify-between items-center">
-                                        <Link href={item.href}>{item.title}</Link>
-                                        <ChevronRightIcon className="text-muted-foreground size-5" />
-                                    </div>
+                                    <SheetClose asChild>
+                                        <Link href={item.href}>
+                                            <div className="flex flex-row justify-between items-center">
+
+                                                {item.title}
+                                                <ChevronRightIcon className="text-muted-foreground size-5" />
+                                            </div>
+                                        </Link>
+                                    </SheetClose>
                                 </AccordionItem>
                         )}
-                    </Accordion>
+                </Accordion>
 
-                </SheetContent>
+            </SheetContent>
 
-            </Sheet>
-        </div>
+        </Sheet>
+        </div >
     );
 }
 

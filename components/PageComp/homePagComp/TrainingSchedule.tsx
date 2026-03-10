@@ -92,7 +92,6 @@ export default function TrainingSchedule() {
                             </div>
                             
                         </div>
-                        <Separator className="bg-muted-foreground h-05 w-full" />
                     </li>
                     
                 ))}

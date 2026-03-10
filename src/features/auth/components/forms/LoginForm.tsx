@@ -22,7 +22,7 @@ const LoginForm = () => {
             lg:grid lg:grid-cols-2 lg:max-w-5xl lg:min-h-[600px]
             relative
         '>
-            <div className='flex flex-col items-center justify-center w-full p-6 py-10 lg:p-12 gap-6 relative'>
+            <div className='flex flex-col items-center justify-center w-full p-4 py-10 lg:p-12 gap-6 relative'>
                 <Link 
                     href="/" 
                     className="absolute top-6 left-6 flex items-center gap-1 text-sm font-bold text-gray-400 hover:text-primary transition-colors uppercase tracking-widest"
