@@ -1,10 +1,11 @@
-import UsersList from "@/src/features/users/components/UsersList";
+import PageContentMembers from "@/components/common/PageContentMembers";
+import UserList from "@/src/features/users/member/annuaire/UserList";
 
 export default function annuaire() {
     return (
-        <section className="flex flex-col space-y-3">
-                <h3>Annuaire des membres</h3>
-                <UsersList />
-        </section>
+        <PageContentMembers
+            title="Annuaire des membres"
+            pageContent={<UserList/>}
+        />
     );
 }

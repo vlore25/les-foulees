@@ -1,31 +1,30 @@
-"use client";
-
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { Download, FileText } from "lucide-react";
 import LegalDocRowActions from "../admin/LegalDocRowActions";
-import { useUser } from "@/components/providers/UserProvider";
-import { usePathname } from "next/navigation";
-import { LegalDocs } from "@/prisma/generated/client";
+import EmptyCategory from "@/components/common/feedback/EmptyCategory";
+import { getLegalDocs } from "../../dal";
+import { CurrentUser } from "@/src/lib/dto";
+import { getCurrentUser } from "@/src/features/users/dal";
 
 
 interface LegalDocsCardMobileProps {
-    docs: LegalDocs[];
+    isAdminPage: boolean;
 }
 
-export default function LegalDocsCardMobile({ docs }: LegalDocsCardMobileProps) {
-    const user = useUser();
-    const pathname = usePathname();
+export default async function LegalDocsCardMobile({ isAdminPage }: LegalDocsCardMobileProps) {
 
+    const user = await getCurrentUser()
+    const docs = await getLegalDocs();
     const isUserAdmin = user?.role === "ADMIN";
-    const isAdminPage = pathname?.includes("/admin");
     const showAdminTools = isUserAdmin && isAdminPage;
 
     if (docs.length === 0) {
         return (
-            <div className="text-center p-8 border border-dashed rounded-lg text-muted-foreground">
-                Aucun document disponible.
-            </div>
+            <EmptyCategory
+                emptyIcon={FileText}
+                text="Aucun document disponible."
+            />
         );
     }
 

@@ -1,4 +1,4 @@
-import getUser from "@/src/features/users/dal";
+import { getUser } from "@/src/features/users/dal";
 import UserInfo from "@/src/features/users/admin/user-gestion/UserInfo";
 import ErrorCard from "@/components/common/feedback/ErrorCard";
 import { Button } from "@/components/ui/button";

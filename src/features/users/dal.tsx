@@ -1,9 +1,22 @@
 import 'server-only';
 
-import { AdminUserDTO, toAdminDTO, toPublicDTO, UserDTO } from "@/src/lib/dto"
+import { AdminUserDTO, CurrentUser, toAdminDTO, toPublicListDTO, UserDTO } from "@/src/lib/dto"
 import { prisma } from "@/src/lib/prisma"
 import { getSession, verifySession } from "@/src/lib/session"
 import { cache } from "react"
+
+export const isUserAdmin = async (): Promise<boolean> => {
+
+  const session = await verifySession();
+  if (!session?.userId) return false;
+
+  const currentUser = await prisma.user.findUnique({
+    where: { id: session.userId as string },
+    select: { role: true }
+  });
+  return currentUser?.role === 'ADMIN';
+};
+
 
 // Retrieve all users
 export const getAllUsers = cache(async (): Promise<UserDTO[]> => {
@@ -20,64 +33,33 @@ export const getAllUsers = cache(async (): Promise<UserDTO[]> => {
   }
 
   const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      lastname: true,
-      status: true,
-      email: true,
-      phone: true,
-      role: true,
-      showEmailDirectory: true,
-      showPhoneDirectory: true,
-      createdAt: true
-    },
     orderBy: { lastname: 'asc' }
   });
 
-
   if (isAdmin) {
-
-    return users.map(user => toAdminDTO(user))
+    return users.map(toAdminDTO)
   } else {
-    return users.map(user => toPublicDTO(user))
+    return users.map(toPublicListDTO)
   }
 })
 
 
-export default async function getUser(userId: string): Promise<AdminUserDTO> {
-
+export const getUser = cache(async (userId: string): Promise<UserDTO | null> => {
+  const isAdmin = await isUserAdmin();
   const user = await prisma.user.findUnique({
-    where: {
-      id: userId
-    },
-    select: {
-      id: true,
-      name: true,
-      lastname: true,
-      birthdate: true,
-      address: true,
-      zipCode: true,
-      city: true,
-      email: true,
-      phone: true,
-      role: true,
-      status: true,
-      showEmailDirectory: true,
-      showPhoneDirectory: true,
-      emergencyName: true,
-      emergencyLastName: true,
-      emergencyPhone: true,
-      createdAt: true
-    },
+    where: { id: userId }
   });
-  return toAdminDTO(user);
-  
-}
 
-export type CurrentUser = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>;
+  if (!user) return null;
+  if (isAdmin) {
+    return toAdminDTO(user);
+  } else {
+    return toPublicListDTO(user);
+  }
+});
 
-export const getCurrentUser = cache(async () => {
+
+export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const session = await getSession();
   if (!session?.userId) return null;
 
@@ -95,6 +77,7 @@ export const getCurrentUser = cache(async () => {
   return user;
 });
 
+
 export async function searchPartnerByName(query: string) {
   if (query.length < 2) return [];
 
@@ -102,7 +85,7 @@ export async function searchPartnerByName(query: string) {
     where: {
       OR: [
         { name: { contains: query, mode: 'insensitive' } },
-        { lastname: { contains: query, mode: 'insensitive' } } 
+        { lastname: { contains: query, mode: 'insensitive' } }
       ]
     },
     select: {

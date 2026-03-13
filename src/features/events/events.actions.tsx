@@ -190,4 +190,5 @@ export async function leaveEventAction(eventId: string) {
   } catch (error) {
     return { success: false, message: "Erreur lors de la désinscription." }
   }
+  
 }

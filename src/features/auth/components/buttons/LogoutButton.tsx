@@ -10,7 +10,7 @@ export default function LogoutButton() {
         <Button
             variant="ghost"
             size="responsive"
-            className="bg-transparent text-red-600"
+            className=" text-red-600"
             onClick={() => logout()}>
             <span>Se déconnecter</span>
             <LogOut color="red"/>

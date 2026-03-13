@@ -1,45 +1,33 @@
+import { User } from '@/prisma/generated/client';
 import 'server-only'
 
-export type PublicUserDTO = {
+type RawUserFromList = Pick<User, 
+  'id' | 'name' | 'lastname' | 'phone' | 'email' | 
+  'showPhoneDirectory' | 'showEmailDirectory' | 'role' | 'status' | 'createdAt'
+>;
 
-  id: string
-  name: string | null
-  lastname: string | null
-  phone: string | null
-  email: string | null
-
+export type PublicUserDTO = Pick<User, 'id' | 'name' | 'lastname'> & {
 }
 
-export type AdminUserDTO = PublicUserDTO & {
+export type AdminUserDTO = Omit<User, 'password' | 'updatedAt' | 'createdAt'> & {
+  createdAt: string;
+};
 
-  birthdate: string
-  status: string
-  role: string
-  createdAt: string
-  address: String
-  zipCode: String
-  city: String
-  emergencyName: String
-  emergencyLastName: String
-  emergencyPhone: String
-  showPhoneDirectory: boolean
-  showEmailDirectory: boolean
+export type CurrentUser = Pick<User, 'id' | 'email' | 'role' | 'name' | 'lastname'>
 
-}
 
 export type UserDTO = PublicUserDTO | AdminUserDTO
 
-export function toPublicDTO(user: any): PublicUserDTO {
+
+export function toPublicListDTO(user: RawUserFromList): PublicUserDTO {
   return {
     id: user.id,
     name: user.name,
     lastname: user.lastname,
-    phone: user.showPhoneDirectory ? user.phone : null,
-    email: user.showEmailDirectory ? user.email : null,
   }
 }
 
-export function toAdminDTO(user: any): AdminUserDTO {
+export function toAdminDTO(user: User): AdminUserDTO {
   return {
     id: user.id,
     name: user.name,

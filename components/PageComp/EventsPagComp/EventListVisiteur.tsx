@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { EventListItem } from "@/src/features/events/dal";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calendar, MapPin, ChevronRight } from "lucide-react";
+import { Calendar, MapPin, } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/src/lib/utils";
 
@@ -13,7 +12,12 @@ export default function EventListVisitor({ events }: { events: EventListItem[] }
 
     const now = new Date();
 
+    const futureEventsCount = events.filter(event => {
+        const eventDate = event.dateStart ? new Date(event.dateStart) : new Date();
+        return eventDate >= now;
+    })
 
+    console.log(futureEventsCount.length)
     const filteredEvents = events.filter(event => {
         const eventDate = event.dateStart ? new Date(event.dateStart) : new Date();
         return filter === "future" ? eventDate >= now : eventDate < now;
@@ -26,18 +30,18 @@ export default function EventListVisitor({ events }: { events: EventListItem[] }
                     <button
                         onClick={() => setFilter("future")}
                         className={cn(
-                            "px-8 py-2.5 text-sm font-black font-medium tracking-widest transition-all duration-300",
+                            "px-3 sm:px-4 py-2.5 text-sm font-medium text-nowrap tracking-widest transition-all duration-300",
                             filter === "future"
                                 ? "bg-primary text-white shadow-lg rounded-tl-xl rounded-br-xl"
                                 : "text-gray-500 hover:text-primary"
                         )}
                     >
-                        À venir
+                        À venir ({futureEventsCount.length})
                     </button>
                     <button
                         onClick={() => setFilter("past")}
                         className={cn(
-                            "px-8 py-2.5 text-sm font-black font-medium tracking-widest transition-all duration-300",
+                            "px-4 py-2.5 text-sm font-medium tracking-widest transition-all duration-300",
                             filter === "past"
                                 ? "bg-primary text-white shadow-lg rounded-tl-xl rounded-br-xl"
                                 : "text-gray-500 hover:text-primary"

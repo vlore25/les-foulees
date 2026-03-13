@@ -1,12 +1,15 @@
-import LegalDocsListPublic from "@/src/features/docs/components/public/LegalDocsListPublic";
+import PageContentMembers from "@/components/common/PageContentMembers";
+import LegalDocsCardMobile from "@/src/features/docs/components/shared/LegalDocsCardMobile";
 
+export default function documentPagePage() {
 
-export default function EventsPage() {
     return (
-        <div>
-            <h3>Documents administratifs</h3>
-            <LegalDocsListPublic />
-        </div>
+        <PageContentMembers
+            title="Documents administratifs"
+            pageContent={
+            <LegalDocsCardMobile 
+                isAdminPage={false}/>}
+        />
     );
 
 }

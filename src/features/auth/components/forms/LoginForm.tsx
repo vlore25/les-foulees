@@ -11,6 +11,7 @@ import hero from '../../../../../public/images/login-hero.jpg';
 import FouleesLogo from '@/components/common/logo/FouleesLogo';
 import ErrorBox from '../../../../../components/common/feedback/ErrorBox';
 import { Label } from '@/components/ui/Label';
+import ErrorText from '@/components/common/feedback/ErrorText';
 
 const LoginForm = () => {
     const [state, action, pending] = useActionState(loginUser, undefined);
@@ -64,7 +65,7 @@ const LoginForm = () => {
                             </InputGroupAddon>
                         </InputGroup>
                         {state?.error?.email && (
-                            <p className="text-xs text-red-500 pl-1">{state.error.email}</p>
+                            <ErrorText>{state.error.email}</ErrorText>
                         )}
                     </div>
 
@@ -90,7 +91,7 @@ const LoginForm = () => {
 
                         <div className="flex justify-between items-center pt-1">
                             {state?.error?.password ? (
-                                <p className="text-xs text-red-500 pl-1">{state.error.password}</p>
+                                <ErrorText>{state.error.password}</ErrorText>
                             ) : <span></span>}
 
                             <Link href="/recuperation" className='text-xs text-primary hover:underline font-bold uppercase tracking-wider'>

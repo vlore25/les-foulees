@@ -4,9 +4,10 @@ import { getProfile } from "@/src/features/account/dal";
 import { getSession } from "@/src/lib/session";
 import { redirect } from "next/navigation";
 import UserMembershipDashboard from "@/src/features/membership/public/UserMembershipDashboard";
+import PageContentMembers from "@/components/common/PageContentMembers";
 
 export default async function AdhesionPage() {
-  
+
   const session = await getSession();
   if (!session?.userId) redirect("/login");
 
@@ -18,10 +19,16 @@ export default async function AdhesionPage() {
   ]);
 
   return (
-        <UserMembershipDashboard 
-            user={user} 
-            season={season} 
-            membership={membership} 
+    <PageContentMembers
+      title="Adhésion"
+      pageContent={
+        <UserMembershipDashboard
+          user={user}
+          season={season}
+          membership={membership}
         />
+      }
+    />
+
   );
 }

@@ -11,8 +11,8 @@ interface SidebarAppProps {
 }
 export async function SidebarApp({ navItems }: SidebarAppProps) {
   const user = await getCurrentUser();
+  
   const isAdmin = user?.role === 'ADMIN' ? true : false;
-
   return (
     <Sidebar>
       <SidebarContent>

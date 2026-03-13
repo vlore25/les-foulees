@@ -16,14 +16,11 @@ export type EventListItem = {
 
 }
 
-
-
-
 //GET ALL EVENTS
 export async function getAllevents(): Promise<EventListItem[]> {
   const session = await getSession();
   const userId = session?.userId;
-
+  
   const events = await prisma.event.findMany({
     select: {
       id: true,
@@ -41,7 +38,6 @@ export async function getAllevents(): Promise<EventListItem[]> {
     },
     orderBy: { dateStart: 'asc' }
   });
-
   return events.map(event => ({
     id: event.id,
     title: event.title,

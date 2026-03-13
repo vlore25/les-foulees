@@ -1,3 +1,4 @@
+import PageContentMembers from '@/components/common/PageContentMembers';
 import { ProfileForm } from '@/src/features/account/components/forms/AccountUpdateForm';
 import { getProfile } from '@/src/features/account/dal';
 import { getSession } from '@/src/lib/session';
@@ -11,10 +12,15 @@ export default async function ProfilePage() {
   }
 
   const user = await getProfile(session.userId);
-  
+
   if (!user) {
     return <div>Profil introuvable</div>;
   }
 
-  return <ProfileForm key={user.email} defaultValues={user} />;
+  return(
+    <PageContentMembers
+      title="Informations du membre"
+      pageContent={<ProfileForm key={user.email} defaultValues={user} />}
+    />
+  )
 }
