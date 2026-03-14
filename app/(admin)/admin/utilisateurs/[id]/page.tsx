@@ -1,9 +1,9 @@
-import { getUser } from "@/src/features/users/dal";
 import UserInfo from "@/src/features/users/admin/user-gestion/UserInfo";
 import ErrorCard from "@/components/common/feedback/ErrorCard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { getUserDetailsAdmin } from "@/src/features/users/dal";
 
 interface PageProps {
     params: {
@@ -14,7 +14,7 @@ interface PageProps {
 export default async function UserDetailsPage({ params }: PageProps) {
 
     const { id } = await params;
-    const user = await getUser(id);
+    const user = await getUserDetailsAdmin(id);
 
     if (!user || user === null) {
         return (

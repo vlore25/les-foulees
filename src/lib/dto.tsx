@@ -1,25 +1,57 @@
 import { User } from '@/prisma/generated/client';
 import 'server-only'
 
-type RawUserFromList = Pick<User, 
-  'id' | 'name' | 'lastname' | 'phone' | 'email' | 
-  'showPhoneDirectory' | 'showEmailDirectory' | 'role' | 'status' | 'createdAt'
+export type BaseUser = Pick<User, 'id' | 'email' | 'role' | 'name' | 'lastname'>
+
+type RawAdminInput = Omit<User, 'password' | 'updatedAt'>;
+
+//-----------PUBLIC---------------------
+
+type RawPublicUser = Pick<User,
+  'id' | 'name' | 'lastname' | 'phone' | 'email' |
+  'showPhoneDirectory' | 'showEmailDirectory' | 'createdAt'
 >;
 
-export type PublicUserDTO = Pick<User, 'id' | 'name' | 'lastname'> & {
+export type PublicUserList = Pick<User, 'id' | 'name' | 'lastname'>
+
+export type PublicUserDetails = PublicUserList & {
+  phone: string | null;
+  email: string | null;
+  createdAt: string;
 }
 
-export type AdminUserDTO = Omit<User, 'password' | 'updatedAt' | 'createdAt'> & {
+//-----------ADMIN---------------------
+
+type RawAdminList = Pick<User, 'id' | 'name' | 'lastname' | 'createdAt'>;
+
+export type AdminUserList = PublicUserList & {
+  createdAt: string;
+}
+
+export type AdminUserDetails = Omit<User, 'password' | 'updatedAt' | 'createdAt'> & {
   createdAt: string;
 };
 
-export type CurrentUser = Pick<User, 'id' | 'email' | 'role' | 'name' | 'lastname'>
+type RawUserDetails = Pick<User, 
+  'id' | 'name' | 'lastname' | 'phone' | 'email' | 
+  'showPhoneDirectory' | 'showEmailDirectory' | 'createdAt'
+>;
 
 
-export type UserDTO = PublicUserDTO | AdminUserDTO
+//-----------PUBLIC---------------------
 
+export async function publicUserDetails(user: RawUserDetails): Promise<PublicUserDetails> {
+  return {
+    id: user.id,
+    name: user.name,
+    lastname: user.lastname,
+    phone: user.showPhoneDirectory ? user.phone : null,
+    email: user.showEmailDirectory ? user.email : null,
+    createdAt: user.createdAt.toLocaleString('fr-FR', { month: 'long', day: 'numeric', year: 'numeric'})
+  }
+}
 
-export function toPublicListDTO(user: RawUserFromList): PublicUserDTO {
+export function toPublicList(user: RawPublicUser): PublicUserList {
   return {
     id: user.id,
     name: user.name,
@@ -27,7 +59,19 @@ export function toPublicListDTO(user: RawUserFromList): PublicUserDTO {
   }
 }
 
-export function toAdminDTO(user: User): AdminUserDTO {
+//-----------ADMIN---------------------
+
+export function toAdminList(user: RawAdminList): AdminUserList {
+  return {
+    id: user.id,
+    name: user.name,
+    lastname: user.lastname,
+    createdAt: user.createdAt.toLocaleString('fr-FR', { month: 'long', day: 'numeric', year: 'numeric'})
+  }
+}
+
+
+export function admindUserDetails(user: RawAdminInput): AdminUserDetails {
   return {
     id: user.id,
     name: user.name,
@@ -45,6 +89,6 @@ export function toAdminDTO(user: User): AdminUserDTO {
     emergencyLastName: user.emergencyLastName,
     emergencyPhone: user.emergencyPhone,
     role: user.role,
-    createdAt: user.createdAt.toISOString()
+    createdAt: user.createdAt.toLocaleString('fr-FR', { month: 'long', day: 'numeric', year: 'numeric'})
   }
 }

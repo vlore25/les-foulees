@@ -1,9 +1,11 @@
 import 'server-only';
 
-import { AdminUserDTO, CurrentUser, toAdminDTO, toPublicListDTO, UserDTO } from "@/src/lib/dto"
+import { admindUserDetails, AdminUserDetails, AdminUserList, BaseUser, publicUserDetails, PublicUserDetails, PublicUserList, toAdminList, toPublicList } from "@/src/lib/dto"
 import { prisma } from "@/src/lib/prisma"
 import { getSession, verifySession } from "@/src/lib/session"
 import { cache } from "react"
+
+
 
 export const isUserAdmin = async (): Promise<boolean> => {
 
@@ -17,49 +19,94 @@ export const isUserAdmin = async (): Promise<boolean> => {
   return currentUser?.role === 'ADMIN';
 };
 
-
-// Retrieve all users
-export const getAllUsers = cache(async (): Promise<UserDTO[]> => {
-  const session = await verifySession()
-
-  let isAdmin = false
-
-  if (session?.userId) {
-    const currentUser = await prisma.user.findUnique({
-      where: { id: session.userId as string },
-      select: { role: true }
-    })
-    isAdmin = currentUser?.role === 'ADMIN'
-  }
-
+//-----------PUBLIC-------------------
+export const getAllUsersPublicList = cache(async (): Promise<PublicUserList[]> => {
   const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      lastname: true,
+    },
     orderBy: { lastname: 'asc' }
   });
+  return users;
+});
 
-  if (isAdmin) {
-    return users.map(toAdminDTO)
-  } else {
-    return users.map(toPublicListDTO)
-  }
-})
+export const getUserDetailsPublic = cache(async (userId: string): Promise<PublicUserDetails | null> => {
 
-
-export const getUser = cache(async (userId: string): Promise<UserDTO | null> => {
-  const isAdmin = await isUserAdmin();
   const user = await prisma.user.findUnique({
-    where: { id: userId }
+    where: {
+      id: userId,
+      status: "ACTIVE"
+    },
+    select: {
+      id: true,
+      name: true,
+      lastname: true,
+      showEmailDirectory: true,
+      showPhoneDirectory: true,
+      phone: true,
+      email: true,
+      createdAt: true,
+    }
+  });
+
+  if (!user) {
+    return null;
+  }
+  return publicUserDetails(user)
+
+});
+
+//-----------ADMIN-------------------
+
+export const getAllUsersAdminList = cache(async (): Promise<AdminUserList[]> => {
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      lastname: true,
+      createdAt: true
+    },
+    orderBy: { lastname: 'asc' }
+  });
+  return users.map(toAdminList);
+});
+
+export const getUserDetailsAdmin = cache(async (userId: string): Promise<AdminUserDetails | null> => {
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      lastname: true,
+      birthdate: true,
+      phone: true,
+      email: true,
+      address: true,
+      zipCode: true,
+      city: true,
+      status: true,
+      showPhoneDirectory: true,
+      showEmailDirectory: true,
+      emergencyName: true,
+      emergencyLastName: true,
+      emergencyPhone: true,
+      role: true,
+      createdAt: true
+
+    }
   });
 
   if (!user) return null;
-  if (isAdmin) {
-    return toAdminDTO(user);
-  } else {
-    return toPublicListDTO(user);
-  }
+
+  return admindUserDetails(user);
+
 });
 
 
-export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
+export const getCurrentUser = cache(async (): Promise<BaseUser | null> => {
   const session = await getSession();
   if (!session?.userId) return null;
 

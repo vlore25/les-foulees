@@ -1,10 +1,10 @@
-import { AdminUserDTO } from "@/src/lib/dto";
 import { UserTable } from "../../components/UserTable";
-import { getAllUsers } from "../../dal";
 import { columnsUsersAdmin } from "./ColumnsUsersAdmin";
+import { getAllUsersAdminList } from "../../dal";
 
 export default async function AdminUsersTable(){
-    const usersData = await getAllUsers() as AdminUserDTO[];
+
+    const usersData = await getAllUsersAdminList();
 
     return (
     <UserTable data= {usersData} columns={columnsUsersAdmin}/>

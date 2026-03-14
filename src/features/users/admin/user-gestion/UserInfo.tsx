@@ -1,10 +1,10 @@
-import { AdminUserDTO } from "@/src/lib/dto";
+import { AdminUserDetails } from "@/src/lib/dto";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 interface UserInfoProps {
-  userData: AdminUserDTO;
+  userData: AdminUserDetails;
 }
 
 export default function UserInfo({ userData }: UserInfoProps) {
