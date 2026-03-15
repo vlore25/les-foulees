@@ -3,7 +3,7 @@
 "use client";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { EventListItem } from "../dal";
-import JoinEventButton from "../public/JointEventButton";
+import JoinEventButton from "./JointEventButton";
 import { useUser } from "@/components/providers/UserProvider";
 import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -16,12 +16,7 @@ interface EventsProps {
 }
 
 export default function EventsCardMobile({ events }: EventsProps) {
-    const user = useUser();
-    const pathname = usePathname();
 
-    const isUserAdmin = user?.role === "ADMIN";
-    const isAdminPage = pathname?.includes("/admin");
-    const showAdminTools = isUserAdmin && isAdminPage;
 
     return (
         <div className="flex flex-col gap-4 lg:grid grid-cols-3 lg:gap-12">
@@ -77,10 +72,10 @@ export default function EventsCardMobile({ events }: EventsProps) {
                             <CardFooter className='px-4 pb-4 pt-2 justify-between gap-3'>
                                 <div className='flex flex-col'>
                                 </div>
-                                {!isAdminPage && <JoinEventButton
+                                <JoinEventButton
                                     eventId={event.id}
                                     isParticipant={!!event.isParticipant}
-                                />}
+                                />
                             </CardFooter>
                         </div>
                     </Card>

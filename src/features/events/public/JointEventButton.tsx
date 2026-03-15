@@ -34,7 +34,7 @@ export default function JoinEventButton({ eventId, isParticipant }: JoinButtonPr
     className=" lg:w-50"
       onClick={handleToggleParticipation} 
       disabled={isPending}
-      variant={isParticipant ? "outline" : "default"}
+      variant={isParticipant ? "outlinerounded" : "rounded"}
     >
       {isPending 
         ? "Chargement..." 

@@ -1,5 +1,5 @@
 import { getAllevents } from "../dal";
-import EventsCardMobile from "../shared/EventsCardMobile";
+import EventsCardMobile from "./EventsCardMobile";
 
 export default async function EventListPublic(){
     const events = await getAllevents();
