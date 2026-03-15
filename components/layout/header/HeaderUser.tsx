@@ -1,16 +1,21 @@
 
+import { Button } from "@/components/ui/button";
 import FouleesLogo from "../../common/logo/FouleesLogo";
 import { SidebarTrigger } from "@/components/ui/side-bat";
+import Link from "next/link";
 
 const HeaderUser = () => {
     return (
         <nav className="shadow-xs">
-            <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-2 sm:px-6 py-1">
+            <div className="flex items-center justify-between gap-4 px-2 sm:px-6 py-4">
                 <SidebarTrigger />
-                <FouleesLogo
-                    size={100}
-                    className="!w-[90px] lg:!w-[100px]"
-                />
+                <Button asChild>
+                    <Link
+                    href={"/"}
+                    >
+                    Accueil
+                    </Link>
+                </Button>
             </div>
         </nav>
     )

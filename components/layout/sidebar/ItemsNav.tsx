@@ -53,7 +53,7 @@ export const ItemsNavUser: NavSection[] = [
     label: "Administration",
     adminOnly: true,
     items: [
-      { title: "Espace administration", url: "/admin", icon: UserStar},
+      { title: "Espace administration", url: "/admin/utilisateurs", icon: UserStar},
     ]
   }
 ]

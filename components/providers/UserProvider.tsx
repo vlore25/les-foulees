@@ -1,16 +1,16 @@
 "use client";
 
-import { CurrentUser } from "@/src/lib/dto";
+import { BaseUser } from "@/src/lib/dto";
 import { createContext, useContext, ReactNode } from "react";
 
-const UserContext = createContext<CurrentUser | null>(null);
+const UserContext = createContext<BaseUser | null>(null);
 
 export default function UserProvider({
   children,
   user
 }: {
   children: ReactNode;
-  user: CurrentUser;
+  user: BaseUser;
 }) {
   return (
     <UserContext.Provider value={user}>

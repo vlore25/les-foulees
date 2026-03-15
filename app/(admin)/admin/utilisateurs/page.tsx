@@ -26,18 +26,16 @@ export default function UsersPage() {
       <Title2>Gestion des utilisateurs</Title2>
       <Tabs defaultValue='user-gestion' className='gap-4'>
         <TabsList className='bg-background'>
-          {/** Tabs Buttons*/}
           {tabsContent.map(tab => (
             <TabsTrigger
               key={tab.value}
               value={tab.value}
-              className='data-[state=active]:bg-primary/20 data-[state=active]:text-primary dark:data-[state=active]:text-primary dark:data-[state=active]:bg-primary/20 data-[state=active]:shadow-none dark:data-[state=active]:border-transparent'
+              className=''
             >
               {tab.name}
             </TabsTrigger>
           ))}
         </TabsList>
-        {/** Tabs content will render here*/}
         {tabsContent.map(tab => (
           <TabsContent key={tab.value} value={tab.value}>
             {tab.content}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect, useState } from 'react'
+import { useActionState, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
@@ -8,11 +8,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { CalendarIcon, Loader2 } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/src/lib/utils'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { updateProfile } from '../../user.action'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@radix-ui/react-label'
-import SuccesCard from '@/components/common/feedback/SuccesCard'
 import SuccesBox from '@/components/common/feedback/SuccesBox'
 
 
@@ -23,7 +21,7 @@ interface ProfileFormProps {
         email: string;
         phone?: string | null;
         birthdate?: Date | null;
-        address?: string; 
+        address?: string;
         zipCode?: string;
         city?: string;
         imageUrl?: string | null;
@@ -44,30 +42,27 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
     const handleFormChange = () => {
         if (!isDirty) setIsDirty(true);
     };
-  
+
 
     return (
-        <form action={action} onChange={handleFormChange} className="space-y-8 max-w-4xl  pb-10" noValidate>
+        <form action={action} onChange={handleFormChange} className="space-y-8 max-w-4xl pb-10" noValidate>
 
             {/* EN-TÊTE */}
-            <div className="flex flex-col md:flex-row gap-6 items-center md:items-start mb-8">
-                <div className="text-center md:text-left space-y-1">
+            <div className="flex flex-col md:flex-row gap-6  md:items-start mb-8">
+                <div className="space-y-1">
                     <h1 className="text-3xl font-bold capitalize">{defaultValues.name} {defaultValues.lastname}</h1>
                     <p className="text-muted-foreground">{defaultValues.email}</p>
                     {state?.message && state.success &&
-                        <SuccesBox message ={state?.message}/>
+                        <SuccesBox message={state?.message} />
                     }
                 </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 px-2">
                 {/* 1. INFO PERSONNELLES */}
-                <Card className='md:col-span-2 border-0 shadow-none'>
-                    <CardHeader>
-                        <CardTitle>Informations Personnelles</CardTitle>
-                        <CardDescription>Vos informations d'identification pour le club.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
+                <article className='md:col-span-2'>
+                    <p className='font-semibold text-xl mb-1'>Informations Personnelles</p>
+                    <div className="space-y-4">
                         <div className="grid md:grid-cols-2 gap-4">
                             <FormInput
                                 label="Prénom" name="name"
@@ -90,46 +85,22 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                                 defaultValue={defaultValues.phone || ''} error={state?.error?.phone}
                             />
                         </div>
-                        <div>
-                            <p>Annuaire des adhérents</p>
-                            <p className="text-xs text-muted-foreground">
-                                Ces informations seront visibles uniquement par les membres connectés.
-                            </p>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    id="showPhoneDirectory"
-                                    name="showPhoneDirectory"
-                                    defaultChecked={defaultValues.showPhoneDirectory}
-                                />
-                                <Label htmlFor="showPhoneDirectory">Diffuser mon téléphone</Label>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <Checkbox
-                                    id="showEmailDirectory"
-                                    name="showEmailDirectory"
-                                    defaultChecked={defaultValues.showEmailDirectory} 
-                                />
-                                <Label htmlFor="showEmailDirectory">Diffuser mon Courriel</Label>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </article>
 
                 {/* 2. ADRESSE */}
-                <Card className='border-0 shadow-none'>
-                    <CardHeader>
-                        <CardTitle>Adresse</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
+                <article className='md:col-span-2'>
+                    <p className='font-semibold text-xl mb-1'>Adresse</p>
+                    <div className="space-y-4">
                         <FormInput
-                            label="Rue & Numéro" name="address"
+                            label="Numéro et nom de la rue" name="address"
                             defaultValue={defaultValues.address || ''} error={state?.error?.address}
                         />
 
                         <div className="grid grid-cols-3 gap-4">
                             <div className="col-span-1">
                                 <FormInput
-                                    label="CP" name="zipCode"
+                                    label="Code postal" name="zipCode"
                                     defaultValue={defaultValues.zipCode || ''} error={state?.error?.zipCode}
                                 />
                             </div>
@@ -141,37 +112,55 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                             </div>
 
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </article>
 
                 {/* 3. CONTACT D'URGENCE */}
-                <Card className='border-0 shadow-none'>
-                    <CardHeader>
-                        <CardTitle>Contact d'urgence</CardTitle>
-                        <CardDescription>Personne à contacter en cas de problème.</CardDescription>
-                        {(!defaultValues.emergencyName || !defaultValues.emergencyPhone) && (
-                            <p className='text-orange-600 text-xs mt-1 font-medium'>
-                                Pensez à renseigner un contact à prévenir !
-                            </p>
-                        )}
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <FormInput
-                                label="Prénom" name="emergencyName"
-                                defaultValue={defaultValues.emergencyName || ''}
-                            />
-                            <FormInput
-                                label="Nom" name="emergencyLastName"
-                                defaultValue={defaultValues.emergencyLastName || ''}
-                            />
-                        </div>
+                <article className='md:col-span-2'>
+                    <p className='font-semibold text-xl mb-1'>Contact d'urgence</p>
+                    <p className="text-muted-foreground text-xs">Personne à contacter en cas de problème.</p>
+                    {(!defaultValues.emergencyName || !defaultValues.emergencyPhone) && (
+                        <p className='text-orange-600 text-xs mt-1 font-medium'>
+                            Pensez à renseigner un contact à prévenir !
+                        </p>
+                    )}
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <FormInput
-                            label="Téléphone d'urgence" name="emergencyPhone"
-                            defaultValue={defaultValues.emergencyPhone || ''} error={state?.error?.emergencyPhone}
+                            label="Prénom" name="emergencyName"
+                            defaultValue={defaultValues.emergencyName || ''}
                         />
-                    </CardContent>
-                </Card>
+                        <FormInput
+                            label="Nom" name="emergencyLastName"
+                            defaultValue={defaultValues.emergencyLastName || ''}
+                        />
+                        <FormInput
+                        label="Téléphone d'urgence" name="emergencyPhone"
+                        defaultValue={defaultValues.emergencyPhone || ''} error={state?.error?.emergencyPhone}
+                    />
+                    </div>
+                    
+                </article>
+                <article className='space-y-2'>
+                    <p className='font-semibold text-xl mb-1'>Annuaire des adhérents</p>
+                    <p className="text-muted-foreground text-xs">Ces informations seront visibles uniquement par les membres connectés.</p>
+                    <div className="flex items-center gap-3">
+                        <Checkbox
+                            id="showPhoneDirectory"
+                            name="showPhoneDirectory"
+                            defaultChecked={defaultValues.showPhoneDirectory}
+                        />
+                        <Label htmlFor="showPhoneDirectory">Diffuser mon téléphone</Label>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <Checkbox
+                            id="showEmailDirectory"
+                            name="showEmailDirectory"
+                            defaultChecked={defaultValues.showEmailDirectory}
+                        />
+                        <Label htmlFor="showEmailDirectory">Diffuser mon Courriel</Label>
+                    </div>
+                </article>
 
             </div>
 
@@ -188,7 +177,7 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                     )}
                 </Button>
             </div>
-        </form>
+        </form >
     );
 };
 
@@ -198,7 +187,7 @@ interface FormInputProps {
     label: string;
     name: string;
     defaultValue?: string;
-    error?: string[] | string; 
+    error?: string[] | string;
     placeholder?: string;
 }
 
@@ -237,7 +226,7 @@ function BirthDayPicker({ name, defaultValue, onDateChange }: BirthDayPickerProp
                     <Button
                         variant="outline"
                         className={cn(
-                            "w-full justify-between text-left font-normal mt-1", 
+                            "w-full justify-between text-left font-normal mt-1",
                             !date && "text-muted-foreground"
                         )}
                     >

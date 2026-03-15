@@ -43,7 +43,7 @@ function TabsTrigger({
       data-slot="tabs-trigger"
       className={cn(
         "inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 text-foreground dark:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        "data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:shadow-none",
+        "data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:shadow-none hover:cursor-pointer",
         "dark:data-[state=active]:text-primary dark:data-[state=active]:bg-primary/20 dark:data-[state=active]:border-transparent",
 
         className,

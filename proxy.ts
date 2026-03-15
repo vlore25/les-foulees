@@ -20,13 +20,13 @@ export default async function proxy(req: NextRequest) {
   }
  
   // 5. Redirect to /dashboard if the user is authenticated
-  if (
+  /*if (
     isPublicRoute &&
     session?.userId &&
     !req.nextUrl.pathname.startsWith('/espace-membre')
   ) {
-    return NextResponse.redirect(new URL('/espace-membre', req.nextUrl))
-  }
+    return NextResponse.redirect(new URL('/espace-membre/annuaire', req.nextUrl))
+  }*/
  
   return NextResponse.next()
 }
