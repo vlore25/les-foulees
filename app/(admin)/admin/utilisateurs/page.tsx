@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Title2 } from "@/components/ui/title2";
 import AdminUsersList from "@/src/features/users/admin/user-gestion/AdminUsersList";
 import InviteForm from "@/src/features/users/invite/InviteForm";
 
@@ -22,7 +23,7 @@ export default function UsersPage() {
   ]
   return (
     <div className='flex flex-col space-y-4 w-full'>
-      <h3>Gestion des utilisateurs</h3>
+      <Title2>Gestion des utilisateurs</Title2>
       <Tabs defaultValue='user-gestion' className='gap-4'>
         <TabsList className='bg-background'>
           {/** Tabs Buttons*/}

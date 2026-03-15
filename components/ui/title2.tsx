@@ -15,11 +15,11 @@ function Title2({
   ...props
 }: TitleProps) {
   return (
-    <div className={cn("py-4 w-fit group", className)}>
+    <div className={cn("py-2 w-fit group", className)}>
       <h2
         data-slot="title2"
         className={cn(
-          "text-primary-500 text-md sm:text-4xl font-black tracking-tighter select-none",
+          "text-primary-500 text-md sm:text-2xl font-black tracking-tighter select-none",
         )}
         {...props}
       >

@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Title2 } from "@/components/ui/title2";
 import EventList from "@/src/features/events/admin/EventList";
 import EventForm from "@/src/features/events/admin/forms/EventForm";
 
@@ -23,7 +24,7 @@ export default function eventsPage() {
 
     return (
         <div className='flex flex-col space-y-4 w-full'>
-            <h3>Gestion des evenements</h3>
+            <Title2>Gestion des evenements</Title2>
             <Tabs defaultValue='events' className='gap-4'>
                 <TabsList className='bg-background'>
                     {/** Tabs Buttons*/}

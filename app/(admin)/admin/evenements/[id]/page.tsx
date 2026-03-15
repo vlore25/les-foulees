@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getEventById } from "@/src/features/events/dal";
 import EventForm from "@/src/features/events/admin/forms/EventForm";
+import PageContentAdmin from "@/components/common/PageContentAdmin";
 
 interface PageProps {
     params: Promise<{
@@ -21,7 +22,7 @@ export default async function EditEventPage({ params }: PageProps) {
     }
 
     return (
-        <div>
+        <PageContentAdmin title="Modifier le evenement">
             <div className="mb-6">
                 <Button variant="ghost" asChild>
                     <Link href="/admin/evenements" className="flex items-center gap-2">
@@ -30,10 +31,7 @@ export default async function EditEventPage({ params }: PageProps) {
                     </Link>
                 </Button>
             </div>
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold">Modifier le evenement</h1>
-            </div>
             <EventForm event={event} />
-        </div>
+        </PageContentAdmin>
     );
 }

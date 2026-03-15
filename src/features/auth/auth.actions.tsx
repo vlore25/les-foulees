@@ -213,7 +213,7 @@ export async function loginUser(state: LoginFormState, formData: FormData): Prom
 
   await createSession(user.id)
 
-  redirect('/espace-membre')
+  redirect('/espace-membre/annuaire')
 }
 
 //===LOGOUT===== 

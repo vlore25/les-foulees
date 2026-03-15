@@ -81,6 +81,34 @@ export async function sendInviteAction(prevState: InviteUserState, formData: For
   }
 }
 
+export async function statusUserAction(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { status: true }, 
+    });
+
+    if (!user) {
+      throw new Error("Utilisateur non trouvé");
+    }
+
+    const newStatus = user.status === "ACTIVE" ? "INACTIVE" : "ACTIVE"; //
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { status: newStatus },
+    });
+
+    revalidatePath("/admin/utilisateurs");
+    revalidatePath(`/admin/utilisateurs/${userId}`); 
+
+    return { success: true, status: newStatus };
+  } catch (error) {
+    console.error("Erreur lors du changement de statut:", error);
+    return { success: false, error: "Impossible de modifier le statut" };
+  }
+}
+
 export async function deleteUserAction(userId: string) {
   await prisma.user.delete({
     where: { id: userId },

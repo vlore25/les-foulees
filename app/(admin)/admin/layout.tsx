@@ -26,7 +26,7 @@ export default async function AdminLayout({
       <SidebarApp navItems={ItemsNavAdmin} />
       <div className="min-h-screen w-full bg-background font-sans antialiased">
         <HeaderUser />
-        <main className="p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto">
+        <main className="p-1 md:p-2 lg:p-4 max-w-[1600px]">
           {children}
         </main>
       </div>

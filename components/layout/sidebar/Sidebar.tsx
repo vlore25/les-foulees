@@ -1,4 +1,4 @@
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/side-bat";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/side-bat";
 
 import { NavSection } from "./ItemsNav";
 import Link from "next/link";
@@ -15,7 +15,7 @@ export async function SidebarApp({ navItems }: SidebarAppProps) {
   const isAdmin = user?.role === 'ADMIN' ? true : false;
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className="pt-4">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -53,19 +53,16 @@ export async function SidebarApp({ navItems }: SidebarAppProps) {
           </SidebarGroup>
           )
         })}
-        <SidebarGroup>
-          <SidebarGroupLabel>Session</SidebarGroupLabel>
-          <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton className="p" asChild>
-                    <LogoutButton/>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <LogoutButton />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   )
 }

@@ -4,8 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
 
+// Ce composant reste un Server Component qui récupère les détails à la demande
 async function SeeMore({ id }: { id: string }) {
-
   const user = await getUserDetailsPublic(id);
 
   if (!user) return null;
@@ -13,7 +13,7 @@ async function SeeMore({ id }: { id: string }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" size="icon">
           <MoreVertical size={16} />
         </Button>
       </DialogTrigger>
@@ -23,21 +23,25 @@ async function SeeMore({ id }: { id: string }) {
           <DialogTitle>Détails du membre</DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 gap-4 py-4">
-          <div className="font-bold">Prénom :</div>
+        <div className="grid grid-cols-2 gap-4 py-4 text-sm">
+          <div className="font-bold text-muted-foreground">Prénom :</div>
           <div>{user.name}</div>
 
-          <div className="font-bold">Nom :</div>
+          <div className="font-bold text-muted-foreground">Nom :</div>
           <div>{user.lastname}</div>
 
-          <div className="font-bold">Teléphone :</div>
-          {user.phone ? <div>{user.phone}</div> : 'No reisegné'}
+          <div className="font-bold text-muted-foreground">Téléphone :</div>
+          <div>{user.phone || "Non renseigné"}</div>
 
-          <div className="font-bold">Email :</div>
-          {user.email ? <div>{user.email}</div> : 'No reisegné'}
+          <div className="font-bold text-muted-foreground">Email :</div>
+          <div>{user.email || "Non renseigné"}</div>
 
-          <div className="font-bold">Date d'inscription :</div>
-          <div>{user.createdAt}</div>
+          <div className="font-bold text-muted-foreground">Inscription :</div>
+          <div>
+            {user.createdAt 
+              ? new Date(user.createdAt).toLocaleDateString('fr-FR') 
+              : "Date inconnue"}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
@@ -45,32 +49,33 @@ async function SeeMore({ id }: { id: string }) {
 }
 
 export default async function UserList() {
-
-  const users = await getAllUsersPublicList()
+  const users = await getAllUsersPublicList();
 
   return (
-    <Table className="">
-      <TableCaption>Liste d'utilisateur actives.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Prénom</TableHead>
-          <TableHead>Nom</TableHead>
-          <TableHead>Details</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {users.map(user => {
-          return (
-            <TableRow key={user.id}>
-              <TableCell >{user.name}</TableCell>
-              <TableCell >{user.lastname}</TableCell>
-              <TableCell ><SeeMore id={user.id} /></TableCell>
-            </TableRow>
-          )
-        })
-        }
-      </TableBody>
-    </Table>
-  )
+    <div className="rounded-md border">
+      <Table>
+        <TableCaption>Annuaire des membres actifs.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Prénom</TableHead>
+            <TableHead>Nom</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {users
+            .filter((user) => user.status === "ACTIVE")
+            .map((user) => (
+              <TableRow key={user.id}>
+                <TableCell className="font-medium">{user.name}</TableCell>
+                <TableCell>{user.lastname}</TableCell>
+                <TableCell className="text-right">
+                  <SeeMore id={user.id} />
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
 }
-

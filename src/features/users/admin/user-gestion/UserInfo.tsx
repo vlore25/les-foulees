@@ -1,78 +1,93 @@
 import { AdminUserDetails } from "@/src/lib/dto";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { ReactNode } from "react";
+import { UserStatusControl } from "./UserStatusCOntrol";
 
 interface UserInfoProps {
-  userData: AdminUserDetails;
+    user: AdminUserDetails;
 }
 
-export default function UserInfo({ userData }: UserInfoProps) {
-  // Formatage de la date pour un affichage "Français"
-  const formattedBirthdate = userData.birthdate 
-    ? new Date(userData.birthdate).toLocaleDateString("fr-FR") 
-    : "Non renseignée";
+export default function UserInfo({ user }: UserInfoProps) {
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+            
 
-  return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle className="text-2xl font-bold">
-            {userData.name} {userData.lastname}
-          </CardTitle>
-          <div className="flex gap-2">
-            {/* Badge pour le Rôle */}
-            <Badge variant={userData.role === "ADMIN" ? "destructive" : "secondary"}>
-              {userData.role}
-            </Badge>
-            {/* Badge pour le Statut */}
-            <Badge variant={userData.status === "ACTIVE" ? "default" : "outline"}>
-              {userData.status}
-            </Badge>
-          </div>
+            <article >
+                <h3 className="font-bold text-lg mb-4">Informations Personnelles</h3>
+                <div className="flex flex-col space-y-1">
+                    <InfoRow label="Prénom" value={user.name} />
+                    <InfoRow label="Nom" value={user.lastname} />
+                    <InfoRow
+                        label="Date de naissance"
+                        value={user.birthdate ? new Date(user.birthdate).toLocaleDateString("fr-FR") : "Non renseignée"}
+                    />
+                </div>
+            </article>
+
+            <article >
+                <h3 className="font-bold text-lg mb-4">Contact et Adresse</h3>
+                <div className="flex flex-col space-y-1">
+                    <InfoRow label="Email" value={user.email || "Non renseigné"} />
+                    <InfoRow label="Téléphone" value={user.phone || "Non renseigné"} />
+                    <InfoRow label="Adresse" value={user.address || "Non renseignée"} />
+                    <InfoRow label="Code Postal" value={user.zipCode || "Non renseigné"} />
+                    <InfoRow label="Ville" value={user.city || "Non renseignée"} />
+                </div>
+            </article>
+
+            <article >
+                <h3 className="font-bold text-lg mb-4">Compte & Permissions</h3>
+                <div className="flex flex-col space-y-1">
+                    <InfoRow
+                        label="Statut"
+                        value={
+                            <Badge variant={user.status === "ACTIVE" ? "default" : "secondary"}>
+                                {user.status}
+                            </Badge>
+                        }
+                    />
+                    <InfoRow label="Rôle" value={user.role} />
+                    <InfoRow
+                        label="Enregistré le"
+                        value={user.createdAt ? new Date(user.createdAt).toLocaleDateString("fr-FR") : "Inconnue"}
+                    />
+                </div>
+            </article>
+
+            <article >
+                <h3 className="font-bold text-lg mb-4">Contact d'Urgence</h3>
+                <div className="flex flex-col space-y-1">
+                    <InfoRow label="Prénom" value={user.emergencyName || "Non renseigné"} />
+                    <InfoRow label="Nom" value={user.emergencyLastName || "Non renseigné"} />
+                    <InfoRow label="Téléphone" value={user.emergencyPhone || "Non renseigné"} />
+                </div>
+            </article>
+
+            <article>
+                <h3 className="font-bold text-lg mb-4">Préférences Annuaire</h3>
+                <div className="flex flex-col space-y-1">
+                    <InfoRow label="Afficher l'email" value={user.showEmailDirectory ? "Oui" : "Non"} />
+                    <InfoRow label="Afficher le téléphone" value={user.showPhoneDirectory ? "Oui" : "Non"} />
+                </div>
+            </article>
+            <UserStatusControl
+                userId={user.id}
+                isActive={user.status} // Assurez-vous d'avoir ce champ dans votre schéma Prisma
+            />
         </div>
-      </CardHeader>
-      
-      <Separator />
+    );
+}
 
-      <CardContent className="pt-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
-          {/* Colonne 1 : Infos Personnelles */}
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">ID Utilisateur</p>
-              <p className="text-sm font-mono bg-muted p-1 rounded">{userData.id}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Date de naissance</p>
-              <p className="text-base">{formattedBirthdate}</p>
-            </div>
-          </div>
+interface InfoRowProps {
+    label: string;
+    value: ReactNode;
+}
 
-          {/* Colonne 2 : Coordonnées */}
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Email</p>
-              <p className="text-base">{userData.email || "Non renseigné"}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Téléphone</p>
-              <p className="text-base">{userData.phone || "Non renseigné"}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Visibilité annuaire</p>
-              <p className="text-sm italic">
-                Telephone: {userData.showPhoneDirectory ? "Visible" : "Masqué"}
-              </p>
-              <p className="text-sm italic">
-                Email: {userData.showEmailDirectory ? "Visible" : "Masqué"}
-              </p>
-            </div>
-          </div>
-
+export function InfoRow({ label, value }: InfoRowProps) {
+    return (
+        <div className="grid grid-cols-4 items-center py-1.5">
+            <span className="text-muted-foreground font-semibold col-span-2 sm:col-span-1 text-sm">{label}</span>
+            <span className="font-semibold col-span-2 sm:col-span-1  text-sm">{value}</span>
         </div>
-      </CardContent>
-    </Card>
-  );
+    );
 }

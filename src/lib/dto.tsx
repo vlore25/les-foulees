@@ -8,21 +8,22 @@ type RawAdminInput = Omit<User, 'password' | 'updatedAt'>;
 //-----------PUBLIC---------------------
 
 type RawPublicUser = Pick<User,
-  'id' | 'name' | 'lastname' | 'phone' | 'email' |
+  'id' | 'name' | 'lastname' | 'phone' | 'email' | 'status' |
   'showPhoneDirectory' | 'showEmailDirectory' | 'createdAt'
 >;
 
-export type PublicUserList = Pick<User, 'id' | 'name' | 'lastname'>
+export type PublicUserList = Pick<User, 'id' | 'name' | 'lastname' | 'status' >
 
 export type PublicUserDetails = PublicUserList & {
   phone: string | null;
   email: string | null;
   createdAt: string;
+  status: string;
 }
 
 //-----------ADMIN---------------------
 
-type RawAdminList = Pick<User, 'id' | 'name' | 'lastname' | 'createdAt'>;
+type RawAdminList = Pick<User, 'id' | 'name' | 'lastname' | 'status' | 'createdAt'>;
 
 export type AdminUserList = PublicUserList & {
   createdAt: string;
@@ -33,7 +34,7 @@ export type AdminUserDetails = Omit<User, 'password' | 'updatedAt' | 'createdAt'
 };
 
 type RawUserDetails = Pick<User, 
-  'id' | 'name' | 'lastname' | 'phone' | 'email' | 
+  'id' | 'name' | 'lastname' | 'phone' | 'email' |'status' |
   'showPhoneDirectory' | 'showEmailDirectory' | 'createdAt'
 >;
 
@@ -45,6 +46,7 @@ export async function publicUserDetails(user: RawUserDetails): Promise<PublicUse
     id: user.id,
     name: user.name,
     lastname: user.lastname,
+    status: user.status,
     phone: user.showPhoneDirectory ? user.phone : null,
     email: user.showEmailDirectory ? user.email : null,
     createdAt: user.createdAt.toLocaleString('fr-FR', { month: 'long', day: 'numeric', year: 'numeric'})
@@ -56,6 +58,7 @@ export function toPublicList(user: RawPublicUser): PublicUserList {
     id: user.id,
     name: user.name,
     lastname: user.lastname,
+    status: user.status
   }
 }
 
@@ -66,6 +69,7 @@ export function toAdminList(user: RawAdminList): AdminUserList {
     id: user.id,
     name: user.name,
     lastname: user.lastname,
+    status: user.status,
     createdAt: user.createdAt.toLocaleString('fr-FR', { month: 'long', day: 'numeric', year: 'numeric'})
   }
 }

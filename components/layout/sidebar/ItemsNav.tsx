@@ -27,7 +27,7 @@ export const ItemsNavAdmin: NavSection[] = [
   {
     label: "Navigation",
     items: [
-      {title: "Espace membres", url: "/espace-membre", icon: PersonStanding}
+      {title: "Espace membres", url: "/espace-membre/annuaire", icon: PersonStanding}
     ]
   }
 ]

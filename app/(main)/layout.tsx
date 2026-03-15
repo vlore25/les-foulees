@@ -1,4 +1,3 @@
-import Header from "@/components/layout/header/Header";
 import HeaderUser from "@/components/layout/header/HeaderUser";
 import { ItemsNavUser } from "@/components/layout/sidebar/ItemsNav";
 import { SidebarApp } from "@/components/layout/sidebar/Sidebar";

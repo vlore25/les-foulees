@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react"; // 1. Ajout de l'état pour contrôler l'ouverture
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -9,24 +11,25 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTransition } from "react";
 import { Trash2, MoreVertical, Eye } from "lucide-react";
-import { deleteUserAction } from "../../user.action";
 import Link from "next/link";
+import { statusUserAction } from "../../user.action";
+import { toast } from "sonner"; // Utilisation correcte de toast
 
 export function UserRowActions({ userId }: { userId: string }) {
-    const [isPending, startTransition] = useTransition();
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-    const handleDelete = () => {
-        if (confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
-            startTransition(async () => {
-                await deleteUserAction(userId);
-            });
+    const handleDeactivate = async () => {
+        try {
+            await statusUserAction(userId);
+            toast.success("Le statut de l'utilisateur a été mis à jour.");
+        } catch (error) {
+            toast.error("Une erreur est survenue lors de la désactivation.");
         }
     };
 
     return (
-        <div>
+        <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
@@ -37,23 +40,45 @@ export function UserRowActions({ userId }: { userId: string }) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Options</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    {/* Option delete */}
-                    <DropdownMenuItem >
-                        <Link href={`/admin/utilisateurs/${userId}`} className="flex flex-row">
-                            <Eye className="mr-2 h-4 w-4" />
-                            <span>Voir details</span>
-                        </Link>
+                    
+                    <DropdownMenuItem asChild>
+                        
                     </DropdownMenuItem>
+
+                    {/* 2. On utilise onSelect pour empêcher la fermeture automatique et déclencher le dialogue */}
                     <DropdownMenuItem
-                        onClick={handleDelete}
-                        disabled={isPending}
+                        onSelect={(e) => {
+                            e.preventDefault();
+                            setShowDeleteDialog(true);
+                        }}
                         className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
                     >
                         <Trash2 className="mr-2 h-4 w-4" />
-                        <span>Supprimer</span>
+                        <span>Désactiver compte</span>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-        </div>
+
+            {/* 3. L'AlertDialog est placé en dehors du Dropdown pour éviter les conflits de DOM */}
+            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            L'utilisateur ne pourra plus se connecter. Pour effacer définitivement le compte, veuillez vous diriger vers la section des comptes désactivés.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Annuler</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={handleDeactivate}
+                            className="bg-red-600 hover:bg-red-700"
+                        >
+                            Continuer
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 }
