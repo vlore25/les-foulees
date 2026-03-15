@@ -10,7 +10,7 @@ export default function UserProvider({
   user
 }: {
   children: ReactNode;
-  user: BaseUser;
+  user: BaseUser | null;
 }) {
   return (
     <UserContext.Provider value={user}>
