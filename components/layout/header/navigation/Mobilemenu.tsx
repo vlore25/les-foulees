@@ -4,7 +4,7 @@ import navItems from "./NavItems";
 import Link from "next/link";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import LoginButton from "@/src/features/auth/components/buttons/LoginButton";
+import { PortalButton } from "./PortalButton";
 
 const MobileMenu = () => {
     return (
@@ -18,7 +18,7 @@ const MobileMenu = () => {
                 <SheetContent side='left'>
                     <SheetTitle className="sr-only">menu</SheetTitle>
                     <Accordion type="single" collapsible className="w-full flex flex-col gap-4 mt-9 p-4 font-semibold text-xl">
-                        <LoginButton />
+                        <PortalButton/>
                         {navItems.map((item) =>
                             item.subItems ? (
                                 <AccordionItem key={item.title} value={item.title}>

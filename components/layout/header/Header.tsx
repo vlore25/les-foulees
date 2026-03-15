@@ -1,11 +1,7 @@
 import DesktopMenu from "./navigation/DesktopMenu";
 import MobileMenu from "./navigation/Mobilemenu";
 import FouleesLogo from "../../common/logo/FouleesLogo";
-import LoginButton from "@/src/features/auth/components/buttons/LoginButton";
-import { verifySessionExternal } from "@/src/lib/session";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+import { PortalButton } from "./navigation/PortalButton";
 
 const Header = () => {
     return (
@@ -29,13 +25,3 @@ const Header = () => {
 
 export default Header;
 
-async function PortalButton() {
-    const session = await verifySessionExternal();
-    return (
-        session.isAuth ? <Button>
-            <Link href="/espace-membre/annuaire">
-             Espace membre
-            </Link></Button> : <LoginButton />
-    )
-
-}
