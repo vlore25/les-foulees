@@ -4,7 +4,6 @@ import { Download, FileText } from "lucide-react";
 import LegalDocRowActions from "../admin/LegalDocRowActions";
 import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import { getLegalDocs } from "../../dal";
-import { CurrentUser } from "@/src/lib/dto";
 import { getCurrentUser } from "@/src/features/users/dal";
 
 

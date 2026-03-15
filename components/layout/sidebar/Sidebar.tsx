@@ -3,7 +3,6 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupConte
 import { NavSection } from "./ItemsNav";
 import Link from "next/link";
 import { getCurrentUser } from "@/src/features/users/dal";
-import LogoutButton from "@/src/features/auth/components/buttons/LogoutButton";
 import UserCard from "@/src/features/account/components/UserCard";
 import FouleesLogo from "@/components/common/logo/FouleesLogo";
 

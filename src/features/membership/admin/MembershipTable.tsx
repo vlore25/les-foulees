@@ -9,7 +9,7 @@ import {
     TableRow
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Clock, XCircle, FileText, Download, ExternalLink } from "lucide-react";
+import { CheckCircle2, Clock, XCircle, FileText, Download, ExternalLink, BookUser } from "lucide-react";
 import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import MembershipRowActions from "./MembershipRowActions"; // Assurez-vous d'avoir ce composant créé précédemment
 
@@ -51,7 +51,7 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
     console.log(memberships)
     if (!memberships || memberships.length === 0) {
         return (
-            <EmptyCategory />
+            <EmptyCategory emptyIcon={BookUser} text=""/>
         );
     }
 

@@ -1,6 +1,6 @@
 import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import { Season } from "@/prisma/generated/client";
-import { Archive } from "lucide-react";
+import { Archive, ClipboardClock } from "lucide-react";
 
 type SeasonWithCount = Season & {
   _count: {
@@ -16,7 +16,7 @@ export default function SeasonList({ archivedSeasons }: SeasonListProps) {
     return (
         <>
             {archivedSeasons.length === 0 ? (
-                <EmptyCategory/>
+                <EmptyCategory emptyIcon={ClipboardClock} text=""/>
             ):(
                 <div>
                     <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-slate-600">

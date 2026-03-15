@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import EmptyCategory from "@/components/common/feedback/EmptyCategory"
+import { Users } from "lucide-react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -70,7 +71,7 @@ export function UserTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-               <EmptyCategory/>
+               <EmptyCategory emptyIcon={Users} text=""/>
               </TableCell>
             </TableRow>
           )}
