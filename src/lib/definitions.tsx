@@ -160,6 +160,10 @@ const eventBase = z.object({
     .max(3000, { message: "Description trop longue." })
     .optional()
     .or(z.literal("")),
+  
+  distances: z 
+   .string()
+   .optional(),
 
   picture: z
     .instanceof(File, { message: "L'image est requise" })

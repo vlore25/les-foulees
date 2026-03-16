@@ -104,7 +104,7 @@ model Event {
   dateStart    DateTime?
   dateEnd      DateTime?
   location     String
-   distances    String[]  
+  distances    String[]  
   type         EventType
   visibility   Visibility @default(PUBLIC)
   createdAt    DateTime   @default(now())
