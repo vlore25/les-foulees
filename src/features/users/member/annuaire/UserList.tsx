@@ -59,7 +59,7 @@ export default async function UserList() {
           <TableRow>
             <TableHead>Prénom</TableHead>
             <TableHead>Nom</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="text-right">Informations</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

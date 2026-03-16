@@ -295,7 +295,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
-  events?: Prisma.EventListRelationFilter
+  eventRegistrations?: Prisma.EventRegistrationListRelationFilter
   memberships?: Prisma.MembershipListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
 }
@@ -321,7 +321,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
-  events?: Prisma.EventOrderByRelationAggregateInput
+  eventRegistrations?: Prisma.EventRegistrationOrderByRelationAggregateInput
   memberships?: Prisma.MembershipOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
 }
@@ -350,7 +350,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
-  events?: Prisma.EventListRelationFilter
+  eventRegistrations?: Prisma.EventRegistrationListRelationFilter
   memberships?: Prisma.MembershipListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
 }, "id" | "email">
@@ -426,7 +426,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  events?: Prisma.EventCreateNestedManyWithoutParticipantsInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
 }
@@ -452,7 +452,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutParticipantsInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
 }
@@ -478,7 +478,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  events?: Prisma.EventUpdateManyWithoutParticipantsNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
 }
@@ -504,7 +504,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutParticipantsNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -646,16 +646,6 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
-export type UserListRelationFilter = {
-  every?: Prisma.UserWhereInput
-  some?: Prisma.UserWhereInput
-  none?: Prisma.UserWhereInput
-}
-
-export type UserOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -698,42 +688,18 @@ export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSessionsInput, Prisma.UserUpdateWithoutSessionsInput>, Prisma.UserUncheckedUpdateWithoutSessionsInput>
 }
 
-export type UserCreateNestedManyWithoutEventsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutEventsInput, Prisma.UserUncheckedCreateWithoutEventsInput> | Prisma.UserCreateWithoutEventsInput[] | Prisma.UserUncheckedCreateWithoutEventsInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEventsInput | Prisma.UserCreateOrConnectWithoutEventsInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+export type UserCreateNestedOneWithoutEventRegistrationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEventRegistrationsInput, Prisma.UserUncheckedCreateWithoutEventRegistrationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEventRegistrationsInput
+  connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUncheckedCreateNestedManyWithoutEventsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutEventsInput, Prisma.UserUncheckedCreateWithoutEventsInput> | Prisma.UserCreateWithoutEventsInput[] | Prisma.UserUncheckedCreateWithoutEventsInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEventsInput | Prisma.UserCreateOrConnectWithoutEventsInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-}
-
-export type UserUpdateManyWithoutEventsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutEventsInput, Prisma.UserUncheckedCreateWithoutEventsInput> | Prisma.UserCreateWithoutEventsInput[] | Prisma.UserUncheckedCreateWithoutEventsInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEventsInput | Prisma.UserCreateOrConnectWithoutEventsInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutEventsInput | Prisma.UserUpsertWithWhereUniqueWithoutEventsInput[]
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutEventsInput | Prisma.UserUpdateWithWhereUniqueWithoutEventsInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutEventsInput | Prisma.UserUpdateManyWithWhereWithoutEventsInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-}
-
-export type UserUncheckedUpdateManyWithoutEventsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutEventsInput, Prisma.UserUncheckedCreateWithoutEventsInput> | Prisma.UserCreateWithoutEventsInput[] | Prisma.UserUncheckedCreateWithoutEventsInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEventsInput | Prisma.UserCreateOrConnectWithoutEventsInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutEventsInput | Prisma.UserUpsertWithWhereUniqueWithoutEventsInput[]
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutEventsInput | Prisma.UserUpdateWithWhereUniqueWithoutEventsInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutEventsInput | Prisma.UserUpdateManyWithWhereWithoutEventsInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+export type UserUpdateOneRequiredWithoutEventRegistrationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEventRegistrationsInput, Prisma.UserUncheckedCreateWithoutEventRegistrationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEventRegistrationsInput
+  upsert?: Prisma.UserUpsertWithoutEventRegistrationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEventRegistrationsInput, Prisma.UserUpdateWithoutEventRegistrationsInput>, Prisma.UserUncheckedUpdateWithoutEventRegistrationsInput>
 }
 
 export type UserCreateNestedOneWithoutMembershipsInput = {
@@ -784,7 +750,7 @@ export type UserCreateWithoutSessionsInput = {
   status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
-  events?: Prisma.EventCreateNestedManyWithoutParticipantsInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
 }
@@ -809,7 +775,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   status?: $Enums.Status
   createdAt?: Date | string
   updatedAt?: Date | string
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutParticipantsInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
 }
@@ -850,7 +816,7 @@ export type UserUpdateWithoutSessionsInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  events?: Prisma.EventUpdateManyWithoutParticipantsNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
 }
@@ -875,12 +841,12 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  events?: Prisma.EventUncheckedUpdateManyWithoutParticipantsNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutEventsInput = {
+export type UserCreateWithoutEventRegistrationsInput = {
   id?: string
   email: string
   name: string
@@ -905,7 +871,7 @@ export type UserCreateWithoutEventsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutEventsInput = {
+export type UserUncheckedCreateWithoutEventRegistrationsInput = {
   id?: string
   email: string
   name: string
@@ -930,50 +896,70 @@ export type UserUncheckedCreateWithoutEventsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutEventsInput = {
+export type UserCreateOrConnectWithoutEventRegistrationsInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutEventsInput, Prisma.UserUncheckedCreateWithoutEventsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutEventRegistrationsInput, Prisma.UserUncheckedCreateWithoutEventRegistrationsInput>
 }
 
-export type UserUpsertWithWhereUniqueWithoutEventsInput = {
-  where: Prisma.UserWhereUniqueInput
-  update: Prisma.XOR<Prisma.UserUpdateWithoutEventsInput, Prisma.UserUncheckedUpdateWithoutEventsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutEventsInput, Prisma.UserUncheckedCreateWithoutEventsInput>
+export type UserUpsertWithoutEventRegistrationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutEventRegistrationsInput, Prisma.UserUncheckedUpdateWithoutEventRegistrationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutEventRegistrationsInput, Prisma.UserUncheckedCreateWithoutEventRegistrationsInput>
+  where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateWithWhereUniqueWithoutEventsInput = {
-  where: Prisma.UserWhereUniqueInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutEventsInput, Prisma.UserUncheckedUpdateWithoutEventsInput>
+export type UserUpdateToOneWithWhereWithoutEventRegistrationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutEventRegistrationsInput, Prisma.UserUncheckedUpdateWithoutEventRegistrationsInput>
 }
 
-export type UserUpdateManyWithWhereWithoutEventsInput = {
-  where: Prisma.UserScalarWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutEventsInput>
+export type UserUpdateWithoutEventRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  zipCode?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showPhoneDirectory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showEmailDirectory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
 }
 
-export type UserScalarWhereInput = {
-  AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-  OR?: Prisma.UserScalarWhereInput[]
-  NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-  id?: Prisma.StringFilter<"User"> | string
-  email?: Prisma.StringFilter<"User"> | string
-  name?: Prisma.StringFilter<"User"> | string
-  lastname?: Prisma.StringFilter<"User"> | string
-  birthdate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  phone?: Prisma.StringNullableFilter<"User"> | string | null
-  password?: Prisma.StringFilter<"User"> | string
-  address?: Prisma.StringFilter<"User"> | string
-  zipCode?: Prisma.StringFilter<"User"> | string
-  city?: Prisma.StringFilter<"User"> | string
-  emergencyName?: Prisma.StringNullableFilter<"User"> | string | null
-  emergencyLastName?: Prisma.StringNullableFilter<"User"> | string | null
-  emergencyPhone?: Prisma.StringNullableFilter<"User"> | string | null
-  showPhoneDirectory?: Prisma.BoolFilter<"User"> | boolean
-  showEmailDirectory?: Prisma.BoolFilter<"User"> | boolean
-  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  status?: Prisma.EnumStatusFilter<"User"> | $Enums.Status
-  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+export type UserUncheckedUpdateWithoutEventRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  zipCode?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showPhoneDirectory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showEmailDirectory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMembershipsInput = {
@@ -997,7 +983,7 @@ export type UserCreateWithoutMembershipsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  events?: Prisma.EventCreateNestedManyWithoutParticipantsInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
 }
 
@@ -1022,7 +1008,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutParticipantsInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1063,7 +1049,7 @@ export type UserUpdateWithoutMembershipsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  events?: Prisma.EventUpdateManyWithoutParticipantsNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
 }
 
@@ -1088,7 +1074,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutParticipantsNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1113,7 +1099,7 @@ export type UserCreateWithoutPaymentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  events?: Prisma.EventCreateNestedManyWithoutParticipantsInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
 }
 
@@ -1138,7 +1124,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  events?: Prisma.EventUncheckedCreateNestedManyWithoutParticipantsInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1179,7 +1165,7 @@ export type UserUpdateWithoutPaymentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  events?: Prisma.EventUpdateManyWithoutParticipantsNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
 }
 
@@ -1204,80 +1190,8 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  events?: Prisma.EventUncheckedUpdateManyWithoutParticipantsNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserUpdateWithoutEventsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  lastname?: Prisma.StringFieldUpdateOperationsInput | string
-  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  zipCode?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  showPhoneDirectory?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  showEmailDirectory?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutEventsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  lastname?: Prisma.StringFieldUpdateOperationsInput | string
-  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  zipCode?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  showPhoneDirectory?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  showEmailDirectory?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateManyWithoutEventsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  lastname?: Prisma.StringFieldUpdateOperationsInput | string
-  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  zipCode?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyLastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  showPhoneDirectory?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  showEmailDirectory?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1287,14 +1201,14 @@ export type UserUncheckedUpdateManyWithoutEventsInput = {
 
 export type UserCountOutputType = {
   sessions: number
-  events: number
+  eventRegistrations: number
   memberships: number
   payments: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
-  events?: boolean | UserCountOutputTypeCountEventsArgs
+  eventRegistrations?: boolean | UserCountOutputTypeCountEventRegistrationsArgs
   memberships?: boolean | UserCountOutputTypeCountMembershipsArgs
   payments?: boolean | UserCountOutputTypeCountPaymentsArgs
 }
@@ -1319,8 +1233,8 @@ export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.E
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.EventWhereInput
+export type UserCountOutputTypeCountEventRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EventRegistrationWhereInput
 }
 
 /**
@@ -1359,7 +1273,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
-  events?: boolean | Prisma.User$eventsArgs<ExtArgs>
+  eventRegistrations?: boolean | Prisma.User$eventRegistrationsArgs<ExtArgs>
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1434,7 +1348,7 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "lastname" | "birthdate" | "phone" | "password" | "address" | "zipCode" | "city" | "emergencyName" | "emergencyLastName" | "emergencyPhone" | "showPhoneDirectory" | "showEmailDirectory" | "role" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
-  events?: boolean | Prisma.User$eventsArgs<ExtArgs>
+  eventRegistrations?: boolean | Prisma.User$eventRegistrationsArgs<ExtArgs>
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1446,7 +1360,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     sessions: Prisma.$SessionPayload<ExtArgs>[]
-    events: Prisma.$EventPayload<ExtArgs>[]
+    eventRegistrations: Prisma.$EventRegistrationPayload<ExtArgs>[]
     memberships: Prisma.$MembershipPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
@@ -1865,7 +1779,7 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  events<T extends Prisma.User$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  eventRegistrations<T extends Prisma.User$eventRegistrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventRegistrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   memberships<T extends Prisma.User$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2328,27 +2242,27 @@ export type User$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
- * User.events
+ * User.eventRegistrations
  */
-export type User$eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$eventRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Event
+   * Select specific fields to fetch from the EventRegistration
    */
-  select?: Prisma.EventSelect<ExtArgs> | null
+  select?: Prisma.EventRegistrationSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Event
+   * Omit specific fields from the EventRegistration
    */
-  omit?: Prisma.EventOmit<ExtArgs> | null
+  omit?: Prisma.EventRegistrationOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.EventInclude<ExtArgs> | null
-  where?: Prisma.EventWhereInput
-  orderBy?: Prisma.EventOrderByWithRelationInput | Prisma.EventOrderByWithRelationInput[]
-  cursor?: Prisma.EventWhereUniqueInput
+  include?: Prisma.EventRegistrationInclude<ExtArgs> | null
+  where?: Prisma.EventRegistrationWhereInput
+  orderBy?: Prisma.EventRegistrationOrderByWithRelationInput | Prisma.EventRegistrationOrderByWithRelationInput[]
+  cursor?: Prisma.EventRegistrationWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.EventScalarFieldEnum | Prisma.EventScalarFieldEnum[]
+  distinct?: Prisma.EventRegistrationScalarFieldEnum | Prisma.EventRegistrationScalarFieldEnum[]
 }
 
 /**

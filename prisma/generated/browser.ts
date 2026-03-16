@@ -43,6 +43,11 @@ export type PasswordResetToken = Prisma.PasswordResetTokenModel
  */
 export type Event = Prisma.EventModel
 /**
+ * Model EventRegistration
+ * 
+ */
+export type EventRegistration = Prisma.EventRegistrationModel
+/**
  * Model LegalDocs
  * 
  */

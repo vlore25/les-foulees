@@ -5,8 +5,7 @@ import Link from "next/link";
 export default function HomeHero() {
     return (
         <section className="relative flex flex-col w-full bg-background overflow-hidden">
-            {/* Conteneur principal avec les bords arrondis signature au bas */}
-            <div className="relative h-[75vh] md:h-[90vh] w-full overflow-hidden rounded-br-[4rem] lg:rounded-br-[8rem] shadow-2xl">
+            <div className="relative h-[75vh] md:h-[90vh] w-full overflow-hidden rounded-br-[4rem] lg:rounded-br-[8rem]">
                 
                 {/* Images avec gestion Mobile/Desktop */}
                 <Image

@@ -42,7 +42,7 @@ model User {
   role               Role         @default(USER)
   status             Status       @default(ACTIVE)
   sessions           Session[]
-  events             Event[]
+  eventRegistrations EventRegistration[]
   memberships        Membership[]
   payments           Payment[]
   createdAt          DateTime     @default(now())
@@ -104,11 +104,26 @@ model Event {
   dateStart    DateTime?
   dateEnd      DateTime?
   location     String
+   distances    String[]  
   type         EventType
   visibility   Visibility @default(PUBLIC)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
-  participants User[]
+  registrations EventRegistration[]
+}
+
+model EventRegistration {
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+  distance  String?  
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // Un utilisateur ne peut s'inscrire qu'une seule fois à un même événement
+  @@unique([userId, eventId]) 
 }
 
 // ==============DOCS=================

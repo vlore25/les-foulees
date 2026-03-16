@@ -60,6 +60,7 @@ export type EventCountAggregateOutputType = {
   dateStart: number
   dateEnd: number
   location: number
+  distances: number
   type: number
   visibility: number
   createdAt: number
@@ -104,6 +105,7 @@ export type EventCountAggregateInputType = {
   dateStart?: true
   dateEnd?: true
   location?: true
+  distances?: true
   type?: true
   visibility?: true
   createdAt?: true
@@ -191,6 +193,7 @@ export type EventGroupByOutputType = {
   dateStart: Date | null
   dateEnd: Date | null
   location: string
+  distances: string[]
   type: $Enums.EventType
   visibility: $Enums.Visibility
   createdAt: Date
@@ -226,11 +229,12 @@ export type EventWhereInput = {
   dateStart?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   dateEnd?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   location?: Prisma.StringFilter<"Event"> | string
+  distances?: Prisma.StringNullableListFilter<"Event">
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFilter<"Event"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Event"> | Date | string
-  participants?: Prisma.UserListRelationFilter
+  registrations?: Prisma.EventRegistrationListRelationFilter
 }
 
 export type EventOrderByWithRelationInput = {
@@ -241,11 +245,12 @@ export type EventOrderByWithRelationInput = {
   dateStart?: Prisma.SortOrderInput | Prisma.SortOrder
   dateEnd?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrder
+  distances?: Prisma.SortOrder
   type?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  participants?: Prisma.UserOrderByRelationAggregateInput
+  registrations?: Prisma.EventRegistrationOrderByRelationAggregateInput
 }
 
 export type EventWhereUniqueInput = Prisma.AtLeast<{
@@ -259,11 +264,12 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   dateStart?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   dateEnd?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   location?: Prisma.StringFilter<"Event"> | string
+  distances?: Prisma.StringNullableListFilter<"Event">
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFilter<"Event"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Event"> | Date | string
-  participants?: Prisma.UserListRelationFilter
+  registrations?: Prisma.EventRegistrationListRelationFilter
 }, "id">
 
 export type EventOrderByWithAggregationInput = {
@@ -274,6 +280,7 @@ export type EventOrderByWithAggregationInput = {
   dateStart?: Prisma.SortOrderInput | Prisma.SortOrder
   dateEnd?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrder
+  distances?: Prisma.SortOrder
   type?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -294,6 +301,7 @@ export type EventScalarWhereWithAggregatesInput = {
   dateStart?: Prisma.DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
   dateEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
   location?: Prisma.StringWithAggregatesFilter<"Event"> | string
+  distances?: Prisma.StringNullableListFilter<"Event">
   type?: Prisma.EnumEventTypeWithAggregatesFilter<"Event"> | $Enums.EventType
   visibility?: Prisma.EnumVisibilityWithAggregatesFilter<"Event"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
@@ -308,11 +316,12 @@ export type EventCreateInput = {
   dateStart?: Date | string | null
   dateEnd?: Date | string | null
   location: string
+  distances?: Prisma.EventCreatedistancesInput | string[]
   type: $Enums.EventType
   visibility?: $Enums.Visibility
   createdAt?: Date | string
   updatedAt?: Date | string
-  participants?: Prisma.UserCreateNestedManyWithoutEventsInput
+  registrations?: Prisma.EventRegistrationCreateNestedManyWithoutEventInput
 }
 
 export type EventUncheckedCreateInput = {
@@ -323,11 +332,12 @@ export type EventUncheckedCreateInput = {
   dateStart?: Date | string | null
   dateEnd?: Date | string | null
   location: string
+  distances?: Prisma.EventCreatedistancesInput | string[]
   type: $Enums.EventType
   visibility?: $Enums.Visibility
   createdAt?: Date | string
   updatedAt?: Date | string
-  participants?: Prisma.UserUncheckedCreateNestedManyWithoutEventsInput
+  registrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutEventInput
 }
 
 export type EventUpdateInput = {
@@ -338,11 +348,12 @@ export type EventUpdateInput = {
   dateStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
+  distances?: Prisma.EventUpdatedistancesInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  participants?: Prisma.UserUpdateManyWithoutEventsNestedInput
+  registrations?: Prisma.EventRegistrationUpdateManyWithoutEventNestedInput
 }
 
 export type EventUncheckedUpdateInput = {
@@ -353,11 +364,12 @@ export type EventUncheckedUpdateInput = {
   dateStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
+  distances?: Prisma.EventUpdatedistancesInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  participants?: Prisma.UserUncheckedUpdateManyWithoutEventsNestedInput
+  registrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutEventNestedInput
 }
 
 export type EventCreateManyInput = {
@@ -368,6 +380,7 @@ export type EventCreateManyInput = {
   dateStart?: Date | string | null
   dateEnd?: Date | string | null
   location: string
+  distances?: Prisma.EventCreatedistancesInput | string[]
   type: $Enums.EventType
   visibility?: $Enums.Visibility
   createdAt?: Date | string
@@ -382,6 +395,7 @@ export type EventUpdateManyMutationInput = {
   dateStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
+  distances?: Prisma.EventUpdatedistancesInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -396,20 +410,19 @@ export type EventUncheckedUpdateManyInput = {
   dateStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
+  distances?: Prisma.EventUpdatedistancesInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type EventListRelationFilter = {
-  every?: Prisma.EventWhereInput
-  some?: Prisma.EventWhereInput
-  none?: Prisma.EventWhereInput
-}
-
-export type EventOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type EventCountOrderByAggregateInput = {
@@ -420,6 +433,7 @@ export type EventCountOrderByAggregateInput = {
   dateStart?: Prisma.SortOrder
   dateEnd?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  distances?: Prisma.SortOrder
   type?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -454,42 +468,18 @@ export type EventMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type EventCreateNestedManyWithoutParticipantsInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutParticipantsInput, Prisma.EventUncheckedCreateWithoutParticipantsInput> | Prisma.EventCreateWithoutParticipantsInput[] | Prisma.EventUncheckedCreateWithoutParticipantsInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutParticipantsInput | Prisma.EventCreateOrConnectWithoutParticipantsInput[]
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+export type EventScalarRelationFilter = {
+  is?: Prisma.EventWhereInput
+  isNot?: Prisma.EventWhereInput
 }
 
-export type EventUncheckedCreateNestedManyWithoutParticipantsInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutParticipantsInput, Prisma.EventUncheckedCreateWithoutParticipantsInput> | Prisma.EventCreateWithoutParticipantsInput[] | Prisma.EventUncheckedCreateWithoutParticipantsInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutParticipantsInput | Prisma.EventCreateOrConnectWithoutParticipantsInput[]
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
+export type EventCreatedistancesInput = {
+  set: string[]
 }
 
-export type EventUpdateManyWithoutParticipantsNestedInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutParticipantsInput, Prisma.EventUncheckedCreateWithoutParticipantsInput> | Prisma.EventCreateWithoutParticipantsInput[] | Prisma.EventUncheckedCreateWithoutParticipantsInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutParticipantsInput | Prisma.EventCreateOrConnectWithoutParticipantsInput[]
-  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutParticipantsInput | Prisma.EventUpsertWithWhereUniqueWithoutParticipantsInput[]
-  set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  update?: Prisma.EventUpdateWithWhereUniqueWithoutParticipantsInput | Prisma.EventUpdateWithWhereUniqueWithoutParticipantsInput[]
-  updateMany?: Prisma.EventUpdateManyWithWhereWithoutParticipantsInput | Prisma.EventUpdateManyWithWhereWithoutParticipantsInput[]
-  deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
-}
-
-export type EventUncheckedUpdateManyWithoutParticipantsNestedInput = {
-  create?: Prisma.XOR<Prisma.EventCreateWithoutParticipantsInput, Prisma.EventUncheckedCreateWithoutParticipantsInput> | Prisma.EventCreateWithoutParticipantsInput[] | Prisma.EventUncheckedCreateWithoutParticipantsInput[]
-  connectOrCreate?: Prisma.EventCreateOrConnectWithoutParticipantsInput | Prisma.EventCreateOrConnectWithoutParticipantsInput[]
-  upsert?: Prisma.EventUpsertWithWhereUniqueWithoutParticipantsInput | Prisma.EventUpsertWithWhereUniqueWithoutParticipantsInput[]
-  set?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  disconnect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  delete?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  connect?: Prisma.EventWhereUniqueInput | Prisma.EventWhereUniqueInput[]
-  update?: Prisma.EventUpdateWithWhereUniqueWithoutParticipantsInput | Prisma.EventUpdateWithWhereUniqueWithoutParticipantsInput[]
-  updateMany?: Prisma.EventUpdateManyWithWhereWithoutParticipantsInput | Prisma.EventUpdateManyWithWhereWithoutParticipantsInput[]
-  deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
+export type EventUpdatedistancesInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type EnumEventTypeFieldUpdateOperationsInput = {
@@ -500,7 +490,21 @@ export type EnumVisibilityFieldUpdateOperationsInput = {
   set?: $Enums.Visibility
 }
 
-export type EventCreateWithoutParticipantsInput = {
+export type EventCreateNestedOneWithoutRegistrationsInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutRegistrationsInput, Prisma.EventUncheckedCreateWithoutRegistrationsInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutRegistrationsInput
+  connect?: Prisma.EventWhereUniqueInput
+}
+
+export type EventUpdateOneRequiredWithoutRegistrationsNestedInput = {
+  create?: Prisma.XOR<Prisma.EventCreateWithoutRegistrationsInput, Prisma.EventUncheckedCreateWithoutRegistrationsInput>
+  connectOrCreate?: Prisma.EventCreateOrConnectWithoutRegistrationsInput
+  upsert?: Prisma.EventUpsertWithoutRegistrationsInput
+  connect?: Prisma.EventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EventUpdateToOneWithWhereWithoutRegistrationsInput, Prisma.EventUpdateWithoutRegistrationsInput>, Prisma.EventUncheckedUpdateWithoutRegistrationsInput>
+}
+
+export type EventCreateWithoutRegistrationsInput = {
   id?: string
   title: string
   imgUrl: string
@@ -508,13 +512,14 @@ export type EventCreateWithoutParticipantsInput = {
   dateStart?: Date | string | null
   dateEnd?: Date | string | null
   location: string
+  distances?: Prisma.EventCreatedistancesInput | string[]
   type: $Enums.EventType
   visibility?: $Enums.Visibility
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
-export type EventUncheckedCreateWithoutParticipantsInput = {
+export type EventUncheckedCreateWithoutRegistrationsInput = {
   id?: string
   title: string
   imgUrl: string
@@ -522,51 +527,30 @@ export type EventUncheckedCreateWithoutParticipantsInput = {
   dateStart?: Date | string | null
   dateEnd?: Date | string | null
   location: string
+  distances?: Prisma.EventCreatedistancesInput | string[]
   type: $Enums.EventType
   visibility?: $Enums.Visibility
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
-export type EventCreateOrConnectWithoutParticipantsInput = {
+export type EventCreateOrConnectWithoutRegistrationsInput = {
   where: Prisma.EventWhereUniqueInput
-  create: Prisma.XOR<Prisma.EventCreateWithoutParticipantsInput, Prisma.EventUncheckedCreateWithoutParticipantsInput>
+  create: Prisma.XOR<Prisma.EventCreateWithoutRegistrationsInput, Prisma.EventUncheckedCreateWithoutRegistrationsInput>
 }
 
-export type EventUpsertWithWhereUniqueWithoutParticipantsInput = {
-  where: Prisma.EventWhereUniqueInput
-  update: Prisma.XOR<Prisma.EventUpdateWithoutParticipantsInput, Prisma.EventUncheckedUpdateWithoutParticipantsInput>
-  create: Prisma.XOR<Prisma.EventCreateWithoutParticipantsInput, Prisma.EventUncheckedCreateWithoutParticipantsInput>
+export type EventUpsertWithoutRegistrationsInput = {
+  update: Prisma.XOR<Prisma.EventUpdateWithoutRegistrationsInput, Prisma.EventUncheckedUpdateWithoutRegistrationsInput>
+  create: Prisma.XOR<Prisma.EventCreateWithoutRegistrationsInput, Prisma.EventUncheckedCreateWithoutRegistrationsInput>
+  where?: Prisma.EventWhereInput
 }
 
-export type EventUpdateWithWhereUniqueWithoutParticipantsInput = {
-  where: Prisma.EventWhereUniqueInput
-  data: Prisma.XOR<Prisma.EventUpdateWithoutParticipantsInput, Prisma.EventUncheckedUpdateWithoutParticipantsInput>
+export type EventUpdateToOneWithWhereWithoutRegistrationsInput = {
+  where?: Prisma.EventWhereInput
+  data: Prisma.XOR<Prisma.EventUpdateWithoutRegistrationsInput, Prisma.EventUncheckedUpdateWithoutRegistrationsInput>
 }
 
-export type EventUpdateManyWithWhereWithoutParticipantsInput = {
-  where: Prisma.EventScalarWhereInput
-  data: Prisma.XOR<Prisma.EventUpdateManyMutationInput, Prisma.EventUncheckedUpdateManyWithoutParticipantsInput>
-}
-
-export type EventScalarWhereInput = {
-  AND?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
-  OR?: Prisma.EventScalarWhereInput[]
-  NOT?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
-  id?: Prisma.StringFilter<"Event"> | string
-  title?: Prisma.StringFilter<"Event"> | string
-  imgUrl?: Prisma.StringFilter<"Event"> | string
-  description?: Prisma.StringNullableFilter<"Event"> | string | null
-  dateStart?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
-  dateEnd?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
-  location?: Prisma.StringFilter<"Event"> | string
-  type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
-  visibility?: Prisma.EnumVisibilityFilter<"Event"> | $Enums.Visibility
-  createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Event"> | Date | string
-}
-
-export type EventUpdateWithoutParticipantsInput = {
+export type EventUpdateWithoutRegistrationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   imgUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -574,13 +558,14 @@ export type EventUpdateWithoutParticipantsInput = {
   dateStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
+  distances?: Prisma.EventUpdatedistancesInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type EventUncheckedUpdateWithoutParticipantsInput = {
+export type EventUncheckedUpdateWithoutRegistrationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   imgUrl?: Prisma.StringFieldUpdateOperationsInput | string
@@ -588,20 +573,7 @@ export type EventUncheckedUpdateWithoutParticipantsInput = {
   dateStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
-  visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type EventUncheckedUpdateManyWithoutParticipantsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  imgUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateStart?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  location?: Prisma.StringFieldUpdateOperationsInput | string
+  distances?: Prisma.EventUpdatedistancesInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -614,11 +586,11 @@ export type EventUncheckedUpdateManyWithoutParticipantsInput = {
  */
 
 export type EventCountOutputType = {
-  participants: number
+  registrations: number
 }
 
 export type EventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  participants?: boolean | EventCountOutputTypeCountParticipantsArgs
+  registrations?: boolean | EventCountOutputTypeCountRegistrationsArgs
 }
 
 /**
@@ -634,8 +606,8 @@ export type EventCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extens
 /**
  * EventCountOutputType without action
  */
-export type EventCountOutputTypeCountParticipantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.UserWhereInput
+export type EventCountOutputTypeCountRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EventRegistrationWhereInput
 }
 
 
@@ -647,11 +619,12 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   dateStart?: boolean
   dateEnd?: boolean
   location?: boolean
+  distances?: boolean
   type?: boolean
   visibility?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  participants?: boolean | Prisma.Event$participantsArgs<ExtArgs>
+  registrations?: boolean | Prisma.Event$registrationsArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["event"]>
 
@@ -663,6 +636,7 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   dateStart?: boolean
   dateEnd?: boolean
   location?: boolean
+  distances?: boolean
   type?: boolean
   visibility?: boolean
   createdAt?: boolean
@@ -677,6 +651,7 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   dateStart?: boolean
   dateEnd?: boolean
   location?: boolean
+  distances?: boolean
   type?: boolean
   visibility?: boolean
   createdAt?: boolean
@@ -691,15 +666,16 @@ export type EventSelectScalar = {
   dateStart?: boolean
   dateEnd?: boolean
   location?: boolean
+  distances?: boolean
   type?: boolean
   visibility?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "imgUrl" | "description" | "dateStart" | "dateEnd" | "location" | "type" | "visibility" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "imgUrl" | "description" | "dateStart" | "dateEnd" | "location" | "distances" | "type" | "visibility" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  participants?: boolean | Prisma.Event$participantsArgs<ExtArgs>
+  registrations?: boolean | Prisma.Event$registrationsArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -708,7 +684,7 @@ export type EventIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Event"
   objects: {
-    participants: Prisma.$UserPayload<ExtArgs>[]
+    registrations: Prisma.$EventRegistrationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -718,6 +694,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     dateStart: Date | null
     dateEnd: Date | null
     location: string
+    distances: string[]
     type: $Enums.EventType
     visibility: $Enums.Visibility
     createdAt: Date
@@ -1116,7 +1093,7 @@ readonly fields: EventFieldRefs;
  */
 export interface Prisma__EventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  participants<T extends Prisma.Event$participantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$participantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  registrations<T extends Prisma.Event$registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Event$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1153,6 +1130,7 @@ export interface EventFieldRefs {
   readonly dateStart: Prisma.FieldRef<"Event", 'DateTime'>
   readonly dateEnd: Prisma.FieldRef<"Event", 'DateTime'>
   readonly location: Prisma.FieldRef<"Event", 'String'>
+  readonly distances: Prisma.FieldRef<"Event", 'String[]'>
   readonly type: Prisma.FieldRef<"Event", 'EventType'>
   readonly visibility: Prisma.FieldRef<"Event", 'Visibility'>
   readonly createdAt: Prisma.FieldRef<"Event", 'DateTime'>
@@ -1545,27 +1523,27 @@ export type EventDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * Event.participants
+ * Event.registrations
  */
-export type Event$participantsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Event$registrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the EventRegistration
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.EventRegistrationSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the EventRegistration
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.EventRegistrationOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
-  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
-  cursor?: Prisma.UserWhereUniqueInput
+  include?: Prisma.EventRegistrationInclude<ExtArgs> | null
+  where?: Prisma.EventRegistrationWhereInput
+  orderBy?: Prisma.EventRegistrationOrderByWithRelationInput | Prisma.EventRegistrationOrderByWithRelationInput[]
+  cursor?: Prisma.EventRegistrationWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
+  distinct?: Prisma.EventRegistrationScalarFieldEnum | Prisma.EventRegistrationScalarFieldEnum[]
 }
 
 /**

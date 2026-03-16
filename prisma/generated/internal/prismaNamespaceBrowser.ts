@@ -56,6 +56,7 @@ export const ModelName = {
   Invitation: 'Invitation',
   PasswordResetToken: 'PasswordResetToken',
   Event: 'Event',
+  EventRegistration: 'EventRegistration',
   LegalDocs: 'LegalDocs',
   Season: 'Season',
   Membership: 'Membership',
@@ -146,6 +147,7 @@ export const EventScalarFieldEnum = {
   dateStart: 'dateStart',
   dateEnd: 'dateEnd',
   location: 'location',
+  distances: 'distances',
   type: 'type',
   visibility: 'visibility',
   createdAt: 'createdAt',
@@ -153,6 +155,17 @@ export const EventScalarFieldEnum = {
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
+
+
+export const EventRegistrationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  eventId: 'eventId',
+  distance: 'distance',
+  createdAt: 'createdAt'
+} as const
+
+export type EventRegistrationScalarFieldEnum = (typeof EventRegistrationScalarFieldEnum)[keyof typeof EventRegistrationScalarFieldEnum]
 
 
 export const LegalDocsScalarFieldEnum = {

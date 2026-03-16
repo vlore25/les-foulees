@@ -8,7 +8,6 @@ import { writeFile } from "fs/promises";
 import { revalidatePath } from "next/cache";
 import { join } from "path";
 
-
 export type EventFormState = {
     error?: {
         title?: string[];
@@ -17,7 +16,9 @@ export type EventFormState = {
         place?: string[];
         eventtype?: string[];
         description?: string[];
+        distance?: string[]
         picture?: string[];
+        distances?: string[]; // NOUVEAU : Pour gérer les erreurs liées aux distances
     };
     message?: string | null;
 } | undefined;
@@ -32,8 +33,9 @@ export async function createEvent(state: EventFormState, formData: FormData): Pr
         return { error: validatedFields.error.flatten().fieldErrors };
     }
 
-    const { title, dateStart, dateEnd, place, eventtype, description, picture } = validatedFields.data;
-
+    // NOUVEAU : on récupère les distances (selon la façon dont vous les envoyez depuis le formulaire, 
+    // assurez-vous que votre eventSchema de zod gère "distances" comme un array de strings)
+    const { title, dateStart, dateEnd, place, eventtype, description, picture, distances } = validatedFields.data;
 
     const bytes = await picture.arrayBuffer();
     const buffer = Buffer.from(bytes);
@@ -57,7 +59,9 @@ export async function createEvent(state: EventFormState, formData: FormData): Pr
                 location: place,
                 type: eventTypeRaw,
                 description: description,
+                distance: distances,
                 imgUrl: imageUrlPath,
+                distances: distances || [], // NOUVEAU : enregistrement des distances disponibles
             },
         })
 
@@ -67,7 +71,7 @@ export async function createEvent(state: EventFormState, formData: FormData): Pr
         return { message: 'Une erreur s\'est produite, veuillez réessayer.' };
     }
 
-    return { message: 'Evenement créé acec succes!' };
+    return { message: 'Événement créé avec succès!' };
 }
 
 //========UPDATE EVENT=========
@@ -77,14 +81,14 @@ export async function updateEventAction(
   formData: FormData
 ): Promise<EventFormState> {
   
-
   const validatedFields = eventUpdateSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
     return { error: validatedFields.error.flatten().fieldErrors };
   }
 
-  const { title, dateStart, dateEnd, place, eventtype, description, picture } = validatedFields.data;
+  // NOUVEAU : On récupère également les distances
+  const { title, dateStart, dateEnd, place, eventtype, description, picture, distances } = validatedFields.data;
   const eventTypeRaw = eventtype;
 
   if (!Object.values(EventType).includes(eventTypeRaw as EventType)) {
@@ -98,6 +102,7 @@ export async function updateEventAction(
     location: place,
     type: eventTypeRaw,
     description,
+    distances: distances || [], // NOUVEAU : mise à jour des distances
   };
 
   if (picture && picture.size > 0) {
@@ -135,9 +140,9 @@ export async function deleteEventAction(eventId: string) {
   revalidatePath("/events");
 }
 
-//========JOINT EVENT=========
-
-export async function joinEventAction(eventId: string) {
+//========JOIN EVENT=========
+// NOUVEAU : L'action prend maintenant la distance choisie en paramètre optionnel
+export async function joinEventAction(eventId: string, selectedDistance?: string) {
   
   const session = await verifySession();
 
@@ -149,14 +154,14 @@ export async function joinEventAction(eventId: string) {
   }
 
   try {
-    await prisma.event.update({
-      where: { id: eventId },
+    // NOUVEAU : Création dans la table de liaison explicite EventRegistration
+    await prisma.eventRegistration.create({
       data: {
-        participants: {
-          connect: { id: session.userId } 
-        }
+        userId: session.userId,
+        eventId: eventId,
+        distance: selectedDistance || null // Enregistre la distance si elle est fournie
       }
-    })
+    });
 
     revalidatePath('/espace-membre/evenements')
     revalidatePath(`/espace-membre/evenement/${eventId}`) 
@@ -165,7 +170,8 @@ export async function joinEventAction(eventId: string) {
 
   } catch (error) {
     console.error("Erreur inscription event:", error)
-    return { success: false, message: "Une erreur est survenue lors de l'inscription." }
+    // Utile pour gérer le cas où l'utilisateur essaie de s'inscrire 2 fois (violation de la contrainte @@unique)
+    return { success: false, message: "Vous êtes déjà inscrit ou une erreur est survenue." }
   }
 }
 
@@ -175,14 +181,15 @@ export async function leaveEventAction(eventId: string) {
   if (!session?.userId) return { success: false, message: "Non autorisé" }
 
   try {
-    await prisma.event.update({
-      where: { id: eventId },
-      data: {
-        participants: {
-          disconnect: { id: session.userId } 
+    // NOUVEAU : Suppression de l'entrée dans la table de liaison EventRegistration
+    await prisma.eventRegistration.delete({
+      where: {
+        userId_eventId: {
+          userId: session.userId,
+          eventId: eventId
         }
       }
-    })
+    });
 
     revalidatePath('/espace-membre/evenements')
     revalidatePath(`/espace-membre/evenement/${eventId}`)
@@ -190,5 +197,4 @@ export async function leaveEventAction(eventId: string) {
   } catch (error) {
     return { success: false, message: "Erreur lors de la désinscription." }
   }
-  
 }
