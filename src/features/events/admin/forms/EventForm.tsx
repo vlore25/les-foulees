@@ -14,6 +14,7 @@ import { useActionState, useState } from "react";
 import Image from "next/image";
 import { createEvent, updateEventAction, type EventFormState } from "../../events.actions";
 import { Event } from "@/prisma/generated/client";
+import DistanceManager from "./DistanceManage";
 
 interface EventFormProps {
     event?: Event | null;
@@ -89,7 +90,9 @@ export default function EventForm({ event }: EventFormProps) {
                     <p className="text-red-500 text-sm">{state.error.description[0]}</p>
                 )}
             </div>
-
+            <div className="flex flex-com gap-2">
+                <DistanceManager />
+            </div>
             <div className="flex flex-col gap-2">
                 <label htmlFor="picture" className="block text-sm font-medium">
                     Image de couverture {event && <span className="text-xs text-muted-foreground font-normal">(Laisser vide pour conserver l'actuelle)</span>}

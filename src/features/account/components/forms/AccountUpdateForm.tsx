@@ -246,9 +246,9 @@ function BirthDayPicker({ name, defaultValue, onDateChange }: BirthDayPickerProp
                         disabled={(date) =>
                             date > new Date() || date < new Date("1900-01-01")
                         }
-                        initialFocus
+                        autoFocus
                         captionLayout="dropdown"
-                        fromYear={1920}
+                        startMonth={new Date(1920, 0)} 
                         toYear={new Date().getFullYear()}
                     />
                 </PopoverContent>

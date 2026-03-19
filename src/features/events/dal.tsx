@@ -1,6 +1,7 @@
 import { prisma } from "@/src/lib/prisma";
 import { getSession, verifySession } from "@/src/lib/session";
 import { cache } from "react";
+import { getCurrentUser } from "../users/dal";
 
 
 export type EventListItem = {
@@ -12,8 +13,10 @@ export type EventListItem = {
   dateEnd: Date | null;
   location: string;
   type: string;
-  isParticipant?: boolean;
-
+  distances: string[]; // NOUVEAU
+  isParticipant: boolean; // CORRIGÉ : Plus de "?", c'est un booléen strict
+  selectedDistance: string | null; // NOUVEAU
+  participantCount: number;
 }
 
 //GET ALL EVENTS
@@ -31,13 +34,19 @@ export async function getAllevents(): Promise<EventListItem[]> {
       dateEnd: true,
       location: true,
       type: true,
-      participants: {
-        where: { id: userId ?? "" },
-        select: { id: true }
+      distances: true, // 2. On récupère les distances de l'événement
+      // 3. CORRIGÉ : Utilisation de "registrations" au lieu de "participants"
+      registrations: {
+        where: { userId: userId ?? "" },
+        select: { distance: true } // On récupère la distance choisie par l'utilisateur
+      },
+      _count: {
+        select: { registrations: true }
       }
     },
     orderBy: { dateStart: 'asc' }
   });
+
   return events.map(event => ({
     id: event.id,
     title: event.title,
@@ -47,12 +56,14 @@ export async function getAllevents(): Promise<EventListItem[]> {
     dateEnd: event.dateEnd,
     location: event.location,
     type: event.type,
-    isParticipant: event.participants.length > 0 
+    distances: event.distances,
+    isParticipant: event.registrations.length > 0, 
+    selectedDistance: event.registrations[0]?.distance || null, 
+    participantCount: event._count.registrations
   }));
-
 }
 
-//GET EVENT BY ID
+// GET EVENT BY ID
 export const getEventById = cache(async (eventId: string) => {
   const event = await prisma.event.findUnique({
     where: {
@@ -63,35 +74,40 @@ export const getEventById = cache(async (eventId: string) => {
   return event;
 });
 
-//GET EVENT AND PARTICIPANTS
+// GET EVENT AND PARTICIPANTS
 export const getEventWithParticipationStatus = cache(async (eventId: string) => {
   if (!eventId) return null;
   const session = await verifySession(); 
+  const userId = session?.userId;
 
   const event = await prisma.event.findUnique({
     where: { id: eventId },
     include: {
-      participants: {
-        select: { 
-            id: true, 
-            name: true, 
-            lastname: true 
+      // NOUVEAU : On inclut TOUTES les inscriptions avec le profil des utilisateurs
+      registrations: {
+        include: {
+          user: {
+            select: { id: true, name: true, lastname: true }
+          }
         }
       },
-      _count: { select: { participants: true } }
+      _count: { select: { registrations: true } }
     }
   });
 
   if (!event) return null;
 
-  const isParticipant = session?.userId 
-    ? event.participants.some((participant) => participant.id === session.userId)
-    : false;
+  // On vérifie si l'utilisateur actuel (userId) se trouve dans la liste des inscrits
+  const userRegistration = event.registrations.find(reg => reg.userId === userId) || null;
+  const isParticipant = !!userRegistration;
 
-  return { ...event, isParticipant };
+  return { 
+    ...event, 
+    isParticipant,
+    selectedDistance: userRegistration?.distance || null,
+    participantCount: event._count.registrations
+  };
 });
-
-
 
 export async function getEventsCountCurrentYear(): Promise<number> {
   const currentYear = new Date().getFullYear();
@@ -109,3 +125,45 @@ export async function getEventsCountCurrentYear(): Promise<number> {
 
   return count;
 }
+
+export async function getEventParticipantsForExport(eventId: string) {
+
+    const event = await prisma.event.findUnique({
+        where: { id: eventId },
+        select: {
+            title: true,
+            registrations: {
+                include: {
+                    user: {
+                        select: { name: true, lastname: true, email: true, phone: true }
+                    }
+                }
+            }
+        }
+    });
+
+    return event;
+}
+
+export async function getEventParticipantsListAction(eventId: string) {
+    const user = await getCurrentUser()
+    
+    // SÉCURITÉ : Seulement pour l'admin
+    if (user?.role !== 'ADMIN') {
+        return { success: false, data: [] };
+    }
+
+    const event = await prisma.event.findUnique({
+        where: { id: eventId },
+        select: {
+            registrations: {
+                include: {
+                    user: { select: { name: true, lastname: true } }
+                }
+            }
+        }
+    });
+
+    return { success: true, data: event?.registrations || [] };
+}
+

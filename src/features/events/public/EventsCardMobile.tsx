@@ -74,7 +74,9 @@ export default function EventsCardMobile({ events }: EventsProps) {
                                 </div>
                                 <JoinEventButton
                                     eventId={event.id}
-                                    isParticipant={!!event.isParticipant}
+                                    isParticipant={event.isParticipant}
+                                    distances={event.distances} 
+                                    userDistance={event.selectedDistance} 
                                 />
                             </CardFooter>
                         </div>
