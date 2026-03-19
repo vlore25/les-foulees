@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
@@ -37,7 +37,18 @@ interface ProfileFormProps {
 export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
     const [state, action, pending] = useActionState(updateProfile, undefined);
     const [isDirty, setIsDirty] = useState(false);
+
+    const [showPhone, setShowPhone] = useState(defaultValues.showPhoneDirectory);
+    const [showEmail, setShowEmail] = useState(defaultValues.showEmailDirectory);
+
     console.log(defaultValues)
+
+
+
+    useEffect(() => {
+        setShowPhone(defaultValues.showPhoneDirectory);
+        setShowEmail(defaultValues.showEmailDirectory);
+    }, [defaultValues.showPhoneDirectory, defaultValues.showEmailDirectory]);
 
     const handleFormChange = () => {
         if (!isDirty) setIsDirty(true);
@@ -135,28 +146,39 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                             defaultValue={defaultValues.emergencyLastName || ''}
                         />
                         <FormInput
-                        label="Téléphone d'urgence" name="emergencyPhone"
-                        defaultValue={defaultValues.emergencyPhone || ''} error={state?.error?.emergencyPhone}
-                    />
+                            label="Téléphone d'urgence" name="emergencyPhone"
+                            defaultValue={defaultValues.emergencyPhone || ''} error={state?.error?.emergencyPhone}
+                        />
                     </div>
-                    
+
                 </article>
                 <article className='space-y-2'>
                     <p className='font-semibold text-xl mb-1'>Annuaire des adhérents</p>
                     <p className="text-muted-foreground text-xs">Ces informations seront visibles uniquement par les membres connectés.</p>
+
+                    <input type="hidden" name="showPhoneDirectory" value={showPhone ? 'on' : 'off'} />
+                    <input type="hidden" name="showEmailDirectory" value={showEmail ? 'on' : 'off'} />
+
                     <div className="flex items-center gap-3">
                         <Checkbox
                             id="showPhoneDirectory"
-                            name="showPhoneDirectory"
-                            defaultChecked={defaultValues.showPhoneDirectory}
+                            checked={showPhone}
+                            onCheckedChange={(checked) => {
+                                setShowPhone(checked === true);
+                                setIsDirty(true);
+                            }}
                         />
                         <Label htmlFor="showPhoneDirectory">Diffuser mon téléphone</Label>
                     </div>
+
                     <div className="flex items-center gap-3">
                         <Checkbox
                             id="showEmailDirectory"
-                            name="showEmailDirectory"
-                            defaultChecked={defaultValues.showEmailDirectory}
+                            checked={showEmail}
+                            onCheckedChange={(checked) => {
+                                setShowEmail(checked === true);
+                                setIsDirty(true);
+                            }}
                         />
                         <Label htmlFor="showEmailDirectory">Diffuser mon Courriel</Label>
                     </div>
@@ -248,7 +270,7 @@ function BirthDayPicker({ name, defaultValue, onDateChange }: BirthDayPickerProp
                         }
                         autoFocus
                         captionLayout="dropdown"
-                        startMonth={new Date(1920, 0)} 
+                        startMonth={new Date(1920, 0)}
                         toYear={new Date().getFullYear()}
                     />
                 </PopoverContent>
