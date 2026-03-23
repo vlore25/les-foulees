@@ -7,10 +7,14 @@ import Link from "next/link";
 export async function PortalButton() {
     const session = await verifySessionExternal();
     return (
-        session.isAuth ? <Button>
-            <Link href="/espace-membre/annuaire">
-             Espace membre
-            </Link></Button> : <LoginButton />
+        session.isAuth ?
+            <Button>
+                <Link href="/espace-membre/annuaire">
+                    Espace membre
+                </Link>
+            </Button>
+            :
+            <LoginButton />
     )
 
 }

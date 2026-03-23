@@ -34,6 +34,13 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
     const [state, action, pending] = useActionState(createMembershipRequest, initialState)
     const [currentStep, setCurrentStep] = useState(0)
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        if (currentStep !== STEPS.length - 1) {
+            e.preventDefault();
+            handleNext(); 
+        }
+    }
+
     const [formData, setFormData] = useState<any>({
         ...userProfile,
         firstName: userProfile.name,
@@ -49,7 +56,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
     const formRef = useRef<HTMLFormElement>(null)
 
-    // --- HANDLERS ---
     const handleNext = () => {
         if (!formRef.current) return
 
@@ -113,7 +119,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                 </div>
             </div>
 
-            <form action={action} ref={formRef} className="space-y-6 bg-white p-6 rounded-lg border shadow-sm mt-10">
+            <form action={action} onSubmit={handleSubmit} ref={formRef} className="space-y-6 bg-white p-6 rounded-lg border shadow-sm mt-10">
 
                 {hasLicense && <input type="hidden" name="licenseType" value={licenseSource} />}
 
@@ -126,7 +132,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                     </div>
                 )}
 
-                {/* === ÉTAPE 0 : TYPE D'ADHÉSION === */}
                 <div className={cn("space-y-4", currentStep === 0 ? "block" : "hidden")}>
                     <h3 className="text-lg font-medium">Type d'adhésion</h3>
                     <RadioGroup
@@ -262,7 +267,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                 </div>
 
 
-                {/* === BOUTONS DE NAVIGATION === */}
                 <div className="flex justify-between pt-4 border-t mt-6">
                     <Button
                         type="button"

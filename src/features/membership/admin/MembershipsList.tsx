@@ -5,6 +5,8 @@ import MembershipTable from "./MembershipTable";
 import { prisma } from "@/src/lib/prisma";
 import SeasonFilter from "./SeasonFilter";
 import ExportButton from "./ExportButton";
+import EmptyCategory from "@/components/common/feedback/EmptyCategory";
+import { Calendar } from "lucide-react";
 
 export default async function MembershipsList({
     searchParams
@@ -26,7 +28,7 @@ export default async function MembershipsList({
     // 3. Déterminer l'ID cible
     const targetSeasonId = urlSeasonId || activeSeason?.id || allSeasons[0]?.id;
 
-    if (!targetSeasonId) return <div>Aucune saison trouvée.</div>;
+    if (!targetSeasonId) return <EmptyCategory text="Aucune saison trouvée." emptyIcon={Calendar}/>
 
     const currentSeason = allSeasons.find(s => s.id === targetSeasonId);
 

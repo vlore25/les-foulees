@@ -18,7 +18,7 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
     const [state, action, pending] = useActionState(generateNextSeason, undefined);
 
     return (
-        <Card className="border-dashed border-2 border-slate-300">
+        <Card className="border-dashed border-2 border-slate-300 rounded-none py-4">
             <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2 text-slate-700">
                     <CalendarPlus className="w-5 h-5" />
@@ -66,7 +66,10 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
                         </div>
 
                         {/* PRIX (Restent éditables) */}
-                        <div className="grid grid-cols-2 gap-3 pt-2 border-t">
+                        <div className="border-t">
+                            <p>Prix d'adhesion</p>
+                            <div className="grid grid-cols-2 gap-3 pt-2 ">
+                            
                             <div className="space-y-1">
                                 <Label className="text-xs">Individuel</Label>
                                 <Input name="priceStandard" type="number" step="0.5" defaultValue={preview.data.prices.priceStandard} className="h-8 bg-white" />
@@ -80,6 +83,9 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
                                 <Input name="priceFfa" type="number" step="0.5" defaultValue={preview.data.prices.priceFfa} className="h-8 bg-white" />
                             </div>
                         </div>
+                        </div>
+                        
+                        
 
                         <Button type="submit" size="sm" className="w-full mt-2">
                             Enregistrer la saison

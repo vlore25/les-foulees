@@ -46,8 +46,8 @@ async function main() {
 
   // 2. 50 Utilisateurs fictifs
   for (let i = 0; i < 50; i++) {
-    const firstName = faker.person.firstName();
-    const lastName = faker.person.lastName();
+    const firstName = faker.person.firstName().toLowerCase();
+    const lastName = faker.person.lastName().toLowerCase();
     const user = await prisma.user.create({
       data: {
         email: faker.internet.email({ firstName, lastName }),

@@ -8,6 +8,7 @@ import { AlertCircle, CheckCircle, Clock } from "lucide-react";
 import ErrorCard from "@/components/common/feedback/ErrorCard";
 import { MembershipForm } from "./MembershipForm";
 import { MembershipStatus } from "@/prisma/generated/enums";
+import { Title2 } from "@/components/ui/title2";
 
 
 const STATUS_INFO = {
@@ -44,7 +45,6 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
 
     if (!season) {
         return (
-            //Retour card if no season 
             <ErrorCard
                 title="Inscriptions fermées"
                 message="Aucune saison n'est ouverte aux inscriptions pour le moment."
@@ -60,42 +60,27 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
         const Icon = info.icon;
 
         return (
-            <div className="space-y-6">
-                <h1 className="text-3xl font-bold tracking-tight">Mon Adhésion {season.name}</h1>
-                <Card>
+            <div className="space-y-6 mx-auto">
+
+                <Card className="rounded-none py-4">
                     <CardHeader>
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <CardTitle>État du dossier</CardTitle>
-                                <CardDescription>Suivi de votre demande pour la saison en cours</CardDescription>
-                            </div>
-                            <Badge variant="outline" className={`${info.color} gap-1 pr-3`}>
-                                <Icon className="w-3 h-3" /> {info.label}
-                            </Badge>
-                        </div>
+                        <Title2 className="text-3xl font-bold tracking-tight">Mon Adhésion {season.name}</Title2>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p className="text-muted-foreground">État du dossier</p>
+                                <Badge variant="outline" className={`${info.color} gap-1 pr-3`}>
+                                    <Icon className="w-3 h-3" /> {info.label}
+                                </Badge>
+                            </div>
                             <div>
                                 <p className="text-muted-foreground">Type d'adhésion</p>
                                 <p className="font-medium text-lg">{TYPE_LABELS[membership.type] || membership.type}</p>
                             </div>
                             <div>
                                 <p className="text-muted-foreground">Date de demande</p>
-                                <p className="font-medium">{new Date(membership.createdAt).toLocaleDateString()}</p>
+                                <p>{new Date(membership.createdAt).toLocaleDateString()}</p>
                             </div>
-                            <div>
-                                <p className="text-muted-foreground">Paiement</p>
-                                <div className="flex items-center gap-2">
-                                    <span className="font-bold">{membership.payment?.amount} €</span>
-                                    <Badge variant="secondary" className="text-xs">
-                                        {membership.payment?.status === 'PAID' ? 'Payé' : 'En attente'}
-                                    </Badge>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Message contextuel */}
                         {status === 'VALIDATED' ? (
                             <div className="bg-green-50 p-3 rounded-md text-green-800 text-sm border border-green-100">
                                 Votre dossier a été validé.
@@ -106,9 +91,9 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                             </div>
                         )}
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="mt-3">
                         <Link href="/espace-membre/" className="w-full">
-                            <Button variant="outline" className="w-full">Retour au tableau de bord</Button>
+                            <Button variant="rounded" className="w-full">Retour au tableau de bord</Button>
                         </Link>
                     </CardFooter>
                 </Card>

@@ -15,14 +15,19 @@ export default async function SeasonsManager() {
     const seasonData = await getSeasonsData()
     const { activeSeason, draftSeason } = seasonData
     const preview = !draftSeason ? await getNextSeasonPreview() : null
-
+    
+    const dateOptions: Intl.DateTimeFormatOptions = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
     return (
         <div className="space-y-8">
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                {/* SAISON ACTUELLE */}
-                <Card className="border-green-200 bg-green-50/30">
+                <Card className="border-green-200 bg-green-50/30 rounded-none py-4">
                     <CardHeader>
                         <CardTitle className="flex justify-between items-center text-green-800">
                             <span className="flex items-center gap-2"><CalendarCheck className="w-5 h-5" /> Saison Actuelle</span>
@@ -34,7 +39,7 @@ export default async function SeasonsManager() {
                             <div className="space-y-4">
                                 <div className="text-2xl font-bold">{activeSeason.name}</div>
                                 <div className="text-sm text-gray-600">
-                                    Du {activeSeason.startDate.toLocaleString('fr-FR')} au {activeSeason.endDate.toLocaleString('fr-FR')}
+                                    Du {activeSeason.startDate.toLocaleString('fr-FR', dateOptions)} au {activeSeason.endDate.toLocaleString('fr-FR', dateOptions)}
                                 </div>
                                 <div className="flex items-center gap-2 text-indigo-600 bg-indigo-50 p-3 rounded-lg w-fit">
                                     <Users className="w-5 h-5" />
@@ -52,7 +57,7 @@ export default async function SeasonsManager() {
                 {/* BLOC 2 : PROCHAINE SAISON */}
                 {draftSeason ? (
                     // CAS A : UNE SAISON EST PRÊTE -> ON L'ACTIVE OU ON LA SUPPRIME (Inchangé)
-                    <Card className="border-amber-200 bg-amber-50/30">
+                    <Card className="border-amber-200 bg-amber-50/30 ">
                         <CardHeader>
                             <CardTitle className="flex justify-between items-center text-amber-800">
                                 <span className="flex items-center gap-2"><CalendarClock className="w-5 h-5" /> Prochaine Saison</span>

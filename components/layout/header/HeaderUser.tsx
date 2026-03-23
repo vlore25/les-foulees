@@ -11,9 +11,9 @@ const HeaderUser = () => {
                 <SidebarTrigger />
                 <Button asChild>
                     <Link
-                    href={"/"}
+                        href={"/"}
                     >
-                    Accueil
+                        Accueil
                     </Link>
                 </Button>
             </div>
