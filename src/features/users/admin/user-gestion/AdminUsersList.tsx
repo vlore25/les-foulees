@@ -11,6 +11,7 @@ import { getAllUsersAdminList } from "../../dal";
 import { UserRowActions } from "./UserRowActions";
 import Link from "next/link";
 import { Eye } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default async function AdminUsersList() {
   // Récupération des données via la DAL
@@ -22,6 +23,7 @@ export default async function AdminUsersList() {
         <TableCaption>Liste des utilisateurs enregistrés.</TableCaption>
         <TableHeader>
           <TableRow>
+            <TableHead className="w-[50px]">Photo</TableHead>
             <TableHead>Prénom</TableHead>
             <TableHead>Nom</TableHead>
             <TableHead>Enregistré depuis</TableHead>
@@ -32,6 +34,14 @@ export default async function AdminUsersList() {
           {usersData.length > 0 ? (
             usersData.map((user) => (
               <TableRow key={user.id}>
+                <TableCell>
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.profileImageUrl || ""} className="object-cover" />
+                    <AvatarFallback className="text-[10px] bg-primary/10">
+                      {user.name[0]}{user.lastname[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                </TableCell>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.lastname}</TableCell>
                 <TableCell>

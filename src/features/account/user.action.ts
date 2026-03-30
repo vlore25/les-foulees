@@ -4,6 +4,7 @@ import { profileFormSchema, ProfileFormState } from "@/src/lib/definitions";
 import { prisma } from "@/src/lib/prisma";
 import { getSession } from "@/src/lib/session";
 import { revalidatePath } from "next/cache";
+import { saveUploadedFile } from "@/src/lib/file-storage";
 
 export async function updateProfile(state: ProfileFormState, formData: FormData): Promise<ProfileFormState> {
     const session = await getSession();
@@ -13,6 +14,7 @@ export async function updateProfile(state: ProfileFormState, formData: FormData)
     const rawData = {
         name: formData.get('name'),
         lastname: formData.get('lastname'),
+        genre: formData.get('genre'),
         phone: formData.get('phone'),
         birthdate: formData.get('birthdate'),
         address: formData.get('address'),
@@ -23,6 +25,7 @@ export async function updateProfile(state: ProfileFormState, formData: FormData)
         emergencyPhone: formData.get('emergencyPhone'),
         showPhoneDirectory: formData.get('showPhoneDirectory') === 'on',
         showEmailDirectory: formData.get('showEmailDirectory') === 'on',
+        profileImage: formData.get('profileImage'),
     };
     console.log(rawData);
 
@@ -34,6 +37,10 @@ export async function updateProfile(state: ProfileFormState, formData: FormData)
 
     const data = validated.data;
     
+    let profileImageUrl = undefined;
+    if (data.profileImage && data.profileImage.size > 0) {
+        profileImageUrl = await saveUploadedFile(data.profileImage, "uploads/users", `${data.name}_${data.lastname}`);
+    }
 
     try {
         await prisma.user.update({
@@ -41,6 +48,7 @@ export async function updateProfile(state: ProfileFormState, formData: FormData)
             data: {
                 name: data.name,
                 lastname: data.lastname,
+                genre: data.genre,
                 phone: data.phone,
                 birthdate: data.birthdate,
                 address: data.address, 
@@ -51,6 +59,7 @@ export async function updateProfile(state: ProfileFormState, formData: FormData)
                 emergencyPhone: data.emergencyPhone || null,
                 showPhoneDirectory: data.showPhoneDirectory,
                 showEmailDirectory: data.showEmailDirectory,
+                ...(profileImageUrl ? { profileImageUrl } : {}),
             }
         });
 

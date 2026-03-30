@@ -1,8 +1,8 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 import { fakerFR as faker } from '@faker-js/faker';
-import { PrismaClient } from './generated/client'; // Assurez-vous du chemin
-import { Role, Status, EventType } from './generated/enums'; // Assurez-vous du chemin
+import { PrismaClient } from './generated/client';
+import { Role, Status, EventType, MembershipStatus, MembershipType, PaymentMethod, PaymentStatus, Genre } from './generated/enums';
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -10,179 +10,192 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log('🌱 Début du seeding...');
+  console.log('Début du seeding..');
 
-  // --- OPTIONNEL : Nettoyage de la base de données ---
-  // Attention : Ceci vide vos tables pour repartir à zéro.
-  console.log('🧹 Nettoyage des anciennes données...');
+  console.log('Nettoyage des anciennes données..');
+  await prisma.payment.deleteMany();
+  await prisma.membership.deleteMany();
+  await prisma.season.deleteMany();
   await prisma.eventRegistration.deleteMany();
   await prisma.event.deleteMany();
   await prisma.legalDocs.deleteMany();
   await prisma.user.deleteMany();
 
-  // --- PARTIE 1 : UTILISATEURS ---
-  console.log('👥 Création des utilisateurs...');
+  console.log('Création des saisons..');
+  const seasonPast = await prisma.season.create({
+    data: {
+      name: "Saison 2024-2025",
+      startDate: new Date("2024-09-01"),
+      endDate: new Date("2025-08-31"),
+      isActive: false,
+    }
+  });
+
+  const seasonCurrent = await prisma.season.create({
+    data: {
+      name: "Saison 2025-2026",
+      startDate: new Date("2025-09-01"),
+      endDate: new Date("2026-08-31"),
+      isActive: true,
+    }
+  });
+
+  console.log('Création des utilisateurs..');
   const plainPassword = 'password123';
   const hashedPassword = await bcrypt.hash(plainPassword, 10);
   const createdUsers = [];
 
-  // 1. Admin Alice
-  const admin = await prisma.user.create({
-    data: {
-      email: 'alice@foulees.com',
-      name: 'Alice',
-      lastname: 'Wonderland',
-      password: hashedPassword,
-      role: Role.ADMIN,
-      status: Status.ACTIVE,
-      phone: "0612345678",
-      address: "1 rue des Merveilles",
-      zipCode: "49240",
-      city: "Avrillé",
-      birthdate: new Date("1990-01-01")
-    },
-  });
-  createdUsers.push(admin);
+  const adminsData = [
+    { email: 'jean.dupont@foulees.com', name: 'Jean', lastname: 'Dupont' },
+    { email: 'marie.lefevre@foulees.com', name: 'Marie', lastname: 'Lefebvre' },
+    { email: 'pierre.dubois@foulees.com', name: 'Pierre', lastname: 'Dubois' },
+  ];
 
-  // 2. 50 Utilisateurs fictifs
-  for (let i = 0; i < 50; i++) {
-    const firstName = faker.person.firstName().toLowerCase();
-    const lastName = faker.person.lastName().toLowerCase();
+  for (const adm of adminsData) {
     const user = await prisma.user.create({
       data: {
-        email: faker.internet.email({ firstName, lastName }),
-        name: firstName,
-        lastname: lastName,
+        email: adm.email,
+        name: adm.name,
+        lastname: adm.lastname,
         password: hashedPassword,
-        role: Role.USER,
+        role: Role.ADMIN,
         status: Status.ACTIVE,
-        phone: faker.phone.number(),
-        birthdate: faker.date.birthdate({ min: 18, max: 65, mode: 'age' }),
+        genre: adm.name === 'Marie' ? Genre.FEMALE : Genre.MALE,
+        phone: "0612345678",
         address: faker.location.streetAddress(),
-        zipCode: faker.location.zipCode('#####'),
-        city: faker.location.city()
+        zipCode: "49240",
+        city: "Avrillé",
+        birthdate: new Date("1985-05-15"),
+        profileImageUrl: `https://i.pravatar.cc/300?u=${adm.email}`
       },
     });
     createdUsers.push(user);
   }
-  console.log(`✅ ${createdUsers.length} utilisateurs créés.`);
 
-  // --- PARTIE 2 : ÉVÉNEMENTS (Passés et Futurs) ---
-  console.log('📅 Création des événements...');
-  const eventsData = [
-    // --- PASSÉS ---
-    {
-      title: "Marathon de la Loire 2023",
-      dateStart: new Date('2023-05-14T08:00:00'),
-      dateEnd: new Date('2023-05-14T14:00:00'),
-      location: "Saumur (49)",
-      type: EventType.COURSE_ROUTE,
-      description: "Notre sortie club historique sur les bords de la Loire.",
-      imgUrl: "/uploads/telethon.jpg", // Remplacez par une vraie image si besoin
-      distances: ["10km", "Semi-Marathon", "Marathon"]
-    },
-    {
-      title: "Trail de Noël 2024",
-      dateStart: new Date('2024-12-20T19:00:00'),
-      dateEnd: new Date('2024-12-20T21:30:00'),
-      location: "Bois d'Avrillé",
-      type: EventType.ENTRAINEMENT,
-      description: "Dernier entraînement festif de l'année avec vin chaud à l'arrivée !",
-      imgUrl: "/uploads/apocalipsis.png",
-      distances: ["5km", "10km"]
-    },
-    // --- FUTURS PROCHES ---
-    {
-      title: "Sortie dominicale - Bords de Mayenne",
-      dateStart: faker.date.soon({ days: 15 }), // Dans les 15 prochains jours
-      dateEnd: null,
-      location: "Cantenay-Épinard (49)",
-      type: EventType.SORTIE,
-      description: "Sortie longue de préparation. Allure footing.",
-      imgUrl: "/uploads/labaie.webp",
-      distances: ["15km", "22km"]
-    },
-    // --- FUTURS LOINTAINS ---
-    {
-      title: "Trail de l'apocalypse",
-      dateStart: new Date('2025-11-15T20:00:00'),
-      dateEnd: new Date('2025-11-15T23:30:00'),
-      location: "Angers (49)",
-      type: EventType.TRAIL,
-      description: "Une course nocturne et urbaine légendaire à travers les rues d'Angers.",
-      imgUrl: "/uploads/apocalipsis.png",
-      distances: ["9km", "15km"]
-    },
-    {
-      title: "Téléthon défi 24h",
-      dateStart: new Date('2025-12-05T18:00:00'),
-      dateEnd: new Date('2025-12-06T18:00:00'),
-      location: "Stade d'Avrillé",
-      type: EventType.VIE_DU_CLUB,
-      description: "24 heures de course en relais pour la bonne cause.",
-      imgUrl: "/uploads/telethon.jpg",
-      distances: ["Libre"]
-    },
-    {
-      title: "Trail Cap Sizun",
-      dateStart: new Date('2026-03-01T08:30:00'),
-      dateEnd: null,
-      location: "Cléden-Cap-Sizun (29)",
-      type: EventType.TRAIL,
-      description: "Un parcours époustouflant à la pointe du Finistère.",
-      imgUrl: "/uploads/capsizun.jpg",
-      distances: ["14km", "28km", "50km"]
-    }
-  ];
-
-  const createdEvents = [];
-  for (const event of eventsData) {
-    const newEvent = await prisma.event.create({ data: event });
-    createdEvents.push(newEvent);
-  }
-  console.log(`✅ ${createdEvents.length} événements créés.`);
-
-  // --- PARTIE 3 : INSCRIPTIONS AUX ÉVÉNEMENTS ---
-  console.log('🏃‍♂️ Génération des inscriptions (EventRegistrations)...');
-  
-  for (const event of createdEvents) {
-    // Choisir un nombre aléatoire de participants (entre 5 et 30)
-    const numParticipants = faker.number.int({ min: 5, max: 30 });
+  // 50 Utilisateurs fictifs
+  for (let i = 0; i < 50; i++) {
+    const gender = faker.helpers.arrayElement([Genre.MALE, Genre.FEMALE]);
+    const firstName = faker.person.firstName(gender === Genre.MALE ? 'male' : 'female');
+    const lastName = faker.person.lastName();
+    const email = faker.internet.email({ firstName, lastName }).toLowerCase();
     
-    // Mélanger les utilisateurs et prendre les X premiers pour éviter les doublons sur un même événement
-    const shuffledUsers = faker.helpers.shuffle(createdUsers);
-    const participants = shuffledUsers.slice(0, numParticipants);
+    const user = await prisma.user.create({
+      data: {
+        email: email,
+        name: firstName,
+        lastname: lastName,
+        genre: gender,
+        password: hashedPassword,
+        role: Role.USER,
+        status: Status.ACTIVE,
+        phone: faker.helpers.fromRegExp(/0[6-7][0-9]{8}/),
+        birthdate: faker.date.birthdate({ min: 18, max: 70, mode: 'age' }),
+        address: faker.location.streetAddress(),
+        zipCode: faker.location.zipCode('#####'),
+        city: faker.location.city(),
+        profileImageUrl: `https://i.pravatar.cc/300?u=${email}`
+      },
+    });
+    createdUsers.push(user);
 
-    for (const user of participants) {
-      // Choisir une distance au hasard si l'événement en propose
-      let selectedDistance = null;
-      if (event.distances && event.distances.length > 0) {
-        selectedDistance = faker.helpers.arrayElement(event.distances);
+    // Création de memberships pour certains utilisateurs
+    const hasPastMembership = faker.datatype.boolean(0.7);
+    const hasCurrentMembership = faker.datatype.boolean(0.8);
+
+    if (hasPastMembership) {
+      await createMembershipWithPayment(user.id, seasonPast.id, MembershipStatus.VALIDATED);
+    }
+    if (hasCurrentMembership) {
+      const status = faker.helpers.arrayElement([MembershipStatus.VALIDATED, MembershipStatus.PENDING]);
+      await createMembershipWithPayment(user.id, seasonCurrent.id, status);
+    }
+  }
+
+  async function createMembershipWithPayment(userId: string, seasonId: string, status: MembershipStatus) {
+    const type = faker.helpers.arrayElement([MembershipType.INDIVIDUAL, MembershipType.YOUNG, MembershipType.LICENSE_RUNNING]);
+    const method = faker.helpers.arrayElement([PaymentMethod.TRANSFER, PaymentMethod.CHECK, PaymentMethod.ONLINE]);
+    const amount = type === MembershipType.YOUNG ? 25 : (type === MembershipType.LICENSE_RUNNING ? 98 : 35);
+
+    const payment = await prisma.payment.create({
+      data: {
+        userId,
+        amount,
+        method,
+        status: status === MembershipStatus.VALIDATED ? PaymentStatus.PAID : PaymentStatus.PENDING,
+        membershipId: 'tmp', // Sera mis à jour
       }
+    });
 
+    const membership = await prisma.membership.create({
+      data: {
+        userId,
+        seasonId,
+        status,
+        type,
+        paymentId: payment.id,
+        ffaLicenseNumber: type === MembershipType.LICENSE_RUNNING ? faker.string.numeric(10) : null,
+      }
+    });
+
+    await prisma.payment.update({
+      where: { id: payment.id },
+      data: { membershipId: membership.id }
+    });
+  }
+
+  console.log(`✅ ${createdUsers.length} utilisateurs et leurs adhésions créés.`);
+
+  // --- PARTIE 3 : ÉVÉNEMENTS ---
+  console.log('📅 Création des événements...');
+  const eventTypes = [EventType.TRAIL, EventType.COURSE_ROUTE, EventType.ENTRAINEMENT, EventType.VIE_DU_CLUB, EventType.SORTIE];
+  const createdEvents = [];
+
+  for (let i = 0; i < 10; i++) {
+    const type = faker.helpers.arrayElement(eventTypes);
+    const isPast = faker.datatype.boolean();
+    const dateStart = isPast ? faker.date.past() : faker.date.future();
+    
+    const event = await prisma.event.create({
+      data: {
+        title: faker.company.catchPhrase(),
+        description: faker.lorem.paragraph(),
+        location: `${faker.location.city()} (${faker.location.zipCode('##')})`,
+        type: type,
+        dateStart: dateStart,
+        dateEnd: new Date(dateStart.getTime() + faker.number.int({ min: 2, max: 6 }) * 3600000),
+        imgUrl: `https://loremflickr.com/800/600/running,marathon?lock=${i}`,
+        distances: faker.helpers.arrayElements(["5km", "10km", "Semi-Marathon", "Marathon", "Trail 15km", "Trail 30km"], { min: 1, max: 3 }),
+      }
+    });
+    createdEvents.push(event);
+  }
+
+  // Inscriptions aux événements
+  for (const event of createdEvents) {
+    const participantsCount = faker.number.int({ min: 5, max: 25 });
+    const participants = faker.helpers.arrayElements(createdUsers, participantsCount);
+    
+    for (const participant of participants) {
       await prisma.eventRegistration.create({
         data: {
           eventId: event.id,
-          userId: user.id,
-          distance: selectedDistance,
+          userId: participant.id,
+          distance: faker.helpers.arrayElement(event.distances || ["Libre"]),
         }
-      });
+      }).catch(() => {}); // Ignorer doublons potentiels
     }
-    console.log(`  -> ${numParticipants} inscrits pour "${event.title}"`);
   }
 
   // --- PARTIE 4 : DOCUMENTS LÉGAUX ---
-  console.log('📄 Création des documents légaux...');
-  const documents = [
-    { title: "Autorisation Parentale 2024-2025", description: "Formulaire obligatoire pour l'inscription des mineurs.", Url: "/uploads/docs/Autorisation_parentale_2024_2025.pdf" },
-    { title: "Bulletin d'Adhésion 2025-2026", description: "Le formulaire complet pour votre inscription.", Url: "/uploads/docs/Bulletin_d-adhésion_2025_2026.pdf" }
-  ];
+  await prisma.legalDocs.createMany({
+    data: [
+      { title: "Statuts de l'association", description: "Les statuts officiels mis à jour.", Url: "/uploads/docs/statuts.pdf" },
+      { title: "Règlement intérieur", description: "Règles de vie du club.", Url: "/uploads/docs/reglement.pdf" },
+      { title: "Charte de l'adhérent", description: "Nos engagements communs.", Url: "/uploads/docs/charte.pdf" },
+    ]
+  });
 
-  for (const doc of documents) {
-    await prisma.legalDocs.create({ data: doc });
-  }
-
-  console.log('🚀 Seeding terminé avec succès ! Votre base est riche et prête.');
+  console.log('🚀 Seeding terminé avec succès !');
 }
 
 main()

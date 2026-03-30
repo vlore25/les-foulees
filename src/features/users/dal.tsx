@@ -27,6 +27,7 @@ export const getAllUsersPublicList = cache(async (): Promise<PublicUserList[]> =
       name: true,
       lastname: true,
       status: true,
+      profileImageUrl: true,
     },
     orderBy: { lastname: 'asc' }
   });
@@ -45,6 +46,7 @@ export const getUserDetailsPublic = cache(async (userId: string): Promise<Public
       name: true,
       lastname: true,
       status: true,
+      profileImageUrl: true,
       showEmailDirectory: true,
       showPhoneDirectory: true,
       phone: true,
@@ -69,6 +71,7 @@ export const getAllUsersAdminList = cache(async (): Promise<AdminUserList[]> => 
       name: true,
       lastname: true,
       status: true,
+      profileImageUrl: true,
       createdAt: true
     },
     orderBy: { lastname: 'asc' }
@@ -84,6 +87,8 @@ export const getUserDetailsAdmin = cache(async (userId: string): Promise<AdminUs
       id: true,
       name: true,
       lastname: true,
+      genre: true,
+      profileImageUrl: true,
       birthdate: true,
       phone: true,
       email: true,
@@ -121,7 +126,7 @@ export const getCurrentUser = cache(async (): Promise<BaseUser | null> => {
       role: true,
       name: true,
       lastname: true,
-
+      profileImageUrl: true,
     },
   });
   return user;

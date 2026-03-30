@@ -35,6 +35,7 @@ model User {
   name               String
   genre              Genre        @default(OTHER)
   lastname           String
+  profileImageUrl    String?
   birthdate          DateTime?
   phone              String?
   password           String

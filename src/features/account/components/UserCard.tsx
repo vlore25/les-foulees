@@ -2,7 +2,7 @@
 "use client";
 
 import { useUser } from "@/components/providers/UserProvider";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronsUpDown } from "lucide-react";
 import LogoutButton from "../../auth/components/buttons/LogoutButton";
@@ -25,6 +25,7 @@ export default function UserCard() {
             <DropdownMenuTrigger asChild>
                 <div className="flex gap-2.5 items-center hover:cursor-pointer">
                     <Avatar >
+                        <AvatarImage src={user.profileImageUrl || ''} className="object-cover" />
                         <AvatarFallback className='bg-primary/10'>{initials}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start overflow-hidden">

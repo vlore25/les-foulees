@@ -95,11 +95,29 @@ export default function RegistrationForm({ email, token }: { email: string, toke
         <ErrorBox error={state.message}></ErrorBox>
       )}
 
-      <form action={action} className="flex flex-col gap-6 min-h-[400px]" noValidate>
+      <form action={action} className="flex flex-col gap-6 min-h-[400px]" noValidate encType="multipart/form-data">
         <input type="hidden" name="token" value={token} />
 
         <div className={cn("space-y-4", currentStep === 0 ? "block" : "hidden")}>
           <h2 className="text-xl font-semibold mb-4">Qui êtes-vous ?</h2>
+          
+          <div className="flex flex-col items-center gap-4 mb-6">
+             <label className="w-24 h-24 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-muted-foreground/20 overflow-hidden relative group cursor-pointer transition-colors hover:border-primary/50">
+                <input 
+                  type="file" 
+                  name="profileImage" 
+                  accept="image/*"
+                  className="hidden" 
+                />
+                <div className="text-center p-2 flex flex-col items-center justify-center">
+                  <Globe className="w-8 h-8 mx-auto text-muted-foreground/50 group-hover:text-primary transition-colors" />
+                  <span className="text-[10px] text-muted-foreground uppercase font-bold">Photo</span>
+                </div>
+             </label>
+             <p className="text-xs text-muted-foreground">Photo de profil (optionnelle)</p>
+             <ErrorText>{state?.errors?.profileImage}</ErrorText>
+          </div>
+
           <div className='flex flex-col md:flex-row gap-4 w-full'>
             <div className="flex-1">
               <Field>
@@ -118,9 +136,9 @@ export default function RegistrationForm({ email, token }: { email: string, toke
             <div className="flex-1">
               <Field>
                 <FieldLabel >Genre</FieldLabel>
-                <GenreSelect genre="genreSelection" initialValue={state?.fields?.genre} />
+                <GenreSelect genre="genre" initialValue={state?.fields?.genre} />
               </Field>
-              <ErrorText>{state?.errors?.lastname}</ErrorText>
+              <ErrorText>{state?.errors?.genre}</ErrorText>
             </div>
           </div>
           <div className="flex flex-col md:flex-row gap-4 w-full items-start">
@@ -350,20 +368,3 @@ function GenreSelect({ genre, initialValue }: { genre: string, initialValue?: st
     );
 }
 
-function GenreSelect({ genre, initialValue }: { genre: string, initialValue?: string }) {
-    return (
-        <Select name={genre} defaultValue={initialValue}>
-            <SelectTrigger className="w-full max-w-48">
-                    <SelectValue placeholder="Indiquer votre genre" />
-            </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Genre</SelectLabel>
-                      <SelectItem value="FEMALE">Femme</SelectItem>
-                      <SelectItem value="MALE">Homme</SelectItem>
-                      <SelectItem value="OTHER">Autre</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-        </Select>
-    );
-}

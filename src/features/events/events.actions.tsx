@@ -5,9 +5,7 @@ import { eventSchema, eventUpdateSchema } from "@/src/lib/definitions";
 import { saveUploadedFile } from "@/src/lib/file-storage";
 import { prisma } from "@/src/lib/prisma";
 import { verifySession } from "@/src/lib/session";
-import { writeFile } from "fs/promises";
 import { revalidatePath } from "next/cache";
-import { join } from "path";
 import { getEventParticipantsForExport } from "./dal";
 import { getCurrentUser } from "../users/dal";
 
@@ -21,18 +19,16 @@ export type EventFormState = {
     description?: string[];
     distance?: string[]
     picture?: string[];
-    distances?: string[]; // NOUVEAU : Pour gérer les erreurs liées aux distances
+    distances?: string[]; 
   };
   message?: string | null;
 } | undefined;
 
 
-//========CREATE EVENT=========
 export async function createEvent(state: EventFormState, formData: FormData): Promise<EventFormState> {
 
   const rawDistances = formData.getAll('distances') as string[];
 
-  // Fusionnez les distances manuellement avant le safeParse
   const dataForValidation = {
     ...Object.fromEntries(formData.entries()),
     distances: rawDistances

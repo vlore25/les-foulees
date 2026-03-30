@@ -12,7 +12,7 @@ interface MemberCardPdfProps {
 export async function memberCardPdf({ userData, memberShipData, season }: MemberCardPdfProps) {
 
 
-    const { name, lastname } = userData;
+    const { name, lastname, profileImageUrl } = userData;
     const { type } = memberShipData
     const { startDate, endDate } = season
 
@@ -20,21 +20,35 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
         type.charAt(0)
         + type.slice(1).toLowerCase()
 
-
-
-
     try {
+
         const cardTemplate = '/templates/card.pdf';
         const existingPdfBytes = await fetch(cardTemplate).then(res => res.arrayBuffer());
-
         const pdfDoc = await PDFDocument.load(existingPdfBytes);
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
         const pages = pdfDoc.getPages();
         const firstPage = pages[0];
         const firstHeight = 237;
         const textColor = rgb(0.26, 0.23, 0.23);
         const licenseTextColor = rgb(0.13, 0.52, 0.12)
+
+        if (profileImageUrl) {
+            try {
+                const imageBytes = await fetch(profileImageUrl).then(res => res.arrayBuffer());
+                const roundedImageBytes = await cropToCircle(imageBytes);
+                const image = await pdfDoc.embedPng(roundedImageBytes);
+
+                const dims = image.scale(0.5);
+                firstPage.drawImage(image, {
+                    x: firstPage.getWidth() - 85.5,
+                    y: 228,
+                    width: 65,
+                    height: 65,
+                });
+            } catch (imgError) {
+                console.warn("Could not embed profile image in PDF", imgError);
+            }
+        }
 
         firstPage.drawText(`${name} ${lastname}`, {
             x: 15,
@@ -76,8 +90,6 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
             color: licenseTextColor
         });
 
-
-
         // 1. Generate the bytes
         const pdfBytes = await pdfDoc.save();
         const compatibleBytes = new Uint8Array(pdfBytes);
@@ -87,7 +99,7 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
         // 4. Create a temporary anchor element and click it
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'my-modified-file.pdf'; // The name of the file
+        link.download = `Carte_Adherent_${lastname}_${name}.pdf`;
         document.body.appendChild(link);
         link.click();
 
@@ -98,4 +110,43 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
     } catch (error) {
         console.error('Error modifying or downloading PDF:', error);
     }
+}
+
+async function cropToCircle(imageBuffer: ArrayBuffer): Promise<ArrayBuffer> {
+    return new Promise((resolve, reject) => {
+        const blob = new Blob([imageBuffer]);
+        const url = URL.createObjectURL(blob);
+        const img = new Image();
+
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const size = Math.min(img.width, img.height);
+            canvas.width = size;
+            canvas.height = size;
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return reject("Canvas context not found");
+
+            // Créer le chemin du cercle
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+            ctx.clip();
+
+            // Dessiner l'image centrée dans le cercle
+            ctx.drawImage(
+                img,
+                (img.width - size) / 2, (img.height - size) / 2, size, size,
+                0, 0, size, size
+            );
+
+            // Convertir le canvas en ArrayBuffer
+            canvas.toBlob((blob) => {
+                blob?.arrayBuffer().then(resolve);
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+        };
+
+        img.onerror = reject;
+        img.src = url;
+    });
 }

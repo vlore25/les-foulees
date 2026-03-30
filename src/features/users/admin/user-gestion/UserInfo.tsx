@@ -2,6 +2,7 @@ import { AdminUserDetails } from "@/src/lib/dto";
 import { Badge } from "@/components/ui/badge";
 import { ReactNode } from "react";
 import { UserStatusControl } from "./UserStatusCOntrol";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface UserInfoProps {
     user: AdminUserDetails;
@@ -11,12 +12,25 @@ export default function UserInfo({ user }: UserInfoProps) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
             
+            <article className="flex items-center gap-6 mb-4">
+                <Avatar className="w-24 h-24 border-2 border-primary/10">
+                    <AvatarImage src={user.profileImageUrl || ""} className="object-cover" />
+                    <AvatarFallback className="text-2xl bg-primary/5 text-primary">
+                        {user.name[0]}{user.lastname[0]}
+                    </AvatarFallback>
+                </Avatar>
+                <div>
+                    <h2 className="text-2xl font-bold capitalize">{user.name} {user.lastname}</h2>
+                    <p className="text-muted-foreground">{user.email}</p>
+                </div>
+            </article>
 
             <article >
                 <h3 className="font-bold text-lg mb-4">Informations Personnelles</h3>
                 <div className="flex flex-col space-y-1">
                     <InfoRow label="Prénom" value={user.name} />
                     <InfoRow label="Nom" value={user.lastname} />
+                    <InfoRow label="Genre" value={user.genre} />
                     <InfoRow
                         label="Date de naissance"
                         value={user.birthdate ? new Date(user.birthdate).toLocaleDateString("fr-FR") : "Non renseignée"}

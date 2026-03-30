@@ -12,12 +12,18 @@ import { updateProfile } from '../../user.action'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@radix-ui/react-label'
 import SuccesBox from '@/components/common/feedback/SuccesBox'
+import Image from 'next/image'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 
 interface ProfileFormProps {
     defaultValues: {
+        id: string;
         name: string;
         lastname: string;
+        genre?: string | null;
+        profileImageUrl?: string | null;
         email: string;
         phone?: string | null;
         birthdate?: Date | null;
@@ -41,6 +47,17 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
     const [showPhone, setShowPhone] = useState(defaultValues.showPhoneDirectory);
     const [showEmail, setShowEmail] = useState(defaultValues.showEmailDirectory);
 
+    const [previewUrl, setPreviewUrl] = useState<string | null>(defaultValues.profileImageUrl || null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            setPreviewUrl(url);
+            setIsDirty(true);
+        }
+    };
+
     console.log(defaultValues)
 
 
@@ -56,25 +73,48 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
 
 
     return (
-        <form action={action} onChange={handleFormChange} className="space-y-8 max-w-4xl pb-10" noValidate>
+        <form action={action} onChange={handleFormChange} className="space-y-8 max-w-4xl pb-10" noValidate encType="multipart/form-data">
 
-            {/* EN-TÊTE */}
+
             <div className="flex flex-col md:flex-row gap-6  md:items-start mb-8">
+                <div className="relative group">
+                    <label className="cursor-pointer block relative">
+                        <Avatar className="w-24 h-24 border-2 border-primary/10 transition-all group-hover:border-primary/30">
+                            <AvatarImage src={previewUrl || ''} className="object-cover" />
+                            <AvatarFallback className="text-2xl bg-primary/5 text-primary">
+                                {defaultValues.name?.[0]}{defaultValues.lastname?.[0]}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+                            <span className="text-white text-[10px] font-bold uppercase">Modifier</span>
+                        </div>
+                        <input
+                            type="file"
+                            name="profileImage"
+                            className="hidden"
+                            onChange={handleFileChange}
+                            accept="image/*"
+                        />
+                    </label>
+                </div>
                 <div className="space-y-1">
                     <h1 className="text-3xl font-bold capitalize">{defaultValues.name} {defaultValues.lastname}</h1>
                     <p className="text-muted-foreground">{defaultValues.email}</p>
                     {state?.message && state.success &&
                         <SuccesBox message={state?.message} />
                     }
+                    <p className="text-xs text-muted-foreground mt-2 italic">
+                        Cliquez sur l'avatar pour modifier votre photo.
+                    </p>
+                    {state?.error?.profileImage && <p className="text-red-500 text-xs mt-1">{state?.error?.profileImage[0]}</p>}
                 </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 px-2">
-                {/* 1. INFO PERSONNELLES */}
                 <article className='md:col-span-2'>
                     <p className='font-semibold text-xl mb-1'>Informations Personnelles</p>
                     <div className="space-y-4">
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid md:grid-cols-3 gap-4">
                             <FormInput
                                 label="Prénom" name="name"
                                 defaultValue={defaultValues.name} error={state?.error?.name}
@@ -83,6 +123,15 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                                 label="Nom" name="lastname"
                                 defaultValue={defaultValues.lastname} error={state?.error?.lastname}
                             />
+                            <div>
+                                <FieldLabel>Genre</FieldLabel>
+                                <GenreSelect
+                                    name="genre"
+                                    defaultValue={defaultValues.genre || ''}
+                                    onValueChange={() => setIsDirty(true)}
+                                />
+                                {state?.error?.genre && <p className="text-red-500 text-xs mt-1">{state?.error?.genre[0]}</p>}
+                            </div>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-4">
@@ -99,7 +148,6 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                     </div>
                 </article>
 
-                {/* 2. ADRESSE */}
                 <article className='md:col-span-2'>
                     <p className='font-semibold text-xl mb-1'>Adresse</p>
                     <div className="space-y-4">
@@ -126,7 +174,6 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                     </div>
                 </article>
 
-                {/* 3. CONTACT D'URGENCE */}
                 <article className='md:col-span-2'>
                     <p className='font-semibold text-xl mb-1'>Contact d'urgence</p>
                     <p className="text-muted-foreground text-xs">Personne à contacter en cas de problème.</p>
@@ -225,7 +272,24 @@ function FormInput({ label, name, defaultValue, error, placeholder }: FormInputP
     )
 }
 
-// 2. Date Picker
+function GenreSelect({ name, defaultValue, onValueChange }: { name: string, defaultValue?: string, onValueChange?: (value: string) => void }) {
+    return (
+        <Select name={name} defaultValue={defaultValue} onValueChange={onValueChange}>
+            <SelectTrigger className="w-full mt-1">
+                <SelectValue placeholder="Indiquer votre genre" />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectGroup>
+                    <SelectLabel>Genre</SelectLabel>
+                    <SelectItem value="FEMALE">Femme</SelectItem>
+                    <SelectItem value="MALE">Homme</SelectItem>
+                    <SelectItem value="OTHER">Autre</SelectItem>
+                </SelectGroup>
+            </SelectContent>
+        </Select>
+    );
+}
+
 interface BirthDayPickerProps {
     name: string;
     defaultValue?: Date | null;
@@ -238,7 +302,6 @@ function BirthDayPicker({ name, defaultValue, onDateChange }: BirthDayPickerProp
 
     return (
         <div className="flex flex-col gap-1.5 flex-1">
-            {/* Utilisation de FieldLabel pour la cohérence au lieu de Label Radix */}
             <FieldLabel>Date de naissance</FieldLabel>
 
             <input type="hidden" name={name} value={date ? date.toISOString() : ''} />

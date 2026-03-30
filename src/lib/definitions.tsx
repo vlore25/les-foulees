@@ -37,7 +37,11 @@ export const newPasswordSchema = z.object({
 export const registerFormSchema = z.object({
   name: z.string().min(2, { message: "Le prénom doit comporter au moins 2 caractères." }).trim(),
   lastname: z.string().min(2, { message: "Le nom doit comporter au moins 2 caractères." }).trim(),
+  genre: z.enum(["MALE", "FEMALE", "OTHER"], { message: "Veuillez sélectionner votre genre." }),
   phone: z.string().regex(phoneRegex, { message: "Numéro de téléphone invalide." }).trim(),
+  profileImage: z.instanceof(File).optional()
+    .refine((file) => !file || file.size === 0 || file.size <= MAX_FILE_SIZE, `Taille max 4MB.`)
+    .refine((file) => !file || file.size === 0 || ACCEPTED_IMAGE_TYPES.includes(file.type), "Seuls .jpg, .png, .webp sont acceptés."),
   password: passwordSchema,
   confirmPassword: z.string().min(1, { message: "La confirmation du mot de passe est requise." }),
   address: z.string().min(5, { message: "L'adresse est requise." }).regex(/\d+.*[a-zA-Z]+/, { message: "L'adresse doit contenir un numéro et un nom de rue." }).trim(),
@@ -127,7 +131,11 @@ export const legalDocSchema = z.object({
 export const profileFormSchema = z.object({
   name: z.string().min(2, "Prénom trop court").trim(),
   lastname: z.string().min(2, "Nom trop court").trim(),
+  genre: z.enum(["MALE", "FEMALE", "OTHER"], { message: "Veuillez sélectionner votre genre." }),
   phone: z.string().regex(phoneRegex, "Numéro invalide").trim(),
+  profileImage: z.instanceof(File).optional()
+    .refine((file) => !file || file.size === 0 || file.size <= MAX_FILE_SIZE, `Taille max 4MB.`)
+    .refine((file) => !file || file.size === 0 || ACCEPTED_IMAGE_TYPES.includes(file.type), "Seuls .jpg, .png, .webp sont acceptés."),
   birthdate: z.string().trim().min(1, { message: "La date de naissance est requise." })
     .transform((val) => new Date(val))
     .refine((date) => !isNaN(date.getTime()), { message: "Format de date invalide." }),
@@ -161,7 +169,9 @@ export type ProfileFormState = {
   error?: {
     name?: string[];
     lastname?: string[];
+    genre?: string[];
     phone?: string[];
+    profileImage?: string[];
     address?: string[];
     zipCode?: string[];
     city?: string[];
@@ -209,11 +219,23 @@ export type RegisterFormState = {
   errors?: {
     name?: string[];
     lastname?: string[];
+    genre?: string[];
+    profileImage?: string[];
     email?: string[];
+    phone?: string[];
     password?: string[];
     confirmPassword?: string[];
+    birthdate?: string[];
+    address?: string[];
+    zipCode?: string[];
+    city?: string[];
+    emergencyName?: string[];
+    emergencyLastName?: string[];
+    emergencyPhone?: string[];
+    terms?: string[];
   };
-  message?: string;
+  message?: string | null;
+  success?: boolean;
 } | undefined;
 
 export type InviteUserState = {

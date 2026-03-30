@@ -1,18 +1,18 @@
 import { User } from '@/prisma/generated/client';
 import 'server-only'
 
-export type BaseUser = Pick<User, 'id' | 'email' | 'role' | 'name' | 'lastname'>
+export type BaseUser = Pick<User, 'id' | 'email' | 'role' | 'name' | 'lastname' | 'profileImageUrl'>
 
 type RawAdminInput = Omit<User, 'password' | 'updatedAt'>;
 
 //-----------PUBLIC---------------------
 
 type RawPublicUser = Pick<User,
-  'id' | 'name' | 'lastname' | 'phone' | 'email' | 'status' |
+  'id' | 'name' | 'lastname' | 'phone' | 'email' | 'status' | 'profileImageUrl' |
   'showPhoneDirectory' | 'showEmailDirectory' | 'createdAt'
 >;
 
-export type PublicUserList = Pick<User, 'id' | 'name' | 'lastname' | 'status' >
+export type PublicUserList = Pick<User, 'id' | 'name' | 'lastname' | 'status' | 'profileImageUrl'>
 
 export type PublicUserDetails = PublicUserList & {
   phone: string | null;
@@ -23,7 +23,7 @@ export type PublicUserDetails = PublicUserList & {
 
 //-----------ADMIN---------------------
 
-type RawAdminList = Pick<User, 'id' | 'name' | 'lastname' | 'status' | 'createdAt'>;
+type RawAdminList = Pick<User, 'id' | 'name' | 'lastname' | 'status' | 'createdAt' | 'profileImageUrl'>;
 
 export type AdminUserList = PublicUserList & {
   createdAt: string;
@@ -34,7 +34,7 @@ export type AdminUserDetails = Omit<User, 'password' | 'updatedAt' | 'createdAt'
 };
 
 type RawUserDetails = Pick<User, 
-  'id' | 'name' | 'lastname' | 'phone' | 'email' |'status' |
+  'id' | 'name' | 'lastname' | 'phone' | 'email' |'status' | 'profileImageUrl' |
   'showPhoneDirectory' | 'showEmailDirectory' | 'createdAt'
 >;
 
@@ -47,6 +47,7 @@ export async function publicUserDetails(user: RawUserDetails): Promise<PublicUse
     name: user.name,
     lastname: user.lastname,
     status: user.status,
+    profileImageUrl: user.profileImageUrl,
     phone: user.showPhoneDirectory ? user.phone : null,
     email: user.showEmailDirectory ? user.email : null,
     createdAt: user.createdAt.toLocaleString('fr-FR', { month: 'long', day: 'numeric', year: 'numeric'})
@@ -58,7 +59,8 @@ export function toPublicList(user: RawPublicUser): PublicUserList {
     id: user.id,
     name: user.name,
     lastname: user.lastname,
-    status: user.status
+    status: user.status,
+    profileImageUrl: user.profileImageUrl
   }
 }
 
@@ -70,6 +72,7 @@ export function toAdminList(user: RawAdminList): AdminUserList {
     name: user.name,
     lastname: user.lastname,
     status: user.status,
+    profileImageUrl: user.profileImageUrl,
     createdAt: user.createdAt.toLocaleString('fr-FR', { month: 'long', day: 'numeric', year: 'numeric'})
   }
 }
@@ -80,6 +83,8 @@ export function admindUserDetails(user: RawAdminInput): AdminUserDetails {
     id: user.id,
     name: user.name,
     lastname: user.lastname,
+    genre: user.genre,
+    profileImageUrl: user.profileImageUrl,
     birthdate: user.birthdate,
     phone: user.phone,
     email: user.email,

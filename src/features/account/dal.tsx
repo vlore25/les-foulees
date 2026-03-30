@@ -12,6 +12,8 @@ export const getProfile = cache(async (userId: string) => {
       id: true,
       name: true,
       lastname: true,
+      genre: true,
+      profileImageUrl: true,
       email: true,
       phone: true,
       birthdate: true,

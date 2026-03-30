@@ -10,6 +10,7 @@ import { SignJWT } from 'jose'
 import { Resend } from 'resend'
 import { render } from '@react-email/render'
 import { RecoverPasswordTemplate } from '@/components/email-templates/RecoverPasswordTemplate'
+import { saveUploadedFile } from '@/src/lib/file-storage'
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const secret = process.env.JWT_SECRET;
@@ -26,6 +27,8 @@ export type RegisterFormState = {
   errors?: {
     name?: string[];
     lastname?: string[];
+    genre?: string[];
+    profileImage?: string[];
     email?: string[];
     phone?: string[];
     password?: string[];
@@ -138,7 +141,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
     terms: formData.get('terms-conditions')=== 'on',
-    
+    profileImage: formData.get('profileImage'),
   }
 
   const validatedFields = registerFormSchema.safeParse(rawFormData);
@@ -152,7 +155,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
     };
   }
 
-  const { confirmPassword, terms, ...userData } = validatedFields.data;
+  const { confirmPassword, terms, profileImage, ...userData } = validatedFields.data;
 
 
   const existingUser = await prisma.user.findUnique({ where: { email: emailVerifie } });
@@ -162,12 +165,18 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
 
   const hashedPassword = await bcrypt.hash(userData.password, 10);
 
+  let profileImageUrl = null;
+  if (profileImage && profileImage.size > 0) {
+    profileImageUrl = await saveUploadedFile(profileImage, "uploads/users", `${userData.name}_${userData.lastname}`);
+  }
+
   try {
     await prisma.$transaction(async (tx) => {
 
       await tx.user.create({
         data: {
           ...userData,
+          profileImageUrl,
           email: emailVerifie,
           password: hashedPassword,
         },

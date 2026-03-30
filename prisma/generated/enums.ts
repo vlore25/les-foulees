@@ -25,6 +25,15 @@ export const Status = {
 export type Status = (typeof Status)[keyof typeof Status]
 
 
+export const Genre = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  OTHER: 'OTHER'
+} as const
+
+export type Genre = (typeof Genre)[keyof typeof Genre]
+
+
 export const Visibility = {
   PRIVATE: 'PRIVATE',
   PUBLIC: 'PUBLIC'
