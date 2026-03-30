@@ -23,10 +23,17 @@ enum Status {
   INACTIVE
 }
 
+enum Genre {
+  MALE
+  FEMALE
+  OTHER
+}
+
 model User {
   id                 String       @id @default(cuid())
   email              String       @unique @db.VarChar(255)
   name               String
+  genre              Genre        @default(OTHER)
   lastname           String
   birthdate          DateTime?
   phone              String?

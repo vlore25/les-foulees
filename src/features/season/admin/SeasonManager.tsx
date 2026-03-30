@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import { CalendarCheck, CalendarClock, Users, Archive, PlayCircle, Trash2 } from "lucide-react"
-import { activateSeasonAction, deleteDraftSeason  } from "../season.actions"
+import { activateSeasonAction, deleteDraftSeason } from "../season.actions"
 import { getNextSeasonPreview, getSeasonsData } from "../dal"
 import SeasonPrepaForm from "./form/SeasonPrepaForm"
 
@@ -15,12 +15,12 @@ export default async function SeasonsManager() {
     const seasonData = await getSeasonsData()
     const { activeSeason, draftSeason } = seasonData
     const preview = !draftSeason ? await getNextSeasonPreview() : null
-    
-    const dateOptions: Intl.DateTimeFormatOptions = { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
     };
     return (
         <div className="space-y-8">
@@ -57,9 +57,9 @@ export default async function SeasonsManager() {
                 {/* BLOC 2 : PROCHAINE SAISON */}
                 {draftSeason ? (
                     // CAS A : UNE SAISON EST PRÊTE -> ON L'ACTIVE OU ON LA SUPPRIME (Inchangé)
-                    <Card className="border-amber-200 bg-amber-50/30 ">
+                    <Card className="border-amber-200 bg-amber-50/30 rounded-none py-4">
                         <CardHeader>
-                            <CardTitle className="flex justify-between items-center text-amber-800">
+                            <CardTitle className="flex justify-between items-center text-amber-800 ">
                                 <span className="flex items-center gap-2"><CalendarClock className="w-5 h-5" /> Prochaine Saison</span>
                                 <div className="flex gap-2">
                                     <form action={async () => {
@@ -84,8 +84,6 @@ export default async function SeasonsManager() {
                                 <div>Jeune: <strong>{draftSeason.priceYoung}€</strong></div>
                                 <div>FFA: <strong>{draftSeason.priceFfa}€</strong></div>
                             </div>
-                        </CardContent>
-                        <CardFooter>
                             <form action={async () => {
                                 'use server'
                                 await activateSeasonAction(draftSeason.id)
@@ -94,13 +92,13 @@ export default async function SeasonsManager() {
                                     <PlayCircle className="mr-2 h-4 w-4" /> Lancer cette saison (Activer)
                                 </Button>
                             </form>
-                        </CardFooter>
+                        </CardContent>
                     </Card>
                 ) : (
                     <SeasonPrepaForm preview={preview} />
                 )}
             </div>
-            
+
         </div>
     )
 }

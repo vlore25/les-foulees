@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 
 interface ExportButtonProps {
-    data: any[]; // Vos données d'adhésion
+    data: any[]; 
     filename?: string;
 }
 
@@ -56,7 +56,6 @@ export default function ExportButton({ data, filename = "adherents.csv" }: Expor
             ...rows.map(r => r.join(";"))
         ].join("\n");
 
-        // 4. Déclencher le téléchargement
         const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");

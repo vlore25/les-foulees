@@ -8,7 +8,7 @@ export default async function adherantsPage({
   searchParams: Promise<{ seasonId?: string }>;
 }) {
   return (
-    <div className="p-6">
+    <div>
       <MembershipsList searchParams={searchParams} />
     </div>
   );

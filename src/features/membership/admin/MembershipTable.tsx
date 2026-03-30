@@ -63,7 +63,6 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                         <TableHead>Adhérent</TableHead>
                         <TableHead>Type</TableHead>
                         <TableHead>Certificat / Licence</TableHead>
-                        <TableHead>Paiement</TableHead>
                         <TableHead>Statut</TableHead>
                         <TableHead>Actions</TableHead>
                     </TableRow>
@@ -89,9 +88,7 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                             </TableCell>
 
 
-                            {/* COLONNE 4 : LOGIQUE CERTIFICAT / LICENCE */}
                             <TableCell>
-                                {/* CAS 1 : C'est une LICENCE (Type 'LICENSE_RUNNING' OU numéro de licence présent) */}
                                 {(m.type === 'LICENSE_RUNNING' || m.ffaLicenseNumber) ? (
                                     <div className="flex flex-col gap-1">
                                         <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 w-fit gap-1">
@@ -125,26 +122,13 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                                 )}
                             </TableCell>
 
-                            {/* COLONNE 5 : Paiement */}
-                            <TableCell>
-                                {m.payment?.status === 'PAID' ? (
-                                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
-                                        <CheckCircle2 className="w-3 h-3" /> {m.payment.amount}€
-                                    </Badge>
-                                ) : (
-                                    <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 gap-1">
-                                        <Clock className="w-3 h-3" /> En attente
-                                    </Badge>
-                                )}
-                            </TableCell>
-
-                            {/* COLONNE 6 : Statut Global */}
+              
                             <TableCell>
                                 {getStatusBadge(m.status)}
                             </TableCell>
 
-                            {/* COLONNE 7 : Actions */}
-                            <TableCell className="text-right">
+    
+                            <TableCell >
                                 <MembershipRowActions
                                     id={m.id}
                                     status={m.status}

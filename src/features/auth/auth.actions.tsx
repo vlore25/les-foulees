@@ -124,6 +124,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
     token: formData.get('token'),
     name: formData.get('name'),
     lastname: formData.get('lastname'),
+    genre: formData.get('genre'),
     phone: formData.get('phone'),
     birthdate: formData.get('birthdate'),
     address: formData.get('address'),
@@ -137,6 +138,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
     terms: formData.get('terms-conditions')=== 'on',
+    
   }
 
   const validatedFields = registerFormSchema.safeParse(rawFormData);

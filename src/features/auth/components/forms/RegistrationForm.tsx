@@ -6,7 +6,7 @@ import { useActionState, useState } from 'react' // Import useState
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { AlertCircle, CalendarIcon, Check, CheckCircle2, ChevronLeft, ChevronRight, Globe } from 'lucide-react'
+import { CalendarIcon, Check, CheckCircle2, ChevronLeft, ChevronRight, Globe } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/src/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -14,9 +14,10 @@ import Link from 'next/link'
 import { Label } from '@/components/ui/Label'
 import ErrorText from '@/components/common/feedback/ErrorText'
 import ErrorBox from '@/components/common/feedback/ErrorBox'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 const STEPS = [
-  { id: 0, title: "Identité", fields: ["name", "lastname", "phone", "birthdate"] },
+  { id: 0, title: "Identité", fields: ["name", "lastname", "genre", "phone",  "birthdate"] },
   { id: 1, title: "Adresse", fields: ["address", "zip-code", "city"] },
   { id: 2, title: "Contact d'urgence", fields: ["emergencyName", "emergencyLastName", "emergencyPhone"] },
   { id: 3, title: "Sécurité", fields: ["password", "confirmPassword"] }
@@ -90,16 +91,13 @@ export default function RegistrationForm({ email, token }: { email: string, toke
         </div>
       </div>
 
-      {/* --- GLOBAL ERROR MESSAGE --- */}
       {state?.message && !state.success && (
         <ErrorBox error={state.message}></ErrorBox>
       )}
 
-      {/* --- FORMULAIRE --- */}
       <form action={action} className="flex flex-col gap-6 min-h-[400px]" noValidate>
         <input type="hidden" name="token" value={token} />
 
-        {/* IDENTITÉ */}
         <div className={cn("space-y-4", currentStep === 0 ? "block" : "hidden")}>
           <h2 className="text-xl font-semibold mb-4">Qui êtes-vous ?</h2>
           <div className='flex flex-col md:flex-row gap-4 w-full'>
@@ -114,6 +112,13 @@ export default function RegistrationForm({ email, token }: { email: string, toke
               <Field>
                 <FieldLabel>Nom</FieldLabel>
                 <Input id="lastname" name="lastname" placeholder="Nom" defaultValue={state?.fields?.lastname} required />
+              </Field>
+              <ErrorText>{state?.errors?.lastname}</ErrorText>
+            </div>
+            <div className="flex-1">
+              <Field>
+                <FieldLabel >Genre</FieldLabel>
+                <GenreSelect genre="genreSelection" initialValue={state?.fields?.genre} />
               </Field>
               <ErrorText>{state?.errors?.lastname}</ErrorText>
             </div>
@@ -325,4 +330,40 @@ function BirthDayPicker({ name, initialValue }: { name: string, initialValue?: s
       </Popover>
     </div>
   )
+}
+
+function GenreSelect({ genre, initialValue }: { genre: string, initialValue?: string }) {
+    return (
+        <Select name={genre} defaultValue={initialValue}>
+            <SelectTrigger className="w-full max-w-48">
+                    <SelectValue placeholder="Indiquer votre genre" />
+            </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Genre</SelectLabel>
+                      <SelectItem value="FEMALE">Femme</SelectItem>
+                      <SelectItem value="MALE">Homme</SelectItem>
+                      <SelectItem value="OTHER">Autre</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+        </Select>
+    );
+}
+
+function GenreSelect({ genre, initialValue }: { genre: string, initialValue?: string }) {
+    return (
+        <Select name={genre} defaultValue={initialValue}>
+            <SelectTrigger className="w-full max-w-48">
+                    <SelectValue placeholder="Indiquer votre genre" />
+            </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Genre</SelectLabel>
+                      <SelectItem value="FEMALE">Femme</SelectItem>
+                      <SelectItem value="MALE">Homme</SelectItem>
+                      <SelectItem value="OTHER">Autre</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+        </Select>
+    );
 }

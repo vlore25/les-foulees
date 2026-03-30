@@ -178,7 +178,7 @@ export async function createMembershipRequest(prevState: any, formData: FormData
             })
         })
 
-        revalidatePath("/admin")
+        revalidatePath("/admin/adherants")
         return { success: true, message: "Demande d'adhésion enregistrée avec succès !" }
 
     } catch (e: any) {
@@ -208,7 +208,7 @@ export async function validateMembershipAction(membershipId: string) {
             })
         })
 
-        revalidatePath("/admin")
+        revalidatePath("/espace-membre/adhesion")
         return { success: true }
     } catch (e) {
         return { success: false, message: "Erreur validation" }
@@ -225,7 +225,7 @@ export async function refuseMembershipAction(membershipId: string) {
             }
         });
 
-        revalidatePath("/admin")
+        revalidatePath("/espace-membre/adhesion")
         return { success: true, message: "Dossier refusé avec succès." };
 
     } catch (e) {
@@ -233,5 +233,3 @@ export async function refuseMembershipAction(membershipId: string) {
         return { success: false, message: "Erreur technique lors du refus." };
     }
 }
-
-

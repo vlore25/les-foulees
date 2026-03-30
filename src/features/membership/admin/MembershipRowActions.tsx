@@ -24,7 +24,7 @@ import { validateMembershipAction, refuseMembershipAction } from "../memberships
 interface MembershipRowActionsProps {
     id: string;
     status: string;
-    paymentStatus?: string; // <-- 1. On ajoute le statut du paiement ici
+    paymentStatus?: string; 
 }
 
 export default function MembershipRowActions({ id, status, paymentStatus }: MembershipRowActionsProps) {
@@ -66,21 +66,13 @@ export default function MembershipRowActions({ id, status, paymentStatus }: Memb
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
 
-                    {/* Action de validation (seulement si payé) */}
-                    {canValidate && (
+                    {/* Action de validation */}
+               
                         <DropdownMenuItem onClick={handleValidate} className="text-green-600 focus:text-green-700 focus:bg-green-50 cursor-pointer">
                             {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-2 h-4 w-4" />}
                             Valider le dossier
                         </DropdownMenuItem>
-                    )}
 
-                    {/* Feedback visuel si le dossier est en attente mais NON payé */}
-                    {status === 'PENDING' && !isPaid && (
-                        <DropdownMenuItem disabled className="text-muted-foreground opacity-70">
-                            <Banknote className="mr-2 h-4 w-4" />
-                            En attente de paiement
-                        </DropdownMenuItem>
-                    )}
 
                     {/* Le bouton Refuser */}
                     {status !== 'REJECTED' && status !== 'VALIDATED' && (

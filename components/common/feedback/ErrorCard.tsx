@@ -9,7 +9,7 @@ interface ErrorCardProps {
 }
 export default function ErrorCard({ title, message, link, linkMessage }: ErrorCardProps) {
     return (
-        <Card className="w-full max-w-md border-red-200 bg-red-50 shadow-none">
+        <Card className="w-full max-w-md border-red-200 bg-red-50 shadow-none rounded-none">
             <CardHeader>
                 <CardTitle className="text-red-700 text-center">{title}</CardTitle>
             </CardHeader>

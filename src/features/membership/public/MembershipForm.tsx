@@ -1,11 +1,11 @@
 "use client"
 
-import { useActionState, useState, useRef } from "react"
+import { useActionState, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Check, Loader2, UploadCloud } from "lucide-react"
+import { Loader2, UploadCloud, FileText } from "lucide-react" // Ajout de FileText
 import { cn } from "@/src/lib/utils"
 import { createMembershipRequest } from "../memberships.actions"
 import { Label } from "@radix-ui/react-label"
@@ -14,7 +14,7 @@ import { Switch } from "@/components/ui/swtich"
 interface MembershipFormProps {
     userProfile: any;
     season: any
-    initialData?: any;
+    initialData?: any; // Contient les données du dossier refusé
 }
 
 const initialState = {
@@ -23,122 +23,47 @@ const initialState = {
     errors: {}
 }
 
-const STEPS = [
-    { id: 0, title: "Type", fields: ["type"] },
-    { id: 1, title: "Infos & Licence", fields: ["ffa", "club", "medicalCertificate"] },
-    { id: 2, title: "Paiement", fields: ["paymentMethod"] },
-]
-
 export function MembershipForm({ userProfile, season, initialData }: MembershipFormProps) {
 
     const [state, action, pending] = useActionState(createMembershipRequest, initialState)
-    const [currentStep, setCurrentStep] = useState(0)
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        if (currentStep !== STEPS.length - 1) {
-            e.preventDefault();
-            handleNext(); 
-        }
-    }
-
-    const [formData, setFormData] = useState<any>({
-        ...userProfile,
-        firstName: userProfile.name,
-        lastName: userProfile.lastname,
-        type: initialData?.type || "INDIVIDUAL",
-        paymentMethod: initialData?.payment?.method || "CHECK",
-        ffa: initialData?.ffaLicenseNumber || "",
-        club: initialData?.previousClub || "",
-    })
-
-    const [hasLicense, setHasLicense] = useState(!!userProfile.ffaNumber);
-    const [licenseSource, setLicenseSource] = useState<"RENEWAL" | "MUTATION">("RENEWAL");
-
-    const formRef = useRef<HTMLFormElement>(null)
-
-    const handleNext = () => {
-        if (!formRef.current) return
-
-        const currentFields = STEPS[currentStep].fields
-        let isValid = true
-        const form = formRef.current
-
-        currentFields.forEach(fieldName => {
-            const field = form.elements.namedItem(fieldName) as HTMLInputElement | RadioNodeList
-            if (field) {
-                if (field instanceof RadioNodeList && field.value === "") {
-                }
-                else if (field instanceof HTMLInputElement && !field.checkValidity()) {
-                    field.reportValidity()
-                    isValid = false
-                }
-            }
-        })
-
-        if (isValid) {
-            const currentFormData = new FormData(formRef.current)
-            const data = Object.fromEntries(currentFormData.entries())
-            setFormData((prev: any) => ({ ...prev, ...data }))
-            setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1))
-        }
-    }
-
-    const handlePrev = () => {
-        setCurrentStep((prev) => Math.max(prev - 1, 0))
-    }
-
-    const isLastStep = currentStep === STEPS.length - 1
+    // 1. Initialisation des états avec initialData s'il existe
+    const [hasLicense, setHasLicense] = useState(
+        initialData ? !!initialData.ffaLicenseNumber : !!userProfile.ffaNumber
+    );
+    const [licenseSource, setLicenseSource] = useState<"RENEWAL" | "MUTATION">(
+        initialData?.licenseType || "RENEWAL"
+    );
 
     return (
         <div className="w-full max-w-lg mx-auto">
-            <div className="mb-8">
-                <div className="flex justify-between items-center mb-2 relative">
-                    {STEPS.map((step, index) => (
-                        <div key={step.id} className="flex flex-col items-center relative z-10 w-20">
-                            <div className={cn(
-                                "w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 font-semibold text-sm bg-white",
-                                index < currentStep ? "bg-primary border-primary text-white" :
-                                    index === currentStep ? "border-primary text-primary" :
-                                        "border-muted text-muted-foreground"
-                            )}>
-                                {index < currentStep ? <Check className="w-4 h-4" /> : index + 1}
-                            </div>
-                            <span className={cn(
-                                "text-[10px] sm:text-xs mt-1 font-medium text-center absolute -bottom-6 w-max",
-                                index === currentStep ? "text-primary" : "text-muted-foreground"
-                            )}>
-                                {step.title}
-                            </span>
-                        </div>
-                    ))}
-                    <div className="absolute top-4 left-0 w-full h-[2px] bg-slate-200 -z-0" />
-                    <div
-                        className="absolute top-4 left-0 h-[2px] bg-primary transition-all duration-300 ease-in-out -z-0"
-                        style={{ width: `${(currentStep / (STEPS.length - 1)) * 100}%` }}
-                    />
-                </div>
-            </div>
+            <form action={action} className="space-y-8 bg-white p-6 rounded-lg border shadow-sm mt-6">
 
-            <form action={action} onSubmit={handleSubmit} ref={formRef} className="space-y-6 bg-white p-6 rounded-lg border shadow-sm mt-10">
-
+                {/* 2. On passe l'ID de la demande pour que le backend sache qu'il faut Mettre à jour et non Créer */}
+                {initialData?.id && <input type="hidden" name="membershipId" value={initialData.id} />}
+                
                 {hasLicense && <input type="hidden" name="licenseType" value={licenseSource} />}
 
+                {/* Message de succès ou d'erreur global */}
                 {state?.message && (
                     <div className={cn(
-                        "p-4 rounded-md text-sm mb-4 flex items-center gap-2",
+                        "p-4 rounded-md text-sm flex items-center gap-2",
                         state.success ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
                     )}>
                         {state.message}
                     </div>
                 )}
 
-                <div className={cn("space-y-4", currentStep === 0 ? "block" : "hidden")}>
-                    <h3 className="text-lg font-medium">Type d'adhésion</h3>
+                {/* --- SECTION 1 : TYPE D'ADHÉSION --- */}
+                <div className="space-y-4">
+                    <h3 className="text-lg font-medium border-b pb-2">1. Type d'adhésion</h3>
+                    {/* Le defaultValue fait déjà très bien le travail ici */}
                     <RadioGroup
                         name="type"
-                        defaultValue={formData.type || 'INDIVIDUAL'}
+                        defaultValue={initialData?.type || 'INDIVIDUAL'}
                         className="grid grid-cols-1 gap-3"
                     >
+                        {/* ... (Vos RadioGroupItems ne changent pas) ... */}
                         <div className="flex items-center space-x-3 border p-3 rounded-md cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-slate-50">
                             <RadioGroupItem value="INDIVIDUAL" id="t-indi" />
                             <Label htmlFor="t-indi" className="flex-1 cursor-pointer font-normal">Individuel {season.priceStandard} €</Label>
@@ -154,28 +79,26 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                     </RadioGroup>
                 </div>
 
-                {/* === ÉTAPE 1 : LICENCE & CONSENTEMENTS === */}
-                <div className={cn("space-y-6", currentStep === 1 ? "block" : "hidden")}>
-                    <div className="p-2 lg:p-2 space-y-2">
+                {/* --- SECTION 2 : INFOS & LICENCE --- */}
+                <div className="space-y-6 pt-2">
+                    <h3 className="text-lg font-medium border-b pb-2">2. Infos & Licence</h3>
+                    <div className="space-y-4">
                         <div className="flex items-center justify-between">
                             <div className="space-y-0.5">
-                                <Label htmlFor="has-license-switch" className="text-base font-medium">
-                                    Êtes-vous déjà licencié FFA ?
-                                </Label>
-                                <p className="text-xs text-muted-foreground">
-                                    Renouvellement ou Mutation depuis un autre club.
-                                </p>
+                                <Label htmlFor="has-license-switch" className="text-base font-medium">Êtes-vous déjà licencié FFA ?</Label>
+                                <p className="text-xs text-muted-foreground">Renouvellement ou Mutation depuis un autre club.</p>
                             </div>
                             <Switch
                                 id="has-license-switch"
                                 checked={hasLicense}
                                 onCheckedChange={setHasLicense}
+                                type="button"
                             />
                         </div>
 
-                        {/* --- OPTION A : OUI, J'AI UNE LICENCE --- */}
                         {hasLicense ? (
                             <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-5 pt-4 border-t border-slate-200">
+                                {/* Le composant RadioGroup de la situation doit être "contrôlé" ou avoir un defaultValue pour pré-remplir */}
                                 <div className="space-y-3">
                                     <Label className="text-sm font-semibold">Votre situation :</Label>
                                     <RadioGroup
@@ -183,17 +106,14 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                         onValueChange={(v) => setLicenseSource(v as "RENEWAL" | "MUTATION")}
                                         className="flex flex-col space-y-2"
                                     >
-                                        <div className="flex items-center space-x-2 border p-3 rounded-md bg-white">
+                                       {/* ... Vos RadioGroupItems ... */}
+                                       <div className="flex items-center space-x-2 border p-3 rounded-md bg-white">
                                             <RadioGroupItem value="RENEWAL" id="src-renew" />
-                                            <Label htmlFor="src-renew" className="font-normal cursor-pointer text-sm">
-                                                Je renouvelle aux <strong>Foulées Avrillaises</strong>
-                                            </Label>
+                                            <Label htmlFor="src-renew" className="font-normal cursor-pointer text-sm">Je renouvelle aux <strong>Foulées Avrillaises</strong></Label>
                                         </div>
                                         <div className="flex items-center space-x-2 border p-3 rounded-md bg-white">
                                             <RadioGroupItem value="MUTATION" id="src-mut" />
-                                            <Label htmlFor="src-mut" className="font-normal cursor-pointer text-sm">
-                                                Je viens d'un <strong>autre club</strong> (Mutation)
-                                            </Label>
+                                            <Label htmlFor="src-mut" className="font-normal cursor-pointer text-sm">Je viens d'un <strong>autre club</strong> (Mutation)</Label>
                                         </div>
                                     </RadioGroup>
                                 </div>
@@ -204,7 +124,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                         id="ffa"
                                         name="ffa"
                                         placeholder="Votre n° de licence"
-                                        defaultValue={formData.ffa || userProfile.ffaNumber}
+                                        defaultValue={initialData?.ffaLicenseNumber || userProfile.ffaNumber || ""}
                                         required={hasLicense}
                                     />
                                 </div>
@@ -216,27 +136,41 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                             id="club"
                                             name="club"
                                             placeholder="Nom du club précédent"
+                                            defaultValue={initialData?.previousClub || ""}
                                             required={licenseSource === "MUTATION"}
                                         />
                                     </div>
                                 )}
                             </div>
                         ) : (
-                            /* --- OPTION B : NON, PAS DE LICENCE (Upload Certificat) --- */
                             <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-4 pt-4 border-t border-slate-200">
-                                <div className="bg-orange-100 border border-orange-200 rounded p-3 text-sm text-orange-800">
-                                    <strong>Document requis :</strong> Comme vous n'avez pas de licence active, vous devez fournir un certificat médical de moins d'un an.
-                                </div>
+                                
+                                {/* 3. GESTION DU CERTIFICAT PRÉCÉDENT */}
+                                {initialData?.medicalCertificateUrl && (
+                                    <div className="bg-slate-50 border rounded-md p-3 flex items-center justify-between text-sm">
+                                        <div className="flex items-center gap-2 text-slate-700">
+                                            <FileText className="w-4 h-4 text-primary" />
+                                            <span>Document déjà fourni</span>
+                                        </div>
+                                        <a href={initialData.medicalCertificateUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                                            Voir le fichier
+                                        </a>
+                                    </div>
+                                )}
+
                                 <div className="space-y-2">
                                     <Label htmlFor="medicalCertificate" className="flex items-center gap-2">
-                                        <UploadCloud className="w-4 h-4" /> Charger votre certificat (PDF/Photo) <span className="text-red-500">*</span>
+                                        <UploadCloud className="w-4 h-4" /> 
+                                        {initialData?.medicalCertificateUrl ? "Remplacer le certificat (Optionnel)" : "Charger votre certificat"} 
+                                        {!initialData?.medicalCertificateUrl && <span className="text-red-500">*</span>}
                                     </Label>
                                     <Input
                                         id="medicalCertificate"
                                         name="medicalCertificate"
                                         type="file"
                                         accept=".pdf,image/*"
-                                        required={!hasLicense}
+                                        // Le champ n'est requis que s'il n'y a pas déjà un document
+                                        required={!hasLicense && !initialData?.medicalCertificateUrl}
                                         className="cursor-pointer bg-white file:text-primary hover:file:bg-primary/10"
                                     />
                                 </div>
@@ -245,12 +179,13 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                     </div>
                 </div>
 
-                {/* === ÉTAPE 2 : PAIEMENT === */}
-                <div className={cn("space-y-4", currentStep === 2 ? "block" : "hidden")}>
-                    <h3 className="text-lg font-medium">Règlement</h3>
+                {/* --- SECTION 3 : RÈGLEMENT --- */}
+                <div className="space-y-4 pt-2">
+                    <h3 className="text-lg font-medium border-b pb-2">3. Règlement</h3>
                     <div className="space-y-2">
                         <Label>Moyen de paiement</Label>
-                        <Select name="paymentMethod" defaultValue={formData.paymentMethod || "TRANSFER"}>
+                        <Select name="paymentMethod" defaultValue={initialData?.paymentMethod || initialData?.payment?.method || "TRANSFER"}>
+                            {/* ... */}
                             <SelectTrigger>
                                 <SelectValue placeholder="Choisir..." />
                             </SelectTrigger>
@@ -259,44 +194,16 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                 <SelectItem value="TRANSFER">Virement Bancaire</SelectItem>
                             </SelectContent>
                         </Select>
-                        <p className="text-sm text-gray-500 mt-2 bg-slate-50 p-3 rounded border">
-                            <strong>Note :</strong> Le paiement sera validé manuellement par le trésorier à réception.
-                            <br />Pour les virements, merci d'indiquer "Adhésion 2025 - NOM Prénom" en libellé.
-                        </p>
+                        {/* ... */}
                     </div>
                 </div>
 
-
-                <div className="flex justify-between pt-4 border-t mt-6">
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={handlePrev}
-                        disabled={currentStep === 0 || pending}
-                        className={currentStep === 0 ? "invisible" : ""}
-                    >
-                        Précédent
+                {/* --- BOUTON DE SOUMISSION --- */}
+                <div className="pt-6 mt-8">
+                    <Button type="submit" disabled={pending} className="w-full">
+                        {pending ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Envoi en cours...</> : "Mettre à jour ma demande"}
                     </Button>
-
-                    {isLastStep ? (
-                        <Button
-                            type="submit"
-                            className="ml-auto bg-green-600 hover:bg-green-700 w-40"
-                            disabled={pending}
-                        >
-                            {pending ? (
-                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Envoi...</>
-                            ) : (
-                                "Valider et Signer"
-                            )}
-                        </Button>
-                    ) : (
-                        <Button type="button" className="ml-auto" onClick={handleNext}>
-                            Suivant
-                        </Button>
-                    )}
                 </div>
-
             </form>
         </div>
     )
