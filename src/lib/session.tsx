@@ -5,11 +5,11 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 
-const secret = process.env.JWT_SECRET;
-if (!secret) {
-  throw new Error("La variable d'environnement JWT_SECRET n'est pas définie !");
+const getSecretKey = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error("JWT_SECRET manquant");
+  return new TextEncoder().encode(secret);
 }
-const secretKey = new TextEncoder().encode(secret);
 
 
 type SessionPayload = {
@@ -37,12 +37,12 @@ export async function encrypt(payload: SessionPayload){
       .setProtectedHeader({alg: 'HS256'})
       .setIssuedAt()
       .setExpirationTime("1 day")
-      .sign(secretKey)
+      .sign(getSecretKey())
 }
 
 export async function decrypt(session: string | undefined = ''){
   try{
-    const {payload} = await jwtVerify(session, secretKey, {
+    const {payload} = await jwtVerify(session, getSecretKey(), {
       algorithms: ['HS256']
     })
     return payload;
