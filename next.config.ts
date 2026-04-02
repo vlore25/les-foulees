@@ -7,12 +7,11 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
+    unoptimized: true, // SOLUTION AU 404 : Désactive l'optimisation gourmande
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'loremflickr.com',
-        port: '',
-        pathname: '/**', 
       },
     ],
   },

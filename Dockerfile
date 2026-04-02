@@ -2,6 +2,8 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 
+COPY --from=builder --chown=10101 /app/.next ./_next
+COPY --from=builder --chown=10101 /app/public ./public
 # On déclare les arguments nécessaires au build (Next.js en a besoin ici)
 ARG DATABASE_URL
 ARG JWT_SECRET
