@@ -1,70 +1,22 @@
-# 1. Base
-FROM node:22-alpine AS base
+# 1. Build stage
+FROM node:22-alpine AS builder
 WORKDIR /app
-RUN apk add --no-cache libc6-compat
-
-ARG DATABASE_URL
-ARG JWT_SECRET
-ARG RESEND_API_KEY
-
-# Injecte ces arguments dans l'environnement du build
-
-
-# 2. DEPS : C'est ici que TypeScript arrive !
-FROM base AS deps
 COPY package*.json ./
-COPY prisma ./prisma/
-COPY prisma.config.ts ./prisma.config.ts
-
 RUN npm ci
-
-FROM base AS builder
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-ENV DATABASE_URL=$DATABASE_URL
-ENV JWT_SECRET=$JWT_SECRET
-ENV RESEND_API_KEY=$RESEND_API_KEY
-
-ENV NEXT_TELEMETRY_DISABLED 1
-
 RUN npx prisma generate
-
 RUN npm run build
 
-# 4. PROD-DEPS : On prépare les modules SANS TypeScript pour la fin
-FROM base AS prod-deps
+# 2. Run stage
+FROM node:22-alpine AS runner
 WORKDIR /app
-COPY package*.json ./
-COPY prisma ./prisma/
-ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
-
-# --only=production : On n'installe PAS TypeScript ici, juste le nécessaire pour tourner
-RUN npm ci --only=production
-RUN npx prisma generate
-
-# 5. RUNNER : L'image finale (Sans TypeScript, juste du JS)
-FROM base AS runner
-WORKDIR /app
-
 ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# On copie tout le dossier buildé et les modules
+COPY --from=builder /app ./
 
-RUN mkdir -p public/uploads/users && chown -R nextjs:nodejs public
-
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=prod-deps --chown=nextjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
-COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./prisma.config.ts
-
-USER nextjs
+# On s'assure que le dossier des images existe
+RUN mkdir -p public/uploads
 
 EXPOSE 3000
 CMD ["npm", "start"]
