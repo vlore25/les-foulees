@@ -3,6 +3,13 @@ FROM node:22-alpine AS base
 WORKDIR /app
 RUN apk add --no-cache libc6-compat
 
+ARG DATABASE_URL
+ARG JWT_SECRET
+ARG RESEND_API_KEY
+
+# Injecte ces arguments dans l'environnement du build
+
+
 # 2. DEPS : C'est ici que TypeScript arrive !
 FROM base AS deps
 COPY package*.json ./
@@ -17,7 +24,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV DATABASE_URL=$DATABASE_URL
+ENV JWT_SECRET=$JWT_SECRET
+ENV RESEND_API_KEY=$RESEND_API_KEY
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
