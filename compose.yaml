@@ -2,6 +2,7 @@ name: les-foulees-prod
 
 services:
   app:
+    user: "1001:1001"
     build:
       context: .
       target: runner 
