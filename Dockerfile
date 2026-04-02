@@ -55,20 +55,16 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# On copie le code compilé (JS) depuis le builder
-COPY --from=builder /app/public ./public
+RUN mkdir -p public/uploads/users && chown -R nextjs:nodejs public
+
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-
-# On copie les modules LÉGERS (sans TypeScript) depuis prod-deps
 COPY --from=prod-deps --chown=nextjs:nodejs /app/node_modules ./node_modules
-
-# Fichiers de config
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./prisma.config.ts
 
 USER nextjs
 
 EXPOSE 3000
-
 CMD ["npm", "start"]
