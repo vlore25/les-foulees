@@ -1,21 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: 'standalone', // AJOUTEZ CECI : Optimise pour Docker
   experimental: {
     serverActions: {
-      bodySizeLimit: '5mb', 
+      bodySizeLimit: '5mb',
     },
   },
   images: {
-    unoptimized: true, // SOLUTION AU 404 : Désactive l'optimisation gourmande
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'loremflickr.com',
-      },
-    ],
+    unoptimized: true, // Évite les erreurs "received null" dans Docker
   },
-
 };
-
 export default nextConfig;

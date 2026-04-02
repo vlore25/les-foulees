@@ -1,35 +1,32 @@
-# 1. Étape de Build
 FROM node:22-alpine AS builder
 WORKDIR /app
-
-
-# On déclare les arguments nécessaires au build (Next.js en a besoin ici)
-ARG DATABASE_URL
-ARG JWT_SECRET
-ARG RESEND_API_KEY
-
-# On les transforme en variables d'environnement pour le processus 'npm run build'
-ENV DATABASE_URL=$DATABASE_URL
-ENV JWT_SECRET=$JWT_SECRET
-ENV RESEND_API_KEY=$RESEND_API_KEY
-ENV NEXT_TELEMETRY_DISABLED=1
-
 COPY package*.json ./
 RUN npm ci
 COPY . .
+
+# Variables nécessaires pour ne pas faire planter le build (ex: Resend)
+ARG DATABASE_URL
+ARG JWT_SECRET
+ARG RESEND_API_KEY
+ENV DATABASE_URL=$DATABASE_URL
+ENV JWT_SECRET=$JWT_SECRET
+ENV RESEND_API_KEY=$RESEND_API_KEY
+
 RUN npx prisma generate
 RUN npm run build
 
-# 2. Étape d'exécution
 FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# On copie tout depuis le builder
-COPY --from=builder /app ./
+# En mode standalone, on copie ces 3 choses précises :
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-# Création du dossier pour les images (sera écrasé par le volume en runtime)
-RUN mkdir -p public/uploads
+# Création du dossier d'upload pour le volume
+RUN mkdir -p public/uploads/users public/uploads/events
 
 EXPOSE 3000
-CMD ["npm", "start"]
+# On lance le serveur standalone (plus rapide et léger)
+CMD ["node", "server.js"]
