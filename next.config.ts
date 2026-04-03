@@ -7,7 +7,16 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    unoptimized: true, // Évite les erreurs "received null" dans Docker
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'loremflickr.com',
+        port: '',
+        pathname: '/**', 
+      },
+    ],
   },
+
 };
+
 export default nextConfig;
