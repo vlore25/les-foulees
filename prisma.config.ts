@@ -1,9 +1,4 @@
 import { defineConfig } from '@prisma/config';
-import dotenv from 'dotenv'; 
-
-const envFile = process.env.NODE_ENV === "production" ? ".env" : ".env.development";
-
-dotenv.config({ path: envFile });
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -12,6 +7,6 @@ export default defineConfig({
     seed: "npx tsx prisma/seed.ts" 
   },
   datasource: {
-    url: process.env.DATABASE_URL
+    url: process.env.DATABASE_URL || "" 
   },
 });
