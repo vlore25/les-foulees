@@ -1,34 +1,11 @@
 name: les-foulees-prod
 
 services:
-  app:
-    user: "1001:1001"
-    build:
-      context: .
-      target: runner 
-      args:
-        JWT_SECRET: ${JWT_SECRET}
-        DATABASE_URL: ${DATABASE_URL}
-        RESEND_API_KEY: ${RESEND_API_KEY}
-
-    environment:
-      - NODE_ENV=production
-      - JWT_SECRET=${JWT_SECRET}
-      - RESEND_API_KEY=${RESEND_API_KEY}
-      - DATABASE_URL=${DATABASE_URL}
-    ports:
-      - "3000:3000"
-    env_file: 
-      - .env
-    restart: always 
-    depends_on:
-      - db
-    volumes:
-      - uploads_data:/app/public/uploads
-
   db:
     image: postgres:15-alpine
     restart: always
+    ports:
+      - "5432:5432" 
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
@@ -38,4 +15,3 @@ services:
 
 volumes:
   db-data-prod:
-  uploads_data:
