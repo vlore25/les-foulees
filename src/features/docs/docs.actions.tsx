@@ -3,8 +3,7 @@
 import { legalDocSchema, LegalDocFormState } from "@/src/lib/definitions";
 import { prisma } from "@/src/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { writeFile, unlink } from "fs/promises";
-import { join } from "path";
+import { saveUploadedFile } from "@/src/lib/file-storage";
 
 // --- CREATE ---
 export async function createLegalDocAction(
@@ -23,14 +22,8 @@ export async function createLegalDocAction(
   let fileUrl = "";
 
   if (file && file.size > 0) {
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const filename = `doc-${Date.now()}-${title.replace(/\s/g, "-")}`;
-    const path = join(process.cwd(), "public/uploads/docs", filename);
-    
     try {
-        await writeFile(path, buffer);
-        fileUrl = `/uploads/docs/${filename}`;
+        fileUrl = await saveUploadedFile(file, "uploads/docs", title);
     } catch (e) {
       console.log(e);
         return { message: "Erreur lors de l'upload du fichier." };
@@ -74,14 +67,8 @@ export async function updateLegalDocAction(
 
   // Si nouveau fichier uploadé
   if (file && file.size > 0) {
-     const bytes = await file.arrayBuffer();
-     const buffer = Buffer.from(bytes);
-     const filename = `doc-${Date.now()}-${file.name.replace(/\s/g, "-")}`;
-     const path = join(process.cwd(), "public/uploads/docs", filename);
-
      try {
-         await writeFile(path, buffer);
-         dataToUpdate.Url = `/uploads/docs/${filename}`;
+         dataToUpdate.Url = await saveUploadedFile(file, "uploads/docs", title);
      } catch (e) {
          return { message: "Erreur lors de l'upload du fichier." };
      }

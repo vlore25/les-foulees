@@ -25,7 +25,11 @@ export async function saveUploadedFile(
 
     // 3. Définir les chemins
     // Le dossier physique sur le serveur
-    const uploadDir = path.join(process.cwd(), "public", folderPath);
+    const baseUploadDir = "/var/www/uploads/les-foulees";
+    
+    // On enlève "uploads" du début de folderPath s'il existe pour éviter la répétition
+    const subFolder = folderPath.replace(/^uploads\/?/, '');
+    const uploadDir = path.join(baseUploadDir, subFolder);
     
     // 4. Créer le dossier s'il n'existe pas (Sécurité)
     await mkdir(uploadDir, { recursive: true });
@@ -35,8 +39,8 @@ export async function saveUploadedFile(
     await writeFile(filePath, buffer);
 
     // 6. Retourner l'URL publique (pour l'accès web)
-    // On utilise folderPath et filename. Note: path.join utilise des \ sur Windows, on force /
-    const publicUrl = `/${folderPath}/${filename}`.replace(/\\/g, '/');
+    // On s'assure que l'URL commence par /uploads/ pour correspondre à la config Nginx probable
+    const publicUrl = `/uploads/${subFolder}/${filename}`.replace(/\/+/g, '/');
     
     return publicUrl;
 }

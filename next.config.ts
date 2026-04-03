@@ -8,20 +8,13 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'loremflickr.com',
-        port: '',
-        pathname: '/**', 
-      },
-      {
-        protocol: 'http',
-        hostname: '82.165.134.12', // Ton IP VPS
-        port: '3000',
-        pathname: '/uploads/**',
-      },
-    ],
-    unoptimized: true,
+    {
+      protocol: 'http', // ou https si tu configures un SSL
+      hostname: '82.165.134.12',
+      port: '9000',
+      pathname: '/les-foulees-uploads/**',
+    },
+  ],
   },
 
 };
