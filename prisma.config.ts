@@ -8,11 +8,15 @@ dotenv.config({ path: envPath });
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
-  datasource: {
-    url: process.env.DATABASE_URL // Maintenant, il devrait trouver la variable
-  },
+  
+  // Tes paramètres de migrations et seed que j'avais zappés
   migrations: {
     path: "prisma/migrations",
     seed: "npx tsx prisma/seed.ts" 
+  },
+  
+  datasource: {
+    // On s'assure que l'URL n'est pas "undefined"
+    url: process.env.DATABASE_URL
   },
 });

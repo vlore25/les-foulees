@@ -14,7 +14,14 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**', 
       },
+      {
+        protocol: 'http',
+        hostname: '82.165.134.12', // Ton IP VPS
+        port: '3000',
+        pathname: '/uploads/**',
+      },
     ],
+    unoptimized: true,
   },
 
 };
