@@ -11,4 +11,8 @@ export default defineConfig({
   datasource: {
     url: process.env.DATABASE_URL // Maintenant, il devrait trouver la variable
   },
+  migrations: {
+    path: "prisma/migrations",
+    seed: "npx tsx prisma/seed.ts" 
+  },
 });
