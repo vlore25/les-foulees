@@ -1,12 +1,14 @@
 import { defineConfig } from '@prisma/config';
+import dotenv from 'dotenv';
+import path from 'path';
+
+// On force le chemin absolu vers le fichier .env à la racine
+const envPath = path.resolve(process.cwd(), '.env');
+dotenv.config({ path: envPath });
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
-  migrations: {
-    path: "prisma/migrations",
-    seed: "npx tsx prisma/seed.ts" 
-  },
   datasource: {
-    url: process.env.DATABASE_URL || "" 
+    url: process.env.DATABASE_URL // Maintenant, il devrait trouver la variable
   },
 });
