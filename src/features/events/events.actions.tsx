@@ -127,11 +127,11 @@ export async function updateEventAction(
       );
       dataToUpdate.imgUrl = imageUrlPath; 
     }
-    
+
     await prisma.event.update({
       where: { id: eventId },
       data: dataToUpdate,
-    }); //
+    }); 
 
     revalidatePath("/events"); //
     revalidatePath(`/events/${eventId}`); //
