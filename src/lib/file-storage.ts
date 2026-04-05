@@ -38,9 +38,7 @@ export async function saveUploadedFile(
     const filePath = path.join(uploadDir, filename);
     await writeFile(filePath, buffer);
 
-    // 6. Retourner l'URL publique (pour l'accès web)
-    // On s'assure que l'URL commence par /uploads/ pour correspondre à la config Nginx probable
-    const publicUrl = `/uploads/${subFolder}/${filename}`.replace(/\/+/g, '/');
+    const publicUrl = `/uploads/les-foulees/${subFolder}/${filename}`.replace(/\/+/g, '/');
     
     return publicUrl;
 }

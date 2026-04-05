@@ -4,8 +4,6 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { EventListItem } from "../dal";
 import JoinEventButton from "./JointEventButton";
-import { useUser } from "@/components/providers/UserProvider";
-import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";

@@ -86,7 +86,7 @@ export async function createMembershipRequest(prevState: any, formData: FormData
     let certificateUrl = null;
     if (!hasValidLicense && medicalFile && medicalFile.size > 0) {
         try {
-            // Stockage : public/uploads/docs/certificates/certif_NOM_ID
+            // Stockage : /var/www/uploads/les-foulees/docs/certificates/certif_NOM_ID
             certificateUrl = await saveUploadedFile(
                 medicalFile,
                 "uploads/docs/certificates",

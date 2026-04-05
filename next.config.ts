@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       protocol: 'http', // ou https si tu configures un SSL
       hostname: '82.165.134.12',
       port: '9000',
-      pathname: '/les-foulees-uploads/**',
+      pathname: '/uploads/les-foulees/**',
     },
   ],
   },
