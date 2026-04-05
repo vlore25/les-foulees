@@ -9,9 +9,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
     {
-      protocol: 'http', // ou https si tu configures un SSL
+      protocol: 'http',
       hostname: '82.165.134.12',
-      port: '9000',
+      port: '80',
       pathname: '/uploads/les-foulees/**',
     },
   ],
