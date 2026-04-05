@@ -19,6 +19,7 @@ export default function EventsCardMobile({ events }: EventsProps) {
     return (
         <div className="flex flex-col gap-4 lg:grid grid-cols-3 lg:gap-12">
             {events.map((event) => {
+                console.log(event.imgUrl)
                 return (
                     <Card key={event.id} className='border-none gap-1 shadow-md hover:shadow-lg transition-shadow duration-300 pt-0 overflow-hidden flex flex-col h-full'>
                         <Link href={`/espace-membre/evenements/${event.id}`} className="block cursor-pointer hover:opacity-95 transition-opacity">

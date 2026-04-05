@@ -125,16 +125,14 @@ export async function updateEventAction(
         "uploads/events",
         title || "event"
       );
-      dataToUpdate.imgUrl = imageUrlPath; // On ajoute l'URL au reste des données
+      dataToUpdate.imgUrl = imageUrlPath; 
     }
-
-    // 7. Mise à jour en base de données
+    
     await prisma.event.update({
       where: { id: eventId },
       data: dataToUpdate,
     }); //
 
-    // 8. Revalidation du cache
     revalidatePath("/events"); //
     revalidatePath(`/events/${eventId}`); //
     revalidatePath("/admin/evenements");
@@ -157,7 +155,6 @@ export async function deleteEventAction(eventId: string) {
 }
 
 //========JOIN EVENT=========
-// NOUVEAU : L'action prend maintenant la distance choisie en paramètre optionnel
 export async function joinEventAction(eventId: string, selectedDistance?: string) {
 
   const session = await verifySession();
