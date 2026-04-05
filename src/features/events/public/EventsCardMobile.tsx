@@ -24,10 +24,9 @@ export default function EventsCardMobile({ events }: EventsProps) {
                     <Card key={event.id} className='border-none gap-1 shadow-md hover:shadow-lg transition-shadow duration-300 pt-0 overflow-hidden flex flex-col h-full'>
                         <Link href={`/espace-membre/evenements/${event.id}`} className="block cursor-pointer hover:opacity-95 transition-opacity">
                             <div className="relative w-full h-48">
-                                <img>
-                                    src={`http://82.165.134.12${event.imgUrl}` || '/images/login-hero.jpg'}
-                                    alt={event.title}
-                                </img>
+                                <img
+                                    src={event.imgUrl}
+                                    alt={event.title} />
                                 {/*<Image
                                     
                                     
@@ -78,8 +77,8 @@ export default function EventsCardMobile({ events }: EventsProps) {
                                 <JoinEventButton
                                     eventId={event.id}
                                     isParticipant={event.isParticipant}
-                                    distances={event.distances} 
-                                    userDistance={event.selectedDistance} 
+                                    distances={event.distances}
+                                    userDistance={event.selectedDistance}
                                 />
                             </CardFooter>
                         </div>
