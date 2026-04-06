@@ -100,11 +100,9 @@ export default function EventForm({ event }: EventFormProps) {
 
                 {event?.imgUrl && (
                     <div className="relative w-32 h-20 mb-2 rounded overflow-hidden border">
-                        <Image
-                            src={event.imgUrl}
-                            alt="Image actuelle"
-                            fill
-                            className="object-cover"
+                        <img
+                            src={`http://82.165.134.12${event.imgUrl}` || '/images/login-hero.jpg'}
+                            alt={event.title}
                         />
                     </div>
                 )}

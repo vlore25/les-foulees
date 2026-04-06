@@ -54,12 +54,9 @@ export default function EventDetails({ event }: EventDetailsProps) {
                 </Button>
             </div>
             <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-md bg-muted">
-                <Image
-                    src={event.imgUrl || '/images/login-hero.jpg'}
+                <img
+                    src={`http://82.165.134.12${event.imgUrl}` || '/images/login-hero.jpg'}
                     alt={event.title}
-                    fill
-                    className="object-cover"
-                    priority
                 />
             </div>
             <div className="space-y-4">

@@ -24,12 +24,9 @@ export default function EventsCardMobile({ events }: EventsProps) {
                     <Card key={event.id} className='border-none gap-1 shadow-md hover:shadow-lg transition-shadow duration-300 pt-0 overflow-hidden flex flex-col h-full'>
                         <Link href={`/espace-membre/evenements/${event.id}`} className="block cursor-pointer hover:opacity-95 transition-opacity">
                             <div className="relative w-full h-48">
-                          
-                                <Image
+                                <img
                                     src={`http://82.165.134.12${event.imgUrl}` || '/images/login-hero.jpg'}
                                     alt={event.title}
-                                    fill={true}
-                                    className="object-cover"
                                 />
                             </div>
                             <CardHeader className='pt-4 px-4 pb-2'>

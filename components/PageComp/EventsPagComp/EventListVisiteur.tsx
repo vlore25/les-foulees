@@ -62,12 +62,9 @@ export default function EventListVisitor({ events }: { events: EventListItem[] }
                     >
 
                         <div className="relative h-56 w-full overflow-hidden">
-                            <Image
+                            <img
                                 src={`http://82.165.134.12${event.imgUrl}` || '/images/login-hero.jpg'}
                                 alt={event.title}
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-110"
-
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                             <div className="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold uppercase px-3 py-1 rounded-tl-md rounded-br-md backdrop-blur-sm">
