@@ -27,6 +27,7 @@ export default function EventsCardMobile({ events }: EventsProps) {
                                 <img
                                     src={`http://82.165.134.12${event.imgUrl}` || '/images/login-hero.jpg'}
                                     alt={event.title}
+                                    className="object-cover"
                                 />
                             </div>
                             <CardHeader className='pt-4 px-4 pb-2'>

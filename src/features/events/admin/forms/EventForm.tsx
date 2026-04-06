@@ -103,6 +103,7 @@ export default function EventForm({ event }: EventFormProps) {
                         <img
                             src={`http://82.165.134.12${event.imgUrl}` || '/images/login-hero.jpg'}
                             alt={event.title}
+                            className="object-cover"
                         />
                     </div>
                 )}

@@ -57,6 +57,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
                 <img
                     src={`http://82.165.134.12${event.imgUrl}` || '/images/login-hero.jpg'}
                     alt={event.title}
+                    className="object-cover"
                 />
             </div>
             <div className="space-y-4">

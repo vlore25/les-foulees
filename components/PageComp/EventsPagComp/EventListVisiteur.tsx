@@ -65,6 +65,7 @@ export default function EventListVisitor({ events }: { events: EventListItem[] }
                             <img
                                 src={`http://82.165.134.12${event.imgUrl}` || '/images/login-hero.jpg'}
                                 alt={event.title}
+                                className="object-cover"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                             <div className="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold uppercase px-3 py-1 rounded-tl-md rounded-br-md backdrop-blur-sm">
