@@ -55,9 +55,9 @@ export default function EventDetails({ event }: EventDetailsProps) {
             </div>
             <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-md bg-muted">
                 <img
-                    src={`http://82.165.134.12${event.imgUrl}` || '/images/login-hero.jpg'}
+                    src={event.imgUrl ? `http://82.165.134.12${event.imgUrl}` : '/images/login-hero.jpg'}
                     alt={event.title}
-                    className="object-cover"
+                    className="w-full h-full object-cover"
                 />
             </div>
             <div className="space-y-4">
