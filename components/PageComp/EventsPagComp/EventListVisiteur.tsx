@@ -5,7 +5,7 @@ import { EventListItem } from "@/src/features/events/dal";
 import { Card } from "@/components/ui/card";
 import { Calendar, MapPin, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { cn, getAssetUrl } from "@/src/lib/utils";
+import { cn, getAssetUrl, formatEventType } from "@/src/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
 export default function EventListVisitor({ events }: { events: EventListItem[] }) {
