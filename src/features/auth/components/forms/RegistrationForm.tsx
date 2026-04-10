@@ -8,13 +8,14 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { CalendarIcon, Check, CheckCircle2, ChevronLeft, ChevronRight, Globe } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
-import { cn } from '@/src/lib/utils'
+import { cn, getAssetUrl } from '@/src/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import Link from 'next/link'
 import { Label } from '@/components/ui/Label'
 import ErrorText from '@/components/common/feedback/ErrorText'
 import ErrorBox from '@/components/common/feedback/ErrorBox'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 const STEPS = [
   { id: 0, title: "Identité", fields: ["name", "lastname", "genre", "phone",  "birthdate"] },
@@ -26,6 +27,14 @@ const STEPS = [
 export default function RegistrationForm({ email, token }: { email: string, token: string }) {
   const [state, action, pending] = useActionState(registerUser, undefined)
   const [currentStep, setCurrentStep] = useState(0)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setPreviewUrl(URL.createObjectURL(file))
+    }
+  }
 
   if (state?.success) {
     return (
@@ -102,17 +111,24 @@ export default function RegistrationForm({ email, token }: { email: string, toke
           <h2 className="text-xl font-semibold mb-4">Qui êtes-vous ?</h2>
           
           <div className="flex flex-col items-center gap-4 mb-6">
-             <label className="w-24 h-24 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-muted-foreground/20 overflow-hidden relative group cursor-pointer transition-colors hover:border-primary/50">
+             <label className="cursor-pointer group relative">
+                <Avatar className="w-24 h-24 border-2 border-dashed border-muted-foreground/20 transition-all group-hover:border-primary/50">
+                    <AvatarImage src={getAssetUrl(previewUrl)} className="object-cover" />
+                    <AvatarFallback className="bg-muted flex flex-col items-center justify-center">
+                        <Globe className="w-8 h-8 text-muted-foreground/50 group-hover:text-primary transition-colors" />
+                        <span className="text-[10px] text-muted-foreground uppercase font-bold mt-1">Photo</span>
+                    </AvatarFallback>
+                </Avatar>
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+                    <span className="text-white text-[10px] font-bold uppercase">Ajouter</span>
+                </div>
                 <input 
                   type="file" 
                   name="profileImage" 
                   accept="image/*"
                   className="hidden" 
+                  onChange={handleFileChange}
                 />
-                <div className="text-center p-2 flex flex-col items-center justify-center">
-                  <Globe className="w-8 h-8 mx-auto text-muted-foreground/50 group-hover:text-primary transition-colors" />
-                  <span className="text-[10px] text-muted-foreground uppercase font-bold">Photo</span>
-                </div>
              </label>
              <p className="text-xs text-muted-foreground">Photo de profil (optionnelle)</p>
              <ErrorText>{state?.errors?.profileImage}</ErrorText>

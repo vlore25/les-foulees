@@ -7,12 +7,11 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { CalendarIcon, Loader2 } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
-import { cn } from '@/src/lib/utils'
+import { cn, getAssetUrl } from '@/src/lib/utils'
 import { updateProfile } from '../../user.action'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@radix-ui/react-label'
 import SuccesBox from '@/components/common/feedback/SuccesBox'
-import Image from 'next/image'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 
@@ -47,7 +46,7 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
     const [showPhone, setShowPhone] = useState(defaultValues.showPhoneDirectory);
     const [showEmail, setShowEmail] = useState(defaultValues.showEmailDirectory);
 
-    const [previewUrl, setPreviewUrl] = useState<string | null>(defaultValues.profileImageUrl || null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(getAssetUrl(defaultValues.profileImageUrl));
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -65,7 +64,8 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
     useEffect(() => {
         setShowPhone(defaultValues.showPhoneDirectory);
         setShowEmail(defaultValues.showEmailDirectory);
-    }, [defaultValues.showPhoneDirectory, defaultValues.showEmailDirectory]);
+        setPreviewUrl(getAssetUrl(defaultValues.profileImageUrl));
+    }, [defaultValues.showPhoneDirectory, defaultValues.showEmailDirectory, defaultValues.profileImageUrl]);
 
     const handleFormChange = () => {
         if (!isDirty) setIsDirty(true);
@@ -80,7 +80,7 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                 <div className="relative group">
                     <label className="cursor-pointer block relative">
                         <Avatar className="w-24 h-24 border-2 border-primary/10 transition-all group-hover:border-primary/30">
-                            <AvatarImage src={previewUrl || ''} className="object-cover" />
+                            <AvatarImage src={getAssetUrl(previewUrl)} className="object-cover" />
                             <AvatarFallback className="text-2xl bg-primary/5 text-primary">
                                 {defaultValues.name?.[0]}{defaultValues.lastname?.[0]}
                             </AvatarFallback>

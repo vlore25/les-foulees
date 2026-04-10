@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronsUpDown } from "lucide-react";
 import LogoutButton from "../../auth/components/buttons/LogoutButton";
+import { getAssetUrl } from "@/src/lib/utils";
 
 
 export default function UserCard() {
@@ -13,8 +14,8 @@ export default function UserCard() {
     const user = useUser();
     if (!user) return null;
     const getInitials = (name: string, lastname: string) => {
-        const firstInitial = Array.from(name)[0];
-        const lastInitial = Array.from(lastname)[0];
+        const firstInitial = Array.from(name || '')[0] || '';
+        const lastInitial = Array.from(lastname || '')[0] || '';
         return (firstInitial + lastInitial).toUpperCase();
     };
 
@@ -25,7 +26,7 @@ export default function UserCard() {
             <DropdownMenuTrigger asChild>
                 <div className="flex gap-2.5 items-center hover:cursor-pointer">
                     <Avatar >
-                        <AvatarImage src={user.profileImageUrl || ''} className="object-cover" />
+                        <AvatarImage src={getAssetUrl(user.profileImageUrl)} className="object-cover" />
                         <AvatarFallback className='bg-primary/10'>{initials}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start overflow-hidden">
