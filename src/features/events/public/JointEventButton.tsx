@@ -80,7 +80,7 @@ export default function JoinEventButton({
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="lg:w-50 w-full" disabled={isPending} variant="rounded">
+          <Button className="lg:w-50 w-full" disabled={isPending} variant="outlinerounded">
             {isPending ? "Chargement..." : "Je participe !"}
           </Button>
         </DropdownMenuTrigger>
@@ -102,13 +102,13 @@ export default function JoinEventButton({
     );
   }
 
-  // CAS 3 : L'événement n'a PAS de distance -> Bouton simple
+
   return (
     <Button 
       className="lg:w-50 w-full"
       onClick={() => handleJoin()} 
       disabled={isPending}
-      variant="rounded"
+      variant="outlinerounded"
     >
       {isPending ? "Chargement..." : "Je participe !"}
     </Button>
