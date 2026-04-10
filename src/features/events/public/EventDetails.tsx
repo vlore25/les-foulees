@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import JoinEventButton from "./JointEventButton";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { getAssetUrl } from "@/src/lib/utils";
 
 
 interface EventDetailsProps {
@@ -55,7 +55,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
             </div>
             <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-md bg-muted">
                 <img
-                    src={event.imgUrl ? `http://82.165.134.12${event.imgUrl}` : '/images/login-hero.jpg'}
+                    src={getAssetUrl(event.imgUrl)}
                     alt={event.title}
                     className="w-full h-full object-cover"
                 />

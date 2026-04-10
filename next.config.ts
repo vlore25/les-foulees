@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: '5mb',
+      bodySizeLimit: '6mb',
     },
   },
   images: {
@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
       protocol: 'http',
       hostname: '82.165.134.12',
       port: '80',
+      pathname: '/uploads/les-foulees/**',
+    },
+    {
+      protocol: 'http',
+      hostname: 'localhost',
       pathname: '/uploads/les-foulees/**',
     },
   ],

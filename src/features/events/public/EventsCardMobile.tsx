@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getAssetUrl } from "@/src/lib/utils";
 
 interface EventsProps {
     events: EventListItem[];
@@ -25,7 +26,7 @@ export default function EventsCardMobile({ events }: EventsProps) {
                         <Link href={`/espace-membre/evenements/${event.id}`} className="block cursor-pointer hover:opacity-95 transition-opacity">
                             <div className="relative w-full h-48">
                                 <img
-                                    src={event.imgUrl ? `http://82.165.134.12${event.imgUrl}` : '/images/login-hero.jpg'}
+                                    src={getAssetUrl(event.imgUrl)}
                                     alt={event.title}
                                     className="w-full h-full object-cover"
                                 />

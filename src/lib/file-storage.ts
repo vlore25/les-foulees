@@ -25,7 +25,10 @@ export async function saveUploadedFile(
 
     // 3. Définir les chemins
     // Le dossier physique sur le serveur
-    const baseUploadDir = "/var/www/uploads/les-foulees";
+    const isDev = process.env.NODE_ENV === 'development';
+    const baseUploadDir = isDev 
+        ? path.join(process.cwd(), "public", "uploads", "les-foulees")
+        : "/var/www/uploads/les-foulees";
     
     // On enlève "uploads" du début de folderPath s'il existe pour éviter la répétition
     const subFolder = folderPath.replace(/^uploads\/?/, '');
@@ -38,6 +41,8 @@ export async function saveUploadedFile(
     const filePath = path.join(uploadDir, filename);
     await writeFile(filePath, buffer);
 
+    // En dev, on veut que l'URL corresponde à ce qui est servi par Next.js (sous /public)
+    // En prod, on garde le même format d'URL
     const publicUrl = `/uploads/les-foulees/${subFolder}/${filename}`.replace(/\/+/g, '/');
     
     return publicUrl;

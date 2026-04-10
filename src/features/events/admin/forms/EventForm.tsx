@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { CalendarIcon, ChevronDownIcon } from "lucide-react";
 import { useActionState, useState } from "react";
 import Image from "next/image";
+import { getAssetUrl } from "@/src/lib/utils";
 import { createEvent, updateEventAction, type EventFormState } from "../../events.actions";
 import { Event } from "@/prisma/generated/client";
 import DistanceManager from "./DistanceManage";
@@ -101,7 +102,7 @@ export default function EventForm({ event }: EventFormProps) {
                 {event?.imgUrl && (
                     <div className="relative w-32 h-20 mb-2 rounded overflow-hidden border">
                         <img
-                            src={event.imgUrl ? `http://82.165.134.12${event.imgUrl}` : '/images/login-hero.jpg'}
+                            src={getAssetUrl(event.imgUrl)}
                             alt={event.title}
                             className="w-full h-full object-cover"
                         />
@@ -116,7 +117,7 @@ export default function EventForm({ event }: EventFormProps) {
                     className="border p-2 rounded w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 bg-background"
                 />
                 <p className='text-muted-foreground text-xs'>
-                    Formats : JPG, PNG, WEBP. Max 4 Mo.
+                    Formats : JPG, PNG, WEBP. Max 5 Mo.
                 </p>
                 {state?.error?.picture && (
                     <p className="text-red-500 text-sm">{state.error.picture[0]}</p>

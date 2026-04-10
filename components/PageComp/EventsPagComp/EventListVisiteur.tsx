@@ -5,7 +5,7 @@ import { EventListItem } from "@/src/features/events/dal";
 import { Card } from "@/components/ui/card";
 import { Calendar, MapPin, } from "lucide-react";
 import Image from "next/image";
-import { cn } from "@/src/lib/utils";
+import { cn, getAssetUrl } from "@/src/lib/utils";
 
 export default function EventListVisitor({ events }: { events: EventListItem[] }) {
     const [filter, setFilter] = useState<"future" | "past">("future");
@@ -63,7 +63,7 @@ export default function EventListVisitor({ events }: { events: EventListItem[] }
 
                         <div className="relative h-56 w-full overflow-hidden">
                             <img
-                                src={event.imgUrl ? `http://82.165.134.12${event.imgUrl}` : '/images/login-hero.jpg'}
+                                src={getAssetUrl(event.imgUrl)}
                                 alt={event.title}
                                 className="w-full h-full object-cover"
                             />
