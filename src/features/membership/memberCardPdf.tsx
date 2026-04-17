@@ -34,16 +34,18 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
 
         if (profileImageUrl) {
             try {
-                // Utiliser getAssetUrl pour avoir une URL correcte (relative ou absolue selon l'env)
+                // Utiliser getAssetUrl pour avoir une URL de base
                 const imageUrl = getAssetUrl(profileImageUrl);
                 
-                // Si l'URL est relative, on la rend absolue pour fetch (nécessaire dans certains navigateurs)
-                const fetchUrl = imageUrl.startsWith('http') 
-                    ? imageUrl 
-                    : `${window.location.origin}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+                // Utiliser le proxy de Next.js (_next/image) pour éviter CORS et Mixed Content
+                // Cela garantit aussi que l'image est servie sur le même origin, 
+                // évitant ainsi de "souiller" le canvas lors du crop.
+                const fetchUrl = imageUrl.startsWith('data:') || imageUrl.startsWith('blob:')
+                    ? imageUrl
+                    : `/_next/image?url=${encodeURIComponent(imageUrl)}&w=256&q=75`;
 
                 const imageBytes = await fetch(fetchUrl).then(res => {
-                    if (!res.ok) throw new Error("Failed to fetch image");
+                    if (!res.ok) throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`);
                     return res.arrayBuffer();
                 });
                 
