@@ -150,7 +150,7 @@ export const profileFormSchema = z.object({
 });
 
 export const MembershipTypeEnum = z.enum(["INDIVIDUAL", "COUPLE", "YOUNG", "LICENSE_RUNNING"]);
-export const PaymentMethodEnum = z.enum(["CHECK", "TRANSFER", "CASH", "ONLINE"]);
+export const PaymentMethodEnum = z.enum(["CHECK", "TRANSFER"]);
 
 export const membershipSchema = z.object({
   type: MembershipTypeEnum,
