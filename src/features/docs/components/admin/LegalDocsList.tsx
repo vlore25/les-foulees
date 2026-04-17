@@ -1,5 +1,5 @@
 
-import LegalDocsTableDesktop from "./LegalDocsTableDesktop";
+import LegalDocsCardMobile from "../shared/LegalDocsCardMobile";
 import { getLegalDocs } from "../../dal";
 
 export default async function LegalDocsList() {
@@ -7,8 +7,8 @@ export default async function LegalDocsList() {
   const docs = await getLegalDocs();
 
   return (
-    <div>
-        <LegalDocsTableDesktop docs={docs} />
+    <div className="py-4">
+        <LegalDocsCardMobile isAdminPage={true} />
     </div>
   );
 }

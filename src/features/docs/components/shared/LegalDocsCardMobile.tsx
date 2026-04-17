@@ -1,10 +1,11 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, FileText } from "lucide-react";
+import { Download, FileText, ChevronRight } from "lucide-react";
 import LegalDocRowActions from "../admin/LegalDocRowActions";
 import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import { getLegalDocs } from "../../dal";
 import { getCurrentUser } from "@/src/features/users/dal";
+import { Badge } from "@/components/ui/badge";
 
 
 interface LegalDocsCardMobileProps {
@@ -28,38 +29,57 @@ export default async function LegalDocsCardMobile({ isAdminPage }: LegalDocsCard
     }
 
     return (
-        <div className="flex flex-col gap-4 lg:grid grid-cols-4 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {docs.map((doc) => (
-                <Card key={doc.id} className="shadow-sm py-2">
-                    <CardHeader className="px-2">
+                <Card 
+                    key={doc.id} 
+                    className="group flex flex-col h-full border-none shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden bg-white rounded-tl-[2rem] rounded-br-[2rem]"
+                >
+                    <div className="relative h-40 w-full overflow-hidden bg-primary/5 flex items-center justify-center">
+                        <FileText size={64} className="text-primary/20 transition-transform duration-500 group-hover:scale-110" />
+                        
+                        <div className="absolute top-4 left-4">
+                            <Badge className="bg-primary/90 hover:bg-primary backdrop-blur-sm border-none font-bold uppercase tracking-wider text-[10px]">
+                                Document Officiel
+                            </Badge>
+                        </div>
+
                         {showAdminTools &&
-                            <div className="flex flex-row justify-end">
+                            <div className="absolute top-4 right-4">
                                 <LegalDocRowActions docId={doc.id} />
                             </div>
                         }
-                    </CardHeader>
-                    <CardTitle className="text-base font-semibold text-center">
-                        {doc.title}
-                    </CardTitle>
 
-                    <CardContent className="text-center ">
-                        <p className="text-sm text-muted-foreground line-clamp-3">
+                        <div className="absolute bottom-4 left-6 right-6">
+                            <h3 className="text-lg font-black uppercase text-primary leading-tight line-clamp-2">
+                                {doc.title}
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div className="p-6 flex flex-col flex-grow space-y-4">
+                        <p className="text-sm text-muted-foreground/90 line-clamp-3 font-medium leading-relaxed italic">
                             {doc.description || "Aucune description pour ce document."}
                         </p>
-                    </CardContent>
 
-                    <CardFooter className="border-t bg-muted/20">
-                        {doc.Url ? (
-                            <Button variant="ghost" size="sm" asChild className="w-full justify-start">
-                                <a href={doc.Url} target="_blank" rel="noopener noreferrer">
-                                    <Download className="h-4 w-4" />
-                                    Télécharger le document
+                        <div className="pt-4 mt-auto border-t border-primary/5 flex justify-end">
+                            {doc.Url ? (
+                                <a 
+                                    href={doc.Url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 text-primary font-black uppercase tracking-tighter text-sm group/link"
+                                >
+                                    <span>Télécharger</span>
+                                    <div className="p-1.5 rounded-full bg-primary/5 group-hover/link:bg-primary group-hover/link:text-white transition-all">
+                                        <Download size={18} />
+                                    </div>
                                 </a>
-                            </Button>
-                        ) : (
-                            <p className="text-xs text-muted-foreground py-2">Fichier non disponible</p>
-                        )}
-                    </CardFooter>
+                            ) : (
+                                <span className="text-xs text-muted-foreground font-bold italic">Indisponible</span>
+                            )}
+                        </div>
+                    </div>
                 </Card>
             ))}
         </div>

@@ -15,7 +15,7 @@ const social = [
   {
     title: "Facebook",
     icon: <SiFacebook size={24} />,
-    href: "#"
+    href: "https://www.facebook.com/groups/1248257145351513/"
   },
 ];
 
@@ -90,7 +90,7 @@ const Footer = ({ className }: Footer2Props) => {
             <p>Copyright © 2026 Les Foulées Avrillaises</p>
             <span className="hidden md:inline text-white">|</span>
             <p>
-              Site par <a href="#" className="underline font-bold">Victor Loré</a>
+              Site par <a href={navItemsFooter2[1].href} className="underline font-bold">{navItemsFooter2[1].title}</a>
             </p>
           </div>
         </div>

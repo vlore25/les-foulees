@@ -1,7 +1,6 @@
 'use server'
 
 import { createSession, deleteSession } from '@/src/lib/session'
-import { registerFormSchema, loginSchema, emailSchema, newPasswordSchema } from '@/src/lib/definitions' // Assurez-vous que votre schema est bien exporté d'ici
 import { prisma } from '@/src/lib/prisma'
 import * as bcrypt from 'bcrypt'
 import { redirect } from 'next/navigation'
@@ -11,6 +10,7 @@ import { Resend } from 'resend'
 import { render } from '@react-email/render'
 import { RecoverPasswordTemplate } from '@/components/email-templates/RecoverPasswordTemplate'
 import { saveUploadedFile } from '@/src/lib/file-storage'
+import { registerFormSchema, loginSchema, emailSchema, newPasswordSchema  } from '../../lib/definitions';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const secret = process.env.JWT_SECRET;
@@ -219,6 +219,12 @@ export async function loginUser(state: LoginFormState, formData: FormData): Prom
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return {
       message: 'Courriel ou mot de passe incorrect.'
+    }
+  }
+
+  if (user.status === 'INACTIVE') {
+    return {
+      message: 'Votre compte est désactivé. Veuillez contacter l\'administration.'
     }
   }
 

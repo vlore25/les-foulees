@@ -32,9 +32,9 @@ export function EventRowActions({ eventId }: { eventId: string }) {
     return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
+                        <Button variant="ghost" className="h-8 w-8 p-0 bg-white/90 hover:bg-white border border-slate-200/50 shadow-sm rounded-full transition-all">
                             <span className="sr-only">Ouvrir menu</span>
-                            <MoreVertical className="h-4 w-4 text-black" />
+                            <MoreVertical className="h-4 w-4 text-slate-700" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">

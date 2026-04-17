@@ -54,7 +54,7 @@ export default function HomeHero() {
                                 size="lg" 
                                 className="h-16 px-10 text-xl font-bold uppercase italic  hover:scale-105 shadow-xl"
                             >
-                                <Link href="/inscription">Devenir membre</Link>
+                                <Link href="/contact">Devenir membre</Link>
                             </Button>
                         </article>
 

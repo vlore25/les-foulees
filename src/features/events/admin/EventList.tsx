@@ -1,12 +1,13 @@
-
 import { getAllevents } from "../dal";
-import EventsTableDesktop from "./EventsTableDesktop";
+import AdminEventCardList from "./AdminEventCardList";
 
 export default async function EventList() {
 
     const events = await getAllevents();
 
     return (
-        <EventsTableDesktop events={events} />
+        <div className="w-full">
+            <AdminEventCardList events={events} />
+        </div>
     );
 }

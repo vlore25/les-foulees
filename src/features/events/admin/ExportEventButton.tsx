@@ -63,7 +63,7 @@ export default function ExportEventButton({ eventId, participantCount, distance 
             onClick={handleExport}
             disabled={isLoading}
             title={distance ? `Exporter les inscrits (${distance})` : "Exporter tous les inscrits"}
-            className="h-8 w-8"
+            className="h-10 w-10"
         >
             <Download className="w-4 h-4 text-primary" />
         </Button>

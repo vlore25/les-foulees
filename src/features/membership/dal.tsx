@@ -48,7 +48,18 @@ export default async function getAdhesions(
                     city: true
                 }
             },
-            payment: true
+            payment: true,
+            partner: {
+                include: {
+                    user: {
+                        select: {
+                            name: true,
+                            lastname: true
+                        }
+                    },
+                    payment: true
+                }
+            }
         },
         orderBy: {
             createdAt: 'desc'
@@ -103,6 +114,20 @@ export async function getUserMembershipForActiveSeason(userId: string) {
                 userId: session.userId,
                 season: { isActive: true } 
             },
+            include: {
+                payment: true,
+                partner: {
+                    include: {
+                        user: {
+                            select: {
+                                name: true,
+                                lastname: true
+                            }
+                        },
+                        payment: true
+                    }
+                }
+            }
         })
 
         return memberShip

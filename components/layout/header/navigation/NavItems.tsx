@@ -35,15 +35,15 @@ type NavItemFooter = {
 export const navItemsFooter: NavItemFooter[] =[
     {
         title: "Plan du site",
-        href: "#"
+        href: "/plan-du-site"
     },
     {
         title: "Mentions légales",
-        href: "#"
+        href: "/mentions-legales"
     },
     {
         title: "Politique de confidentialité",
-        href: "#"
+        href: "/politique-de-confidentialite"
     },
 ]
 
@@ -54,11 +54,11 @@ type NavItemFooter2 = {
 
 export const navItemsFooter2: NavItemFooter[] =[
     {
-        title: "Copyright © 2027 Les Foulées Avrillaises",
-        href: "#"
+        title: "Copyright © 2026 Les Foulées Avrillaises",
+        href: "/"
     },
     {
-        title: "Réalisation du site par Victor Loré.",
-        href: "victorlore.fr"
+        title: "Victor Loré.",
+        href: "https://victorlore.fr"
     },
 ]

@@ -190,6 +190,10 @@ model Membership {
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
   payment          Payment?         @relation(fields: [paymentId], references: [id])
+  
+  partnerId        String?
+  partner          Membership?      @relation("CoupleMembership", fields: [partnerId], references: [id])
+  partnerOf        Membership[]     @relation("CoupleMembership")
 
   @@unique([userId, seasonId])
 }

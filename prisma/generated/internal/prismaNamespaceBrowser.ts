@@ -208,7 +208,8 @@ export const MembershipScalarFieldEnum = {
   type: 'type',
   paymentId: 'paymentId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  partnerId: 'partnerId'
 } as const
 
 export type MembershipScalarFieldEnum = (typeof MembershipScalarFieldEnum)[keyof typeof MembershipScalarFieldEnum]

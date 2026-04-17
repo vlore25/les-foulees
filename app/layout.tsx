@@ -7,6 +7,7 @@ import UserProvider from "@/components/providers/UserProvider";
 import { getCurrentUser } from "@/src/features/users/dal";
 import { Toaster } from "@/components/ui/sonner"
 import { GoogleTagManager } from '@next/third-parties/google'
+import CookieBanner from "@/components/common/CookieBanner";
 
 const vendSans = Vend_Sans({
   variable: "--font-vend-sans",
@@ -46,6 +47,7 @@ export default async function RootLayout({
       >
         <UserProvider user={user}>
           <Toaster />
+          <CookieBanner />
           {children}
         </UserProvider>
       </body>

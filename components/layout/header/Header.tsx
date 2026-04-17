@@ -14,7 +14,7 @@ const Header = () => {
                     />
                 </div>
                 <DesktopMenu />
-                <MobileMenu />
+                <MobileMenu portalButton={<PortalButton />} />
                 <div className="hidden lg:flex">
                     <PortalButton />
                 </div>

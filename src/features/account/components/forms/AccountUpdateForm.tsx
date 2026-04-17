@@ -51,6 +51,11 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert("L'image est trop volumineuse (maximum 5 Mo).");
+                e.target.value = "";
+                return;
+            }
             const url = URL.createObjectURL(file);
             setPreviewUrl(url);
             setIsDirty(true);
@@ -73,7 +78,7 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
 
 
     return (
-        <form action={action} onChange={handleFormChange} className="space-y-8 max-w-4xl pb-10" noValidate encType="multipart/form-data">
+        <form action={action} onChange={handleFormChange} className="space-y-8 max-w-4xl pb-10" noValidate>
 
 
             <div className="flex flex-col md:flex-row gap-6  md:items-start mb-8">

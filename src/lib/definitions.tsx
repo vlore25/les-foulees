@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // ============= CONFIGURATION GLOBALE =====================
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB (Ajusté pour correspondre à vos messages d'erreur)
 const MAX_DOC_SIZE = 10 * 1024 * 1024; // 10MB pour les documents légaux
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 const ACCEPTED_DOC_TYPES = [...ACCEPTED_IMAGE_TYPES, "application/pdf"];
@@ -40,7 +40,7 @@ export const registerFormSchema = z.object({
   genre: z.enum(["MALE", "FEMALE", "OTHER"], { message: "Veuillez sélectionner votre genre." }),
   phone: z.string().regex(phoneRegex, { message: "Numéro de téléphone invalide." }).trim(),
   profileImage: z.instanceof(File).optional()
-    .refine((file) => !file || file.size === 0 || file.size <= MAX_FILE_SIZE, `Taille max 5MB.`)
+    .refine((file) => !file || file.size === 0 || file.size <= MAX_FILE_SIZE, `Taille max 4MB.`)
     .refine((file) => !file || file.size === 0 || ACCEPTED_IMAGE_TYPES.includes(file.type), "Seuls .jpg, .png, .webp sont acceptés."),
   password: passwordSchema,
   confirmPassword: z.string().min(1, { message: "La confirmation du mot de passe est requise." }),
@@ -93,7 +93,7 @@ export const eventBase = z.object({
 export const eventSchema = eventBase.extend({
   picture: z.instanceof(File, { message: "L'image de couverture est requise." })
     .refine((file) => file.size > 0, "L'image est requise et ne peut pas être vide.")
-    .refine((file) => file.size <= MAX_FILE_SIZE, "La taille de l'image ne doit pas dépasser 5MB.")
+    .refine((file) => file.size <= MAX_FILE_SIZE, "La taille de l'image ne doit pas dépasser 4MB.")
     .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), "Format invalide. Seuls .jpg, .png, et .webp sont acceptés."),
 }).refine((data) => {
   // CORRECTION : On vérifie si dateEnd existe avant de comparer
@@ -107,7 +107,7 @@ export const eventSchema = eventBase.extend({
 // UPDATE : L'image est optionnelle, et on vérifie que dateEnd > dateStart
 export const eventUpdateSchema = eventBase.extend({
   picture: z.instanceof(File).optional()
-    .refine((file) => !file || file.size === 0 || file.size <= MAX_FILE_SIZE, `Taille max 5MB.`)
+    .refine((file) => !file || file.size === 0 || file.size <= MAX_FILE_SIZE, `Taille max 4MB.`)
     .refine((file) => !file || file.size === 0 || ACCEPTED_IMAGE_TYPES.includes(file.type), "Seuls .jpg, .png, .webp sont acceptés."),
 }).refine((data) => {
   // CORRECTION : On vérifie si dateEnd existe avant de comparer
@@ -134,7 +134,7 @@ export const profileFormSchema = z.object({
   genre: z.enum(["MALE", "FEMALE", "OTHER"], { message: "Veuillez sélectionner votre genre." }),
   phone: z.string().regex(phoneRegex, "Numéro invalide").trim(),
   profileImage: z.instanceof(File).optional()
-    .refine((file) => !file || file.size === 0 || file.size <= MAX_FILE_SIZE, `Taille max 5MB.`)
+    .refine((file) => !file || file.size === 0 || file.size <= MAX_FILE_SIZE, `Taille max 4MB.`)
     .refine((file) => !file || file.size === 0 || ACCEPTED_IMAGE_TYPES.includes(file.type), "Seuls .jpg, .png, .webp sont acceptés."),
   birthdate: z.string().trim().min(1, { message: "La date de naissance est requise." })
     .transform((val) => new Date(val))
@@ -149,16 +149,28 @@ export const profileFormSchema = z.object({
   emergencyPhone: z.string().optional().or(z.literal('')).refine(val => !val || phoneRegex.test(val), "Numéro invalide"),
 });
 
-export const MembershipTypeEnum = z.enum(["INDIVIDUAL", "YOUNG", "LICENSE_RUNNING"]);
+export const MembershipTypeEnum = z.enum(["INDIVIDUAL", "COUPLE", "YOUNG", "LICENSE_RUNNING"]);
 export const PaymentMethodEnum = z.enum(["CHECK", "TRANSFER", "CASH", "ONLINE"]);
 
 export const membershipSchema = z.object({
   type: MembershipTypeEnum,
   paymentMethod: PaymentMethodEnum,
-  ffaLicenseNumber: z.string().optional(),
+  ffaLicenseNumber: z.string().optional().or(z.literal(''))
+    .refine(val => !val || /^\d{7,8}$/.test(val), "Le numéro de licence doit comporter 7 ou 8 chiffres."),
   previousClub: z.string().optional(),
+  partnerUserId: z.string().optional(),
   showPhoneDirectory: z.boolean().default(false),
   showEmailDirectory: z.boolean().default(false),
+  birthdate: z.coerce.date().optional(), // Pour validation croisée avec "YOUNG"
+}).refine((data) => {
+  if (data.type === "YOUNG" && data.birthdate) {
+    const age = new Date().getFullYear() - data.birthdate.getFullYear();
+    return age < 18;
+  }
+  return true;
+}, {
+  message: "L'adhésion Jeune est réservée aux mineurs.",
+  path: ["type"],
 });
 
 export type MembershipFormValues = z.infer<typeof membershipSchema>;

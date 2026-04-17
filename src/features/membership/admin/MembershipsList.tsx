@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import getAdhesions from "../dal";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import MembershipTable from "./MembershipTable";
+import MembershipSimpleList from "./MembershipSimpleList";
 import { prisma } from "@/src/lib/prisma";
 import SeasonFilter from "./SeasonFilter";
 import ExportButton from "./ExportButton";
@@ -65,12 +65,12 @@ export default async function MembershipsList({
     ];
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-6">
             
             {/* Barre d'outils */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-lg border shadow-sm">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 border border-slate-200 rounded-md shadow-sm">
                 <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-slate-700 whitespace-nowrap">
+                    <span className="text-xs font-black uppercase tracking-widest text-slate-400 whitespace-nowrap">
                         Saison :
                     </span>
                     <SeasonFilter 
@@ -85,15 +85,21 @@ export default async function MembershipsList({
                 />
             </div>
 
-            <h3 className="text-lg font-semibold text-slate-800">
-                Liste pour la saison : <span className="text-primary">{currentSeason?.name}</span>
-            </h3>
-            <Tabs defaultValue="TO_HANDLE" className="gap-4" key={targetSeasonId}>
-                <TabsList className="h-auto p-2 bg-muted/50 flex flex-wrap gap-2 justify-start w-full sm:w-auto">
+            <div className="space-y-1">
+                <h3 className="text-lg font-black uppercase tracking-tight text-slate-800">
+                    Gestion des adhésions
+                </h3>
+                <p className="text-xs font-bold text-primary uppercase tracking-widest italic">
+                    Saison {currentSeason?.name}
+                </p>
+            </div>
+
+            <Tabs defaultValue="TO_HANDLE" className="gap-6" key={targetSeasonId}>
+                <TabsList className="h-auto p-1 bg-slate-100/50 rounded-md border border-slate-200 flex flex-wrap gap-1 justify-start w-full sm:w-auto">
                     {tabConfig.map((tab) => (
-                        <TabsTrigger key={tab.key} value={tab.key} className="flex gap-2">
+                        <TabsTrigger key={tab.key} value={tab.key} className="flex gap-2 rounded-sm px-3 py-2 font-bold uppercase text-xs tracking-widest data-[state=active]:bg-white data-[state=active]:shadow-sm">
                             {tab.label}
-                            <Badge variant={tab.variant as any} className="ml-1 px-1.5 py-0.5 h-5 min-w-[1.25rem]">
+                            <Badge variant={tab.variant as any} className="ml-1 px-1.5 py-0 h-5 min-w-[1.5rem] text-xs border-none rounded-sm flex items-center justify-center font-black">
                                 {tab.count}
                             </Badge>
                         </TabsTrigger>
@@ -101,13 +107,13 @@ export default async function MembershipsList({
                 </TabsList>
 
                 {tabConfig.map((tab) => (
-                    <TabsContent key={tab.key} value={tab.key} className="mt-4">
+                    <TabsContent key={tab.key} value={tab.key} className="mt-4 animate-in fade-in duration-300">
                         {tab.data.length === 0 ? (
-                            <div className="text-center py-10 text-muted-foreground border rounded-md border-dashed bg-slate-50">
-                                Aucun dossier dans "{tab.label}" pour la saison {currentSeason?.name}.
+                            <div className="text-center py-12 text-slate-400 border border-dashed rounded-md bg-slate-50 font-bold italic uppercase tracking-widest text-xs">
+                                Aucun dossier dans "{tab.label}"
                             </div>
                         ) : (
-                            <MembershipTable memberships={tab.data} />
+                            <MembershipSimpleList memberships={tab.data} />
                         )}
                     </TabsContent>
                 ))}

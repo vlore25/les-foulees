@@ -1,8 +1,8 @@
 import HeaderUser from "@/components/layout/header/HeaderUser";
-import { ItemsNavAdmin } from "@/components/layout/sidebar/ItemsNav";
 import { SidebarApp } from "@/components/layout/sidebar/Sidebar";
 import { SidebarProvider } from "@/components/ui/side-bat";
 import { getCurrentUser } from "@/src/features/users/dal";
+import { verifySession } from "@/src/lib/session";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -16,6 +16,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  await verifySession();
   const user = await getCurrentUser();
 
   if (user?.role !== 'ADMIN') {
@@ -23,7 +24,7 @@ export default async function AdminLayout({
   }
   return (
     <SidebarProvider>
-      <SidebarApp navItems={ItemsNavAdmin} />
+      <SidebarApp type="ADMIN" />
       <div className="min-h-screen w-full bg-background font-sans antialiased">
         <HeaderUser />
         <main className="p-1 md:p-2 lg:p-4 max-w-[1600px]">

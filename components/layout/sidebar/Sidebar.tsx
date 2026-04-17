@@ -1,15 +1,14 @@
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/side-bat";
+import { Sidebar, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/side-bat";
 
-import { NavSection } from "./ItemsNav";
-import Link from "next/link";
 import { getCurrentUser } from "@/src/features/users/dal";
 import UserCard from "@/src/features/account/components/UserCard";
 import FouleesLogo from "@/components/common/logo/FouleesLogo";
+import { SidebarNav } from "./SidebarNav";
 
 interface SidebarAppProps {
-  navItems: NavSection[];
+  type: "ADMIN" | "USER";
 }
-export async function SidebarApp({ navItems }: SidebarAppProps) {
+export async function SidebarApp({ type }: SidebarAppProps) {
   const user = await getCurrentUser();
 
   const isAdmin = user?.role === 'ADMIN' ? true : false;
@@ -22,44 +21,9 @@ export async function SidebarApp({ navItems }: SidebarAppProps) {
         />
         
       </SidebarHeader>
-      <SidebarContent className="pt-4">
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        {navItems.map((section) => {
-          if (section.adminOnly && !isAdmin) {
-            return null;
-          }
-          return (
-            <SidebarGroup key={section.label}>
-              <SidebarGroupLabel>{section.label}</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {section.items.map((item) => {
-                    return (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild>
-                          <Link href={item.url}>
-                            <item.icon />
-                            <span>{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    )
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          )
-        })}
-      </SidebarContent>
+      
+      <SidebarNav type={type} isAdmin={isAdmin} />
+
       <SidebarFooter className="mb-3">
         <SidebarMenu>
           <SidebarMenuItem>

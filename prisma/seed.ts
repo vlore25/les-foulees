@@ -13,13 +13,17 @@ async function main() {
   console.log('Début du seeding..');
 
   console.log('Nettoyage des anciennes données..');
-  await prisma.payment.deleteMany();
-  await prisma.membership.deleteMany();
-  await prisma.season.deleteMany();
+  // L'ordre est important à cause des clés étrangères
   await prisma.eventRegistration.deleteMany();
-  await prisma.event.deleteMany();
-  await prisma.legalDocs.deleteMany();
+  await prisma.membership.deleteMany();
+  await prisma.payment.deleteMany();
+  await prisma.session.deleteMany();
+  await prisma.passwordResetToken.deleteMany();
+  await prisma.invitation.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.event.deleteMany();
+  await prisma.season.deleteMany();
+  await prisma.legalDocs.deleteMany();
 
   console.log('Création des saisons..');
   const seasonPast = await prisma.season.create({
@@ -122,7 +126,7 @@ async function main() {
         amount,
         method,
         status: status === MembershipStatus.VALIDATED ? PaymentStatus.PAID : PaymentStatus.PENDING,
-        membershipId: 'tmp', // Sera mis à jour
+        membershipId: faker.string.uuid(), // Temporaire et unique
       }
     });
 
@@ -147,25 +151,53 @@ async function main() {
 
   // --- PARTIE 3 : ÉVÉNEMENTS ---
   console.log('📅 Création des événements...');
-  const eventTypes = [EventType.TRAIL, EventType.COURSE_ROUTE, EventType.ENTRAINEMENT, EventType.VIE_DU_CLUB, EventType.SORTIE];
-  const createdEvents = [];
+  const realisticEvents = [
+    {
+      title: "Apocalypse Trail - La Course Nocturne",
+      description: "Une expérience immersive unique au cœur de la nuit. Affrontez vos peurs sur un parcours technique semé d'embûches et d'animations terrifiantes. Lampes frontales obligatoires pour cette aventure hors du commun où le but n'est pas seulement de courir, mais de survivre jusqu'à l'arrivée !",
+      location: "Forêt d'Avrillé, Maine-et-Loire",
+      type: EventType.TRAIL,
+      dateStart: new Date("2026-10-31T20:00:00"),
+      dateEnd: new Date("2026-10-31T23:30:00"),
+      imgUrl: "/uploads/apocalipsis.png",
+      distances: ["13km (Le Survivant)", "6.66km (L'Initié)"],
+    },
+    {
+      title: "Trail du Cap Sizun - Pointe du Raz",
+      description: "Venez défier les éléments sur l'un des plus beaux parcours côtiers de France. Entre falaises escarpées, sentiers de douaniers (GR34) et landes sauvages, ce trail vous offre des panoramas spectaculaires sur l'Océan Atlantique et la majestueuse Pointe du Raz. Une immersion totale en terre bretonne.",
+      location: "Audierne / Cap Sizun, Bretagne",
+      type: EventType.TRAIL,
+      dateStart: new Date("2026-04-12T08:30:00"),
+      dateEnd: new Date("2026-04-12T16:00:00"),
+      imgUrl: "/uploads/capsizun.jpg",
+      distances: ["15km", "30km", "50km"],
+    },
+    {
+      title: "Trail de la Baie - Entre Terre et Mer",
+      description: "Le Trail de la Baie revient pour une édition printanière exceptionnelle. Le parcours alterne entre passages techniques en sous-bois, chemins creux et portions rapides sur le sable à marée basse. Un tracé exigeant mais gratifiant, idéal pour les amoureux de nature sauvage et d'air iodé.",
+      location: "Baie de Saint-Brieuc / Hillion",
+      type: EventType.TRAIL,
+      dateStart: new Date("2026-06-14T09:00:00"),
+      dateEnd: new Date("2026-06-14T14:00:00"),
+      imgUrl: "/uploads/labaie.webp",
+      distances: ["10km", "22km", "34km"],
+    },
+    {
+      title: "Course de la Solidarité - Téléthon Avrillé",
+      description: "Mobilisons-nous ensemble pour la recherche ! Comme chaque année, le club organise sa course caritative au profit de l'AFM-Téléthon. Un événement convivial et familial où le chronomètre passe au second plan derrière la solidarité. Ouvert aux marcheurs et aux coureurs de tous niveaux.",
+      location: "Esplanade de l'Hôtel de Ville, Avrillé",
+      type: EventType.COURSE_ROUTE,
+      dateStart: new Date("2025-12-06T10:00:00"),
+      dateEnd: new Date("2025-12-06T13:00:00"),
+      imgUrl: "/uploads/telethon.jpg",
+      distances: ["5km (Course)", "10km (Course)", "5km (Marche)"],
+    },
+  ];
 
-  for (let i = 0; i < 10; i++) {
-    const type = faker.helpers.arrayElement(eventTypes);
-    const isPast = faker.datatype.boolean();
-    const dateStart = isPast ? faker.date.past() : faker.date.future();
-    
+  const createdEvents = [];
+  for (const eventData of realisticEvents) {
     const event = await prisma.event.create({
-      data: {
-        title: faker.company.catchPhrase(),
-        description: faker.lorem.paragraph(),
-        location: `${faker.location.city()} (${faker.location.zipCode('##')})`,
-        type: type,
-        dateStart: dateStart,
-        dateEnd: new Date(dateStart.getTime() + faker.number.int({ min: 2, max: 6 }) * 3600000),
-        imgUrl: `https://loremflickr.com/800/600/running,marathon?lock=${i}`,
-        distances: faker.helpers.arrayElements(["5km", "10km", "Semi-Marathon", "Marathon", "Trail 15km", "Trail 30km"], { min: 1, max: 3 }),
-      }
+      data: eventData
     });
     createdEvents.push(event);
   }
@@ -180,7 +212,9 @@ async function main() {
         data: {
           eventId: event.id,
           userId: participant.id,
-          distance: faker.helpers.arrayElement(event.distances || ["Libre"]),
+          distance: event.distances && event.distances.length > 0 
+            ? faker.helpers.arrayElement(event.distances) 
+            : "Libre",
         }
       }).catch(() => {}); // Ignorer doublons potentiels
     }

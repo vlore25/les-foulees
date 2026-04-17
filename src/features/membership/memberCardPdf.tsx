@@ -34,16 +34,37 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
 
         if (profileImageUrl) {
             try {
-                const imageBytes = await fetch(profileImageUrl).then(res => res.arrayBuffer());
-                const roundedImageBytes = await cropToCircle(imageBytes);
-                const image = await pdfDoc.embedPng(roundedImageBytes);
+                // S'assurer que l'URL est absolue si c'est un chemin relatif
+                const absoluteUrl = profileImageUrl.startsWith('http') 
+                    ? profileImageUrl 
+                    : `${window.location.origin}${profileImageUrl}`;
 
-                const dims = image.scale(0.5);
+                const imageBytes = await fetch(absoluteUrl).then(res => res.arrayBuffer());
+                
+                let processedImageBytes = imageBytes;
+                try {
+                    processedImageBytes = await cropToCircle(imageBytes);
+                } catch (cropError) {
+                    console.warn("Could not crop image to circle, using original", cropError);
+                }
+
+                // Détecter le format de l'image (PNG ou JPEG/Autre)
+                // pdf-lib supporte embedPng et embedJpg
+                let image;
+                try {
+                    image = await pdfDoc.embedPng(processedImageBytes);
+                } catch (e) {
+                    image = await pdfDoc.embedJpg(processedImageBytes);
+                }
+
+                const width = 65;
+                const height = 65;
+                
                 firstPage.drawImage(image, {
                     x: firstPage.getWidth() - 85.5,
                     y: 228,
-                    width: 65,
-                    height: 65,
+                    width: width,
+                    height: height,
                 });
             } catch (imgError) {
                 console.warn("Could not embed profile image in PDF", imgError);
@@ -117,6 +138,9 @@ async function cropToCircle(imageBuffer: ArrayBuffer): Promise<ArrayBuffer> {
         const blob = new Blob([imageBuffer]);
         const url = URL.createObjectURL(blob);
         const img = new Image();
+        
+        // Nécessaire pour les images provenant d'un autre domaine (CORS)
+        img.crossOrigin = "anonymous";
 
         img.onload = () => {
             const canvas = document.createElement('canvas');

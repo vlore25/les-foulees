@@ -62,10 +62,21 @@ export async function createSession(userId: string){
 }
 
 export const getSession = cache(async () => {
-  const cookie = (await cookies()).get('lesFoulees')?.value
-  const session = await decrypt(cookie)
+  const cookieValue = (await cookies()).get(cookie.name)?.value
+  const session = await decrypt(cookieValue)
 
   if (!session?.userId) {
+    return null
+  }
+
+  // Vérifier le statut de l'utilisateur en base
+  const { prisma } = await import('@/src/lib/prisma')
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId as string },
+    select: { status: true }
+  })
+
+  if (!user || user.status === 'INACTIVE') {
     return null
   }
 
@@ -73,21 +84,47 @@ export const getSession = cache(async () => {
 })
 
 export const verifySession = cache(async () => {
-  const cookie = (await cookies()).get('lesFoulees')?.value
-  const session = await decrypt(cookie)
+  const cookieValue = (await cookies()).get(cookie.name)?.value
+  const session = await decrypt(cookieValue)
  
   if (!session?.userId) {
     redirect('/login')
   }
+
+  // Vérifier le statut de l'utilisateur en base
+  const { prisma } = await import('@/src/lib/prisma')
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId as string },
+    select: { status: true }
+  })
+
+  if (!user || user.status === 'INACTIVE') {
+    redirect('/login')
+  }
+
   return { isAuth: true, userId: session.userId as string }
 })
 
 export const verifySessionExternal = cache(async () => {
-  const cookie = (await cookies()).get('lesFoulees')?.value
-  const session = await decrypt(cookie)
+  const cookieValue = (await cookies()).get(cookie.name)?.value
+  const session = await decrypt(cookieValue)
  
+  if (!session?.userId) {
+    return { isAuth: false, userId: "" }
+  }
 
-  return { isAuth: true, userId: session?.userId as string }
+  // Vérifier le statut de l'utilisateur en base
+  const { prisma } = await import('@/src/lib/prisma')
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId as string },
+    select: { status: true }
+  })
+
+  if (!user || user.status === 'INACTIVE') {
+    return { isAuth: false, userId: "" }
+  }
+
+  return { isAuth: true, userId: session.userId as string }
 })
 
 

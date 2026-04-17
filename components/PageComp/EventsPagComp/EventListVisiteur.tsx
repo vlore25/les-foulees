@@ -102,12 +102,12 @@ export default function EventListVisitor({ events }: { events: EventListItem[] }
                             </p>
 
                             <div className="pt-4 mt-auto border-t border-primary/5 flex justify-end">
-                                <div className="inline-flex items-center gap-2 text-primary font-black uppercase tracking-tighter text-sm group/link">
+                                <Link href={`/evenements/${event.id}`} className="inline-flex items-center gap-2 text-primary font-black uppercase tracking-tighter text-sm group/link">
                                     <span>En savoir plus</span>
                                     <div className="p-1.5 rounded-full bg-primary/5 group-hover/link:bg-primary group-hover/link:text-white transition-all">
                                         <ChevronRight size={18} />
                                     </div>
-                                </div>
+                                </Link>
                             </div>
                         </div>
                     </Card>
