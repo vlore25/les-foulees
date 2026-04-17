@@ -71,8 +71,28 @@ export async function updateProfile(state: ProfileFormState, formData: FormData)
         };
         
     } catch (error) {
-        console.error(error);
-        return { message: "Erreur lors de la mise à jour." };
+    console.error(error);
+    return { message: "Erreur lors de la mise à jour." };
     }
-    
-}
+
+    }
+
+    /**
+    * Récupère une image depuis une URL (même externe) et la renvoie en Base64
+    * Utilisé pour contourner les problèmes de CORS lors de la génération de PDF
+    */
+    export async function fetchImageAsBase64(url: string): Promise<string | null> {
+    try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    const buffer = await response.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString('base64');
+    const contentType = response.headers.get('content-type') || 'image/jpeg';
+
+    return `data:${contentType};base64,${base64}`;
+    } catch (error) {
+    console.error("Erreur serveur lors de la récupération de l'image:", error);
+    return null;
+    }
+    }

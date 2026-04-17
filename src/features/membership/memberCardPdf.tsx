@@ -1,6 +1,7 @@
 import { Membership, Season, User } from '@/prisma/generated/client';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { getAssetUrl } from '@/src/lib/utils';
+import { fetchImageAsBase64 } from '@/src/features/account/user.action';
 
 
 interface MemberCardPdfProps {
@@ -35,60 +36,77 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
         if (profileImageUrl) {
             try {
                 // Utiliser getAssetUrl pour avoir une URL de base
-                const imageUrl = getAssetUrl(profileImageUrl);
+                let imageUrl = getAssetUrl(profileImageUrl);
                 
-                // Utiliser le proxy de Next.js (_next/image) pour éviter CORS et Mixed Content
-                // Cela garantit aussi que l'image est servie sur le même origin, 
-                // évitant ainsi de "souiller" le canvas lors du crop.
-                const fetchUrl = imageUrl.startsWith('data:') || imageUrl.startsWith('blob:')
-                    ? imageUrl
-                    : `/_next/image?url=${encodeURIComponent(imageUrl)}&w=256&q=75`;
+                // Si l'URL est relative, on la rend absolue pour la Server Action
+                if (!imageUrl.startsWith('http') && !imageUrl.startsWith('data:')) {
+                    imageUrl = `${window.location.origin}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+                }
 
-                const imageBytes = await fetch(fetchUrl).then(res => {
-                    if (!res.ok) throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`);
-                    return res.arrayBuffer();
-                });
-                
-                let processedImageBytes = imageBytes;
+                let imageBytes: ArrayBuffer | null = null;
                 let usedCircle = false;
 
-                try {
-                    // Tenter de cropper, mais si ça échoue (ex: CORS canvas), on garde l'original
-                    processedImageBytes = await cropToCircle(imageBytes);
-                    usedCircle = true;
-                } catch (cropError) {
-                    console.warn("Could not crop image to circle, using original", cropError);
-                    processedImageBytes = imageBytes;
-                }
-
-                // Détecter le format de l'image (PNG ou JPEG/Autre)
-                let image;
-                try {
-                    // On essaie PNG en premier si on a croppé (car cropToCircle renvoie du PNG)
-                    if (usedCircle) {
-                        image = await pdfDoc.embedPng(processedImageBytes);
-                    } else {
-                        // Sinon on tente JPG puis PNG
-                        try {
-                            image = await pdfDoc.embedJpg(processedImageBytes);
-                        } catch {
-                            image = await pdfDoc.embedPng(processedImageBytes);
-                        }
+                if (imageUrl.startsWith('data:')) {
+                    // C'est déjà du base64
+                    const base64Data = imageUrl.split(',')[1];
+                    const binaryString = window.atob(base64Data);
+                    const bytes = new Uint8Array(binaryString.length);
+                    for (let i = 0; i < binaryString.length; i++) {
+                        bytes[i] = binaryString.charCodeAt(i);
                     }
-                } catch (embedError) {
-                    console.error("Could not embed image in PDF", embedError);
+                    imageBytes = bytes.buffer;
+                } else {
+                    // Utiliser la Server Action pour bypasser le CORS du navigateur
+                    const base64 = await fetchImageAsBase64(imageUrl);
+                    if (base64) {
+                        const base64Data = base64.split(',')[1];
+                        const binaryString = window.atob(base64Data);
+                        const bytes = new Uint8Array(binaryString.length);
+                        for (let i = 0; i < binaryString.length; i++) {
+                            bytes[i] = binaryString.charCodeAt(i);
+                        }
+                        imageBytes = bytes.buffer;
+                    }
                 }
 
-                if (image) {
-                    const width = 65;
-                    const height = 65;
-                    
-                    firstPage.drawImage(image, {
-                        x: firstPage.getWidth() - 85.5,
-                        y: 228,
-                        width: width,
-                        height: height,
-                    });
+                if (imageBytes) {
+                    let processedImageBytes = imageBytes;
+                    try {
+                        // Tenter de cropper
+                        processedImageBytes = await cropToCircle(imageBytes);
+                        usedCircle = true;
+                    } catch (cropError) {
+                        console.warn("Could not crop image to circle, using original", cropError);
+                        processedImageBytes = imageBytes;
+                    }
+
+                    // Détecter le format de l'image
+                    let image;
+                    try {
+                        if (usedCircle) {
+                            image = await pdfDoc.embedPng(processedImageBytes);
+                        } else {
+                            try {
+                                image = await pdfDoc.embedJpg(processedImageBytes);
+                            } catch {
+                                image = await pdfDoc.embedPng(processedImageBytes);
+                            }
+                        }
+                    } catch (embedError) {
+                        console.error("Could not embed image in PDF", embedError);
+                    }
+
+                    if (image) {
+                        const width = 65;
+                        const height = 65;
+                        
+                        firstPage.drawImage(image, {
+                            x: firstPage.getWidth() - 85.5,
+                            y: 228,
+                            width: width,
+                            height: height,
+                        });
+                    }
                 }
             } catch (imgError) {
                 console.warn("Error processing profile image for PDF", imgError);
