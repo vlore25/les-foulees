@@ -108,6 +108,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                 <Label htmlFor="t-run" className="flex-1 cursor-pointer font-bold uppercase text-xs">Licence Running FFA {season.priceFfa} €</Label>
                             </div>
                         </RadioGroup>
+                        {state?.errors?.type && <p className="text-xs text-red-500 font-bold italic">{state.errors.type[0]}</p>}
 
                         {membershipType === "COUPLE" && (
                             <div className="animate-in fade-in slide-in-from-top-2 duration-300 pt-4 space-y-3 border-t border-dashed mt-4">
@@ -122,7 +123,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                     <>
                                         <SearchUser />
                                         {state?.errors?.partnerUserId && (
-                                            <p className="text-xs text-red-500 font-medium">{state.errors.partnerUserId[0]}</p>
+                                            <p className="text-xs text-red-500 font-bold italic">{state.errors.partnerUserId[0]}</p>
                                         )}
                                     </>
                                 )}
@@ -186,6 +187,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                         required={hasLicense}
                                         className="rounded-xl"
                                     />
+                                    {state?.errors?.ffaLicenseNumber && <p className="text-xs text-red-500 font-bold italic">{state.errors.ffaLicenseNumber[0]}</p>}
                                 </div>
 
                                 {licenseSource === "MUTATION" && (
@@ -199,6 +201,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                             required={licenseSource === "MUTATION"}
                                             className="rounded-xl"
                                         />
+                                        {state?.errors?.previousClub && <p className="text-xs text-red-500 font-bold italic">{state.errors.previousClub[0]}</p>}
                                     </div>
                                 )}
                             </div>
@@ -230,6 +233,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                         required={!hasLicense && !initialData?.medicalCertificateUrl}
                                         className="cursor-pointer bg-white file:bg-primary file:text-white file:font-bold file:uppercase file:text-[10px] file:px-4 file:py-2 file:rounded-lg file:border-none rounded-xl"
                                     />
+                                    {state?.errors?.medicalCertificate && <p className="text-xs text-red-500 font-bold italic">{state.errors.medicalCertificate[0]}</p>}
                                 </div>
                             </div>
                             )}
@@ -250,6 +254,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                     <SelectItem value="TRANSFER">Virement Bancaire</SelectItem>
                                 </SelectContent>
                             </Select>
+                            {state?.errors?.paymentMethod && <p className="text-xs text-red-500 font-bold italic">{state.errors.paymentMethod[0]}</p>}
                             </div>
                             </div>
                             ) : (

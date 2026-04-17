@@ -15,7 +15,8 @@ export type MembershipState = {
         paymentMethod?: string[];
         ffaLicenseNumber?: string[];
         previousClub?: string[];
-        partnerUserId?: string[]
+        partnerUserId?: string[];
+        medicalCertificate?: string[];
     };
     message?: string;
     success?: boolean;
@@ -54,26 +55,33 @@ export async function createMembershipRequest(prevState: any, formData: FormData
     const medicalFile = formData.get("medicalCertificate") as File | null;
     const hasValidLicense = !!rawFormData.ffaLicenseNumber;
 
+    // 6. Récupération de la Saison Active
+    const season = await getActiveSeasonData();
+    if (!season) {
+        return { message: "Aucune saison active pour l'instant. Inscriptions fermées." }
+    }
+
     if (!hasValidLicense) {
         if (!medicalFile || medicalFile.size === 0) {
             // On vérifie si une adhésion existe déjà avec un certificat (cas de la mise à jour)
-            const season = await getActiveSeasonData();
-            if (season) {
-                const existing = await prisma.membership.findUnique({
-                    where: { userId_seasonId: { userId: session.userId, seasonId: season.id } }
-                });
-                if (!existing?.certificateUrl) {
-                    return { message: "Le certificat médical est obligatoire si vous n'avez pas de licence." };
-                }
-            } else {
-                return { message: "Le certificat médical est obligatoire si vous n'avez pas de licence." };
+            const existing = await prisma.membership.findUnique({
+                where: { userId_seasonId: { userId: session.userId, seasonId: season.id } }
+            });
+            if (!existing?.certificateUrl) {
+                return { 
+                    errors: { medicalCertificate: ["Le certificat médical est obligatoire si vous n'avez pas de licence."] },
+                    message: "Veuillez fournir un certificat médical." 
+                };
             }
         }
         
         if (medicalFile && medicalFile.size > 0) {
             const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
             if (!validTypes.includes(medicalFile.type)) {
-                return { message: "Format de fichier invalide (PDF ou Image uniquement)." };
+                return { 
+                    errors: { medicalCertificate: ["Format de fichier invalide (PDF ou Image uniquement)."] },
+                    message: "Fichier invalide." 
+                };
             }
         }
     }
@@ -105,10 +113,18 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         };
     }
 
-    // 6. Récupération de la Saison Active
-    const season = await getActiveSeasonData();
-    if (!season) {
-        return { message: "Aucune saison active pour l'instant. Inscriptions fermées." }
+    // Vérification spécifique pour le partenaire AVANT de commencer la transaction
+    if (type === "COUPLE" && partnerUserId) {
+        const partnerExisting = await prisma.membership.findUnique({
+            where: { userId_seasonId: { userId: partnerUserId, seasonId: season.id } }
+        });
+
+        if (partnerExisting && partnerExisting.status !== 'REJECTED') {
+            return {
+                errors: { partnerUserId: ["Ce partenaire a déjà un dossier en cours ou validé pour cette saison."] },
+                message: "Partenaire indisponible."
+            };
+        }
     }
 
     let certificateUrl = null;
@@ -215,13 +231,20 @@ export async function createMembershipRequest(prevState: any, formData: FormData
 
             // Si c'est un COUPLE, on crée automatiquement l'adhésion du partenaire en lien
             if (type === "COUPLE" && partnerUserId) {
-                // On vérifie si le partenaire n'a pas déjà une adhésion pour cette saison
+                // On revérifie au cas où (sécurité transactionnelle)
                 const partnerExisting = await tx.membership.findUnique({
                     where: { userId_seasonId: { userId: partnerUserId, seasonId: season.id } }
                 });
 
-                if (partnerExisting) {
+                if (partnerExisting && partnerExisting.status !== 'REJECTED') {
                     throw new Error("Votre partenaire a déjà un dossier en cours pour cette saison.");
+                }
+
+                // Si le partenaire avait un dossier REJECTED, on le supprime ou on le met à jour ? 
+                // Pour l'instant on part du principe qu'il n'en a pas ou qu'on en crée un nouveau lié.
+                if (partnerExisting && partnerExisting.status === 'REJECTED') {
+                    // On peut choisir de le mettre à jour ou de le supprimer pour le recréer
+                    await tx.membership.delete({ where: { id: partnerExisting.id } });
                 }
 
                 const partnerMembership = await tx.membership.create({
@@ -276,6 +299,13 @@ export async function createMembershipRequest(prevState: any, formData: FormData
         // Gestion message d'erreur doublon
         if (e.message && e.message.includes("déjà existant")) {
             return { success: false, message: e.message }
+        }
+        if (e.message && e.message.includes("partenaire a déjà un dossier")) {
+            return { 
+                success: false, 
+                message: e.message,
+                errors: { partnerUserId: [e.message] }
+            }
         }
         return { success: false, message: "Une erreur est survenue lors de l'enregistrement." }
     }
