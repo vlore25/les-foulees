@@ -156,7 +156,7 @@ export const membershipSchema = z.object({
   type: MembershipTypeEnum,
   paymentMethod: PaymentMethodEnum,
   ffaLicenseNumber: z.string().optional().or(z.literal(''))
-    .refine(val => !val || /^\d{3,25}$/.test(val), "Le numéro de licence doit comporter 3 ou 25 chiffres."),
+    .refine(val => !val || /^[a-zA-Z0-9]{3,25}$/.test(val), "Le numéro de licence doit comporter entre 3 et 25 caractères (lettres ou chiffres)."),
   previousClub: z.string().optional(),
   partnerUserId: z.string().optional(),
   showPhoneDirectory: z.boolean().default(false),
