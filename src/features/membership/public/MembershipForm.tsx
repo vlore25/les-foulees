@@ -108,6 +108,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                 <Label htmlFor="t-run" className="flex-1 cursor-pointer font-bold uppercase text-xs">Licence Running FFA {season.priceFfa} €</Label>
                             </div>
                         </RadioGroup>
+                        {initialData && <input type="hidden" name="type" value={membershipType} />}
                         {state?.errors?.type && <p className="text-xs text-red-500 font-bold italic">{state.errors.type[0]}</p>}
 
                         {membershipType === "COUPLE" && (
