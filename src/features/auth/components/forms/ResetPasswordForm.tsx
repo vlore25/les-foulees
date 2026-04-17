@@ -40,8 +40,8 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                         <FieldLabel>Mot de passe</FieldLabel>
                         <Input id="password" name="password" type="password" required />
                     </Field>
-                    {state?.error?.password && (
-                        <p className="text-xs text-red-500 pl-1">{state.error.password}</p>
+                    {state?.errors?.password && (
+                        <p className="text-xs text-red-500 pl-1">{state.errors.password[0]}</p>
                     )}
                 </div>
                 <div className="flex-1">
@@ -49,8 +49,8 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                         <FieldLabel>Confirmer</FieldLabel>
                         <Input id="confirmPassword" name="confirmPassword" type="password" required />
                     </Field>
-                    {state?.error?.confirmPassword && (
-                            <p className="text-xs text-red-500 pl-1">{state.error.confirmPassword }</p>
+                    {state?.errors?.confirmPassword && (
+                            <p className="text-xs text-red-500 pl-1">{state.errors.confirmPassword[0]}</p>
                         )}
                 </div>
             </div>

@@ -53,7 +53,7 @@ export default function ForgotPasswordForm() {
                                 <UserCircle className="text-gray-500" />
                             </InputGroupAddon>
                         </InputGroup>
-                        {state?.error?.email && <p className="text-xs text-red-500">{state.error.email}</p>}
+                        {state?.errors?.email && <p className="text-xs text-red-500">{state.errors.email[0]}</p>}
                         <Button type='submit' className="w-full" disabled={pending}>
                             {pending ? "Envoi en cours..." : "Envoyer le lien"}
                         </Button>

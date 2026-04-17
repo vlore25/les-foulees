@@ -1,6 +1,6 @@
 import { Membership, Season, User } from '@/prisma/generated/client';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
-
+import { getAssetUrl } from '@/src/lib/utils';
 
 
 interface MemberCardPdfProps {
@@ -18,7 +18,7 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
 
     const capiType =
         type.charAt(0)
-        + type.slice(1).toLowerCase()
+        + type.slice(1).toLowerCase().replace(/_/g, ' ')
 
     try {
 
@@ -34,43 +34,66 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
 
         if (profileImageUrl) {
             try {
-                // S'assurer que l'URL est absolue si c'est un chemin relatif
-                const absoluteUrl = profileImageUrl.startsWith('http') 
-                    ? profileImageUrl 
-                    : `${window.location.origin}${profileImageUrl}`;
+                // Utiliser getAssetUrl pour avoir une URL correcte (relative ou absolue selon l'env)
+                const imageUrl = getAssetUrl(profileImageUrl);
+                
+                // Si l'URL est relative, on la rend absolue pour fetch (nécessaire dans certains navigateurs)
+                const fetchUrl = imageUrl.startsWith('http') 
+                    ? imageUrl 
+                    : `${window.location.origin}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
 
-                const imageBytes = await fetch(absoluteUrl).then(res => res.arrayBuffer());
+                const imageBytes = await fetch(fetchUrl).then(res => {
+                    if (!res.ok) throw new Error("Failed to fetch image");
+                    return res.arrayBuffer();
+                });
                 
                 let processedImageBytes = imageBytes;
+                let usedCircle = false;
+
                 try {
+                    // Tenter de cropper, mais si ça échoue (ex: CORS canvas), on garde l'original
                     processedImageBytes = await cropToCircle(imageBytes);
+                    usedCircle = true;
                 } catch (cropError) {
                     console.warn("Could not crop image to circle, using original", cropError);
+                    processedImageBytes = imageBytes;
                 }
 
                 // Détecter le format de l'image (PNG ou JPEG/Autre)
-                // pdf-lib supporte embedPng et embedJpg
                 let image;
                 try {
-                    image = await pdfDoc.embedPng(processedImageBytes);
-                } catch (e) {
-                    image = await pdfDoc.embedJpg(processedImageBytes);
+                    // On essaie PNG en premier si on a croppé (car cropToCircle renvoie du PNG)
+                    if (usedCircle) {
+                        image = await pdfDoc.embedPng(processedImageBytes);
+                    } else {
+                        // Sinon on tente JPG puis PNG
+                        try {
+                            image = await pdfDoc.embedJpg(processedImageBytes);
+                        } catch {
+                            image = await pdfDoc.embedPng(processedImageBytes);
+                        }
+                    }
+                } catch (embedError) {
+                    console.error("Could not embed image in PDF", embedError);
                 }
 
-                const width = 65;
-                const height = 65;
-                
-                firstPage.drawImage(image, {
-                    x: firstPage.getWidth() - 85.5,
-                    y: 228,
-                    width: width,
-                    height: height,
-                });
+                if (image) {
+                    const width = 65;
+                    const height = 65;
+                    
+                    firstPage.drawImage(image, {
+                        x: firstPage.getWidth() - 85.5,
+                        y: 228,
+                        width: width,
+                        height: height,
+                    });
+                }
             } catch (imgError) {
-                console.warn("Could not embed profile image in PDF", imgError);
+                console.warn("Error processing profile image for PDF", imgError);
             }
         }
 
+        // Identité
         firstPage.drawText(`${name} ${lastname}`, {
             x: 15,
             y: firstHeight,
@@ -79,33 +102,20 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
             color: textColor
         });
 
-        firstPage.drawText(`${name} ${lastname}`, {
+        // Type d'adhésion
+        firstPage.drawText(`Adhésion: ${capiType}`, {
             x: 15,
-            y: firstHeight,
-            size: 10,
+            y: firstHeight - 12,
+            size: 8,
             font: helveticaFont,
             color: textColor
         });
 
-        firstPage.drawText(`Type de license: ${capiType}`, {
+        // Saison
+        const seasonText = `SAISON ${startDate.getFullYear()} - ${endDate.getFullYear()}`;
+        firstPage.drawText(seasonText, {
             x: 15,
-            y: firstHeight - 10,
-            size: 7,
-            font: helveticaFont,
-            color: textColor
-        });
-
-        firstPage.drawText(`SEASON ${startDate.getFullYear()} - ${endDate.getFullYear()}`, {
-            x: 15,
-            y: firstHeight - 30,
-            size: 10,
-            font: helveticaFont,
-            color: licenseTextColor
-        });
-
-        firstPage.drawText(`SEASON ${startDate.getFullYear()} - ${endDate.getFullYear()}`, {
-            x: 15,
-            y: firstHeight - 30,
+            y: firstHeight - 32,
             size: 10,
             font: helveticaFont,
             color: licenseTextColor
@@ -139,38 +149,53 @@ async function cropToCircle(imageBuffer: ArrayBuffer): Promise<ArrayBuffer> {
         const url = URL.createObjectURL(blob);
         const img = new Image();
         
-        // Nécessaire pour les images provenant d'un autre domaine (CORS)
+        // Indispensable pour éviter les erreurs "tainted canvas" si l'image vient d'un autre port/domaine
         img.crossOrigin = "anonymous";
 
         img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const size = Math.min(img.width, img.height);
-            canvas.width = size;
-            canvas.height = size;
+            try {
+                const canvas = document.createElement('canvas');
+                const size = Math.min(img.width, img.height);
+                canvas.width = size;
+                canvas.height = size;
 
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return reject("Canvas context not found");
+                const ctx = canvas.getContext('2d');
+                if (!ctx) {
+                    URL.revokeObjectURL(url);
+                    return reject("Canvas context not found");
+                }
 
-            // Créer le chemin du cercle
-            ctx.beginPath();
-            ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
-            ctx.clip();
+                // Créer le chemin du cercle
+                ctx.beginPath();
+                ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+                ctx.clip();
 
-            // Dessiner l'image centrée dans le cercle
-            ctx.drawImage(
-                img,
-                (img.width - size) / 2, (img.height - size) / 2, size, size,
-                0, 0, size, size
-            );
+                // Dessiner l'image centrée dans le cercle
+                ctx.drawImage(
+                    img,
+                    (img.width - size) / 2, (img.height - size) / 2, size, size,
+                    0, 0, size, size
+                );
 
-            // Convertir le canvas en ArrayBuffer
-            canvas.toBlob((blob) => {
-                blob?.arrayBuffer().then(resolve);
+                // Convertir le canvas en ArrayBuffer
+                canvas.toBlob((resultBlob) => {
+                    if (resultBlob) {
+                        resultBlob.arrayBuffer().then(resolve);
+                    } else {
+                        reject("Failed to create blob from canvas");
+                    }
+                    URL.revokeObjectURL(url);
+                }, 'image/png');
+            } catch (err) {
                 URL.revokeObjectURL(url);
-            }, 'image/png');
+                reject(err);
+            }
         };
 
-        img.onerror = reject;
+        img.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject("Failed to load image for cropping");
+        };
         img.src = url;
     });
 }

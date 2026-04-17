@@ -50,7 +50,7 @@ export type RegisterFormState = {
 } | undefined;
 
 export type LoginFormState = {
-  error?: {
+  errors?: {
     email?: string[];
     password?: string[];
   };
@@ -58,7 +58,7 @@ export type LoginFormState = {
 } | undefined;
 
 export type RecoveryFormState = {
-  error?: {
+  errors?: {
     email?: string[];
   };
   message?: string | null;
@@ -66,7 +66,7 @@ export type RecoveryFormState = {
 } | undefined;
 
 export type ResetPasswordFormState = {
-  error?: {
+  errors?: {
     password?: string[];
     confirmPassword?: string[];
   };
@@ -207,7 +207,7 @@ export async function loginUser(state: LoginFormState, formData: FormData): Prom
 
   if (!validatedFields.success) {
     return {
-      error: validatedFields.error.flatten().fieldErrors
+      errors: validatedFields.error.flatten().fieldErrors
     }
   }
 
@@ -252,7 +252,7 @@ export async function sendPasswordResetEmail(state: RecoveryFormState, formData:
 
   if (!validatedField.success) {
     return {
-      error: z.flattenError(validatedField.error).fieldErrors
+      errors: z.flattenError(validatedField.error).fieldErrors
     };
   }
 
@@ -317,7 +317,7 @@ export async function resetPassword(state: ResetPasswordFormState, formData: For
     return {
       success: false,
       message: "Veuillez corriger les erreurs ci-dessous.",
-      error: validatedFields.error.flatten().fieldErrors 
+      errors: validatedFields.error.flatten().fieldErrors 
     };
   }
 
@@ -360,7 +360,3 @@ export async function resetPassword(state: ResetPasswordFormState, formData: For
     return { success: false, message: "Une erreur serveur est survenue." };
   }
 }
-
-
-
-

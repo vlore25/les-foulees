@@ -57,8 +57,8 @@ export default function EventForm({ event }: EventFormProps) {
                         placeholder="Ex: Trail de la Forêt"
                         className="rounded-xl border-primary/10 focus:border-primary/30"
                     />
-                    {state?.error?.title && (
-                        <p className="text-red-500 text-[10px] font-bold uppercase">{state.error.title[0]}</p>
+                    {state?.errors?.title && (
+                        <p className="text-red-500 text-[10px] font-bold uppercase">{state.errors.title[0]}</p>
                     )}
                 </div>
 

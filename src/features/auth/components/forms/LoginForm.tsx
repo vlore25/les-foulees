@@ -64,8 +64,8 @@ const LoginForm = () => {
                                 <UserCircle/>
                             </InputGroupAddon>
                         </InputGroup>
-                        {state?.error?.email && (
-                            <ErrorText>{state.error.email}</ErrorText>
+                        {state?.errors?.email && (
+                            <ErrorText>{state.errors.email[0]}</ErrorText>
                         )}
                     </div>
 
@@ -90,8 +90,8 @@ const LoginForm = () => {
                         </InputGroup>
 
                         <div className="flex justify-between items-center pt-1">
-                            {state?.error?.password ? (
-                                <ErrorText>{state.error.password}</ErrorText>
+                            {state?.errors?.password ? (
+                                <ErrorText>{state.errors.password[0]}</ErrorText>
                             ) : <span></span>}
 
                             <Link href="/recuperation" className='text-xs text-primary hover:underline font-bold uppercase tracking-wider'>
