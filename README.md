@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Les Foulées Avrillaises
 
-## Getting Started
+Les Foulées is a comprehensive management platform designed for a sports association. The application centralizes the management of members, annual subscriptions, events, and administrative documents within a modern and secure web environment.
 
-First, run the development server:
+## Main Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The application is divided into three distinct areas:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Public Area
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+-- Presentation of the association and its activities.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+-- Calendar of upcoming events open to visitors.
 
-## Learn More
+-- Contact and registration forms.
 
-To learn more about Next.js, take a look at the following resources:
+Member Area
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-- User profile and personal information management.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+-- Online membership system with subscription tracking by season.
 
-## Deploy on Vercel
+-- Registration for events organized by the association.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+-- Secure access to internal documents and medical certificate downloads.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Administration Area
+
+-- Dashboard for tracking members and membership statistics.
+
+-- Season management (pricing, opening periods).
+
+-- Creation and moderation of events.
+
+-- Validation of payments and administrative documents provided by members.
+
+-- Invitation system for adding new users.
+
+
+## Technical Stack
+The project's architecture relies on cutting-edge technologies to ensure performance and maintainability:
+
+-- Framework: Next.js (App Router)
+
+-- Language: TypeScript
+
+-- Database: PostgreSQL via Prisma ORM
+
+-- User Interface: Tailwind CSS with the shadcn/ui component library
+
+-- Email Management: Resend for notifications and account recovery
+
+-- Containerization: Docker and Docker Compose for development and deployment environments
+
+## Installation and Setup
+
+Prerequisites
+-- Node.js (version 18 or higher)
+
+-- Docker
+
+-- A PostgreSQL instance (or via Docker)
+
+## Installation Steps
+
+1. Clone the repository:
+
+``git clone https://github.com/vlore25/les-foulees.git
+cd les-foulees``
+
+2. Install dependencies:
+
+``npm install``
+
+3. Environment configuration:
+   
+Create a .env file at the root and configure the following variables:
+
+``DATABASE_URL="your_database_url"
+RESEND_API_KEY="your_resend_api_key"``
+
+4. Database initialization:
+
+``npx prisma generate
+npx prisma db push``
+
+5. Run the application:
+
+``npm run dev``
+
+## Project Structure
+
+/app: Routing and page logic (organized by route groups: admin, auth, main, external).
+
+/components: Reusable UI component library.
+
+/src/features: Business logic divided by domains (accounting, authentication, events, memberships).
+
+/prisma: Data schemas and migrations.
+
+/public: Static assets and PDF document templates.
+
+
+
+Additional Information:
+This project was developed with the goal of professionalization and putting a modular software architecture into practice.
+
+Developer: Victor Loré
+
+GitHub Link: https://github.com/vlore25
+Personal site: https://www.victorlore.fr/
