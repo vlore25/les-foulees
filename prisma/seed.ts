@@ -5,7 +5,7 @@ import { PrismaClient } from './generated/client';
 import { Role, Status, EventType, MembershipStatus, MembershipType, PaymentMethod, PaymentStatus, Genre } from './generated/enums';
 import { Pool } from 'pg';
 
-const connectionString = `${process.env.POSTGRES_URL}`;
+const connectionString = `${process.env.POSTGRES_DATABASE_URL}`;
 const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
