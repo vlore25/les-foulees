@@ -11,6 +11,6 @@ export default defineConfig({
   },
   
   datasource: {
-    url: process.env.POSTGRES_DATABASE_URLPOSTGRES_DATABASE_URL,
+    url: env("POSTGRES_DATABASE_URL"),
   },
 });
