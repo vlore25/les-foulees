@@ -3,10 +3,11 @@ import * as bcrypt from 'bcrypt';
 import { fakerFR as faker } from '@faker-js/faker';
 import { PrismaClient } from './generated/client';
 import { Role, Status, EventType, MembershipStatus, MembershipType, PaymentMethod, PaymentStatus, Genre } from './generated/enums';
+import { Pool } from 'pg';
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
-});
+const connectionString = `${process.env.POSTGRES_URL}`;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
