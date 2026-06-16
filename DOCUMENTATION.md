@@ -3,7 +3,7 @@
 Ce document présente les fonctionnalités actuelles du projet "Les Foulées Avrillaises" ainsi que les pistes d'amélioration identifiées.
 
 ## 1. Présentation du projet
-Le projet "Les Foulées Avrillaises" est une application web destinée à la gestion d'un club d'athlétisme/course à pied. Elle permet de gérer les adhérents, les événements, les adhésions annuelles et les documents administratifs du club.
+Le projet "Les Foulées Avrillaises" est une application web destinée à la gestion d'une association de course à pied de la ville de Avrillé. Elle permet de gérer les adhérents, les événements, les adhésions annuelles et les documents administratifs du club.
 
 ## 2. Pile Technique (Stack)
 - **Framework :** Next.js 15 (App Router, Server Actions)
