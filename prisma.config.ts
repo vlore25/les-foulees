@@ -1,10 +1,4 @@
-import { defineConfig } from '@prisma/config';
-import dotenv from 'dotenv';
-import path from 'path';
-
-// On force le chemin absolu vers le fichier .env à la racine
-const envPath = path.resolve(process.cwd(), '.env');
-dotenv.config({ path: envPath });
+import { defineConfig, env } from '@prisma/config';
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -12,11 +6,10 @@ export default defineConfig({
   // Tes paramètres de migrations et seed que j'avais zappés
   migrations: {
     path: "prisma/migrations",
-    seed: "npx tsx prisma/seed.ts" 
+    seed: "bunx tsx prisma/seed.ts" 
   },
   
   datasource: {
-    // On s'assure que l'URL n'est pas "undefined"
-    url: process.env.DATABASE_URL
+    url: env("DATABASE_URL"),
   },
 });
