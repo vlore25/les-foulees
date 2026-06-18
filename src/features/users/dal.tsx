@@ -103,6 +103,7 @@ export const getUserDetailsAdmin = cache(async (userId: string): Promise<AdminUs
       emergencyLastName: true,
       emergencyPhone: true,
       role: true,
+      deactivatedAt: true,
       createdAt: true
 
     }

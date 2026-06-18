@@ -100,6 +100,7 @@ export function admindUserDetails(user: RawAdminInput): AdminUserDetails {
     emergencyLastName: user.emergencyLastName,
     emergencyPhone: user.emergencyPhone,
     role: user.role,
+    deactivatedAt: user.deactivatedAt,
     createdAt: user.createdAt.toLocaleString('fr-FR', { month: 'long', day: 'numeric', year: 'numeric'})
   }
 }
