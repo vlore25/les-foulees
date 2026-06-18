@@ -10,10 +10,10 @@ export const getSeasonsData = async () => {
 
   const now = new Date();
 
-  const activeSeason = allSeasons.find(s => s.isActive);
-  const futureSeason = allSeasons.find(s => s.startDate > now && !s.isActive);
-  const archivedSeasons = allSeasons.filter(s => !s.isActive && s.startDate < now);
-  const draftSeason = allSeasons.find(s => !s.isActive && s.startDate > now)
+  const activeSeason = allSeasons.find(s => s.isOpenForRegistration);
+  const futureSeason = allSeasons.find(s => s.startDate > now && !s.isOpenForRegistration);
+  const archivedSeasons = allSeasons.filter(s => !s.isOpenForRegistration && s.startDate < now);
+  const draftSeason = allSeasons.find(s => !s.isOpenForRegistration && s.startDate > now)
 
   return { activeSeason, futureSeason, archivedSeasons, draftSeason };
 }
@@ -78,7 +78,7 @@ export const getActiveSeasonData = async () => {
   try {
     const activeSeason = await prisma.season.findFirst({
       where: {
-        isActive: true,
+        isOpenForRegistration: true,
       },
     })
     return activeSeason;

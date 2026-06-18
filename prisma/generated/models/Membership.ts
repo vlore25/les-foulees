@@ -242,7 +242,7 @@ export type MembershipWhereInput = {
   season?: Prisma.XOR<Prisma.SeasonScalarRelationFilter, Prisma.SeasonWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
   partner?: Prisma.XOR<Prisma.MembershipNullableScalarRelationFilter, Prisma.MembershipWhereInput> | null
-  partnerOf?: Prisma.MembershipListRelationFilter
+  partnerOf?: Prisma.XOR<Prisma.MembershipNullableScalarRelationFilter, Prisma.MembershipWhereInput> | null
 }
 
 export type MembershipOrderByWithRelationInput = {
@@ -262,11 +262,12 @@ export type MembershipOrderByWithRelationInput = {
   season?: Prisma.SeasonOrderByWithRelationInput
   payment?: Prisma.PaymentOrderByWithRelationInput
   partner?: Prisma.MembershipOrderByWithRelationInput
-  partnerOf?: Prisma.MembershipOrderByRelationAggregateInput
+  partnerOf?: Prisma.MembershipOrderByWithRelationInput
 }
 
 export type MembershipWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  partnerId?: string
   userId_seasonId?: Prisma.MembershipUserIdSeasonIdCompoundUniqueInput
   AND?: Prisma.MembershipWhereInput | Prisma.MembershipWhereInput[]
   OR?: Prisma.MembershipWhereInput[]
@@ -281,13 +282,12 @@ export type MembershipWhereUniqueInput = Prisma.AtLeast<{
   paymentId?: Prisma.StringNullableFilter<"Membership"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Membership"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Membership"> | Date | string
-  partnerId?: Prisma.StringNullableFilter<"Membership"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   season?: Prisma.XOR<Prisma.SeasonScalarRelationFilter, Prisma.SeasonWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
   partner?: Prisma.XOR<Prisma.MembershipNullableScalarRelationFilter, Prisma.MembershipWhereInput> | null
-  partnerOf?: Prisma.MembershipListRelationFilter
-}, "id" | "userId_seasonId">
+  partnerOf?: Prisma.XOR<Prisma.MembershipNullableScalarRelationFilter, Prisma.MembershipWhereInput> | null
+}, "id" | "partnerId" | "userId_seasonId">
 
 export type MembershipOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -338,7 +338,7 @@ export type MembershipCreateInput = {
   season: Prisma.SeasonCreateNestedOneWithoutMembershipsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutMembershipsInput
   partner?: Prisma.MembershipCreateNestedOneWithoutPartnerOfInput
-  partnerOf?: Prisma.MembershipCreateNestedManyWithoutPartnerInput
+  partnerOf?: Prisma.MembershipCreateNestedOneWithoutPartnerInput
 }
 
 export type MembershipUncheckedCreateInput = {
@@ -354,7 +354,7 @@ export type MembershipUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   partnerId?: string | null
-  partnerOf?: Prisma.MembershipUncheckedCreateNestedManyWithoutPartnerInput
+  partnerOf?: Prisma.MembershipUncheckedCreateNestedOneWithoutPartnerInput
 }
 
 export type MembershipUpdateInput = {
@@ -370,7 +370,7 @@ export type MembershipUpdateInput = {
   season?: Prisma.SeasonUpdateOneRequiredWithoutMembershipsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutMembershipsNestedInput
   partner?: Prisma.MembershipUpdateOneWithoutPartnerOfNestedInput
-  partnerOf?: Prisma.MembershipUpdateManyWithoutPartnerNestedInput
+  partnerOf?: Prisma.MembershipUpdateOneWithoutPartnerNestedInput
 }
 
 export type MembershipUncheckedUpdateInput = {
@@ -386,7 +386,7 @@ export type MembershipUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  partnerOf?: Prisma.MembershipUncheckedUpdateManyWithoutPartnerNestedInput
+  partnerOf?: Prisma.MembershipUncheckedUpdateOneWithoutPartnerNestedInput
 }
 
 export type MembershipCreateManyInput = {
@@ -585,18 +585,16 @@ export type MembershipCreateNestedOneWithoutPartnerOfInput = {
   connect?: Prisma.MembershipWhereUniqueInput
 }
 
-export type MembershipCreateNestedManyWithoutPartnerInput = {
-  create?: Prisma.XOR<Prisma.MembershipCreateWithoutPartnerInput, Prisma.MembershipUncheckedCreateWithoutPartnerInput> | Prisma.MembershipCreateWithoutPartnerInput[] | Prisma.MembershipUncheckedCreateWithoutPartnerInput[]
-  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutPartnerInput | Prisma.MembershipCreateOrConnectWithoutPartnerInput[]
-  createMany?: Prisma.MembershipCreateManyPartnerInputEnvelope
-  connect?: Prisma.MembershipWhereUniqueInput | Prisma.MembershipWhereUniqueInput[]
+export type MembershipCreateNestedOneWithoutPartnerInput = {
+  create?: Prisma.XOR<Prisma.MembershipCreateWithoutPartnerInput, Prisma.MembershipUncheckedCreateWithoutPartnerInput>
+  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutPartnerInput
+  connect?: Prisma.MembershipWhereUniqueInput
 }
 
-export type MembershipUncheckedCreateNestedManyWithoutPartnerInput = {
-  create?: Prisma.XOR<Prisma.MembershipCreateWithoutPartnerInput, Prisma.MembershipUncheckedCreateWithoutPartnerInput> | Prisma.MembershipCreateWithoutPartnerInput[] | Prisma.MembershipUncheckedCreateWithoutPartnerInput[]
-  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutPartnerInput | Prisma.MembershipCreateOrConnectWithoutPartnerInput[]
-  createMany?: Prisma.MembershipCreateManyPartnerInputEnvelope
-  connect?: Prisma.MembershipWhereUniqueInput | Prisma.MembershipWhereUniqueInput[]
+export type MembershipUncheckedCreateNestedOneWithoutPartnerInput = {
+  create?: Prisma.XOR<Prisma.MembershipCreateWithoutPartnerInput, Prisma.MembershipUncheckedCreateWithoutPartnerInput>
+  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutPartnerInput
+  connect?: Prisma.MembershipWhereUniqueInput
 }
 
 export type EnumMembershipStatusFieldUpdateOperationsInput = {
@@ -617,32 +615,24 @@ export type MembershipUpdateOneWithoutPartnerOfNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MembershipUpdateToOneWithWhereWithoutPartnerOfInput, Prisma.MembershipUpdateWithoutPartnerOfInput>, Prisma.MembershipUncheckedUpdateWithoutPartnerOfInput>
 }
 
-export type MembershipUpdateManyWithoutPartnerNestedInput = {
-  create?: Prisma.XOR<Prisma.MembershipCreateWithoutPartnerInput, Prisma.MembershipUncheckedCreateWithoutPartnerInput> | Prisma.MembershipCreateWithoutPartnerInput[] | Prisma.MembershipUncheckedCreateWithoutPartnerInput[]
-  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutPartnerInput | Prisma.MembershipCreateOrConnectWithoutPartnerInput[]
-  upsert?: Prisma.MembershipUpsertWithWhereUniqueWithoutPartnerInput | Prisma.MembershipUpsertWithWhereUniqueWithoutPartnerInput[]
-  createMany?: Prisma.MembershipCreateManyPartnerInputEnvelope
-  set?: Prisma.MembershipWhereUniqueInput | Prisma.MembershipWhereUniqueInput[]
-  disconnect?: Prisma.MembershipWhereUniqueInput | Prisma.MembershipWhereUniqueInput[]
-  delete?: Prisma.MembershipWhereUniqueInput | Prisma.MembershipWhereUniqueInput[]
-  connect?: Prisma.MembershipWhereUniqueInput | Prisma.MembershipWhereUniqueInput[]
-  update?: Prisma.MembershipUpdateWithWhereUniqueWithoutPartnerInput | Prisma.MembershipUpdateWithWhereUniqueWithoutPartnerInput[]
-  updateMany?: Prisma.MembershipUpdateManyWithWhereWithoutPartnerInput | Prisma.MembershipUpdateManyWithWhereWithoutPartnerInput[]
-  deleteMany?: Prisma.MembershipScalarWhereInput | Prisma.MembershipScalarWhereInput[]
+export type MembershipUpdateOneWithoutPartnerNestedInput = {
+  create?: Prisma.XOR<Prisma.MembershipCreateWithoutPartnerInput, Prisma.MembershipUncheckedCreateWithoutPartnerInput>
+  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutPartnerInput
+  upsert?: Prisma.MembershipUpsertWithoutPartnerInput
+  disconnect?: Prisma.MembershipWhereInput | boolean
+  delete?: Prisma.MembershipWhereInput | boolean
+  connect?: Prisma.MembershipWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MembershipUpdateToOneWithWhereWithoutPartnerInput, Prisma.MembershipUpdateWithoutPartnerInput>, Prisma.MembershipUncheckedUpdateWithoutPartnerInput>
 }
 
-export type MembershipUncheckedUpdateManyWithoutPartnerNestedInput = {
-  create?: Prisma.XOR<Prisma.MembershipCreateWithoutPartnerInput, Prisma.MembershipUncheckedCreateWithoutPartnerInput> | Prisma.MembershipCreateWithoutPartnerInput[] | Prisma.MembershipUncheckedCreateWithoutPartnerInput[]
-  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutPartnerInput | Prisma.MembershipCreateOrConnectWithoutPartnerInput[]
-  upsert?: Prisma.MembershipUpsertWithWhereUniqueWithoutPartnerInput | Prisma.MembershipUpsertWithWhereUniqueWithoutPartnerInput[]
-  createMany?: Prisma.MembershipCreateManyPartnerInputEnvelope
-  set?: Prisma.MembershipWhereUniqueInput | Prisma.MembershipWhereUniqueInput[]
-  disconnect?: Prisma.MembershipWhereUniqueInput | Prisma.MembershipWhereUniqueInput[]
-  delete?: Prisma.MembershipWhereUniqueInput | Prisma.MembershipWhereUniqueInput[]
-  connect?: Prisma.MembershipWhereUniqueInput | Prisma.MembershipWhereUniqueInput[]
-  update?: Prisma.MembershipUpdateWithWhereUniqueWithoutPartnerInput | Prisma.MembershipUpdateWithWhereUniqueWithoutPartnerInput[]
-  updateMany?: Prisma.MembershipUpdateManyWithWhereWithoutPartnerInput | Prisma.MembershipUpdateManyWithWhereWithoutPartnerInput[]
-  deleteMany?: Prisma.MembershipScalarWhereInput | Prisma.MembershipScalarWhereInput[]
+export type MembershipUncheckedUpdateOneWithoutPartnerNestedInput = {
+  create?: Prisma.XOR<Prisma.MembershipCreateWithoutPartnerInput, Prisma.MembershipUncheckedCreateWithoutPartnerInput>
+  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutPartnerInput
+  upsert?: Prisma.MembershipUpsertWithoutPartnerInput
+  disconnect?: Prisma.MembershipWhereInput | boolean
+  delete?: Prisma.MembershipWhereInput | boolean
+  connect?: Prisma.MembershipWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MembershipUpdateToOneWithWhereWithoutPartnerInput, Prisma.MembershipUpdateWithoutPartnerInput>, Prisma.MembershipUncheckedUpdateWithoutPartnerInput>
 }
 
 export type MembershipCreateNestedManyWithoutPaymentInput = {
@@ -699,7 +689,7 @@ export type MembershipCreateWithoutUserInput = {
   season: Prisma.SeasonCreateNestedOneWithoutMembershipsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutMembershipsInput
   partner?: Prisma.MembershipCreateNestedOneWithoutPartnerOfInput
-  partnerOf?: Prisma.MembershipCreateNestedManyWithoutPartnerInput
+  partnerOf?: Prisma.MembershipCreateNestedOneWithoutPartnerInput
 }
 
 export type MembershipUncheckedCreateWithoutUserInput = {
@@ -714,7 +704,7 @@ export type MembershipUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   partnerId?: string | null
-  partnerOf?: Prisma.MembershipUncheckedCreateNestedManyWithoutPartnerInput
+  partnerOf?: Prisma.MembershipUncheckedCreateNestedOneWithoutPartnerInput
 }
 
 export type MembershipCreateOrConnectWithoutUserInput = {
@@ -773,7 +763,7 @@ export type MembershipCreateWithoutSeasonInput = {
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutMembershipsInput
   partner?: Prisma.MembershipCreateNestedOneWithoutPartnerOfInput
-  partnerOf?: Prisma.MembershipCreateNestedManyWithoutPartnerInput
+  partnerOf?: Prisma.MembershipCreateNestedOneWithoutPartnerInput
 }
 
 export type MembershipUncheckedCreateWithoutSeasonInput = {
@@ -788,7 +778,7 @@ export type MembershipUncheckedCreateWithoutSeasonInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   partnerId?: string | null
-  partnerOf?: Prisma.MembershipUncheckedCreateNestedManyWithoutPartnerInput
+  partnerOf?: Prisma.MembershipUncheckedCreateNestedOneWithoutPartnerInput
 }
 
 export type MembershipCreateOrConnectWithoutSeasonInput = {
@@ -864,7 +854,7 @@ export type MembershipCreateWithoutPartnerInput = {
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
   season: Prisma.SeasonCreateNestedOneWithoutMembershipsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutMembershipsInput
-  partnerOf?: Prisma.MembershipCreateNestedManyWithoutPartnerInput
+  partnerOf?: Prisma.MembershipCreateNestedOneWithoutPartnerInput
 }
 
 export type MembershipUncheckedCreateWithoutPartnerInput = {
@@ -879,17 +869,12 @@ export type MembershipUncheckedCreateWithoutPartnerInput = {
   paymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  partnerOf?: Prisma.MembershipUncheckedCreateNestedManyWithoutPartnerInput
+  partnerOf?: Prisma.MembershipUncheckedCreateNestedOneWithoutPartnerInput
 }
 
 export type MembershipCreateOrConnectWithoutPartnerInput = {
   where: Prisma.MembershipWhereUniqueInput
   create: Prisma.XOR<Prisma.MembershipCreateWithoutPartnerInput, Prisma.MembershipUncheckedCreateWithoutPartnerInput>
-}
-
-export type MembershipCreateManyPartnerInputEnvelope = {
-  data: Prisma.MembershipCreateManyPartnerInput | Prisma.MembershipCreateManyPartnerInput[]
-  skipDuplicates?: boolean
 }
 
 export type MembershipUpsertWithoutPartnerOfInput = {
@@ -933,20 +918,45 @@ export type MembershipUncheckedUpdateWithoutPartnerOfInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
-export type MembershipUpsertWithWhereUniqueWithoutPartnerInput = {
-  where: Prisma.MembershipWhereUniqueInput
+export type MembershipUpsertWithoutPartnerInput = {
   update: Prisma.XOR<Prisma.MembershipUpdateWithoutPartnerInput, Prisma.MembershipUncheckedUpdateWithoutPartnerInput>
   create: Prisma.XOR<Prisma.MembershipCreateWithoutPartnerInput, Prisma.MembershipUncheckedCreateWithoutPartnerInput>
+  where?: Prisma.MembershipWhereInput
 }
 
-export type MembershipUpdateWithWhereUniqueWithoutPartnerInput = {
-  where: Prisma.MembershipWhereUniqueInput
+export type MembershipUpdateToOneWithWhereWithoutPartnerInput = {
+  where?: Prisma.MembershipWhereInput
   data: Prisma.XOR<Prisma.MembershipUpdateWithoutPartnerInput, Prisma.MembershipUncheckedUpdateWithoutPartnerInput>
 }
 
-export type MembershipUpdateManyWithWhereWithoutPartnerInput = {
-  where: Prisma.MembershipScalarWhereInput
-  data: Prisma.XOR<Prisma.MembershipUpdateManyMutationInput, Prisma.MembershipUncheckedUpdateManyWithoutPartnerInput>
+export type MembershipUpdateWithoutPartnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  ffaLicenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
+  season?: Prisma.SeasonUpdateOneRequiredWithoutMembershipsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutMembershipsNestedInput
+  partnerOf?: Prisma.MembershipUpdateOneWithoutPartnerNestedInput
+}
+
+export type MembershipUncheckedUpdateWithoutPartnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  seasonId?: Prisma.StringFieldUpdateOperationsInput | string
+  ffaLicenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partnerOf?: Prisma.MembershipUncheckedUpdateOneWithoutPartnerNestedInput
 }
 
 export type MembershipCreateWithoutPaymentInput = {
@@ -961,7 +971,7 @@ export type MembershipCreateWithoutPaymentInput = {
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
   season: Prisma.SeasonCreateNestedOneWithoutMembershipsInput
   partner?: Prisma.MembershipCreateNestedOneWithoutPartnerOfInput
-  partnerOf?: Prisma.MembershipCreateNestedManyWithoutPartnerInput
+  partnerOf?: Prisma.MembershipCreateNestedOneWithoutPartnerInput
 }
 
 export type MembershipUncheckedCreateWithoutPaymentInput = {
@@ -976,7 +986,7 @@ export type MembershipUncheckedCreateWithoutPaymentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   partnerId?: string | null
-  partnerOf?: Prisma.MembershipUncheckedCreateNestedManyWithoutPartnerInput
+  partnerOf?: Prisma.MembershipUncheckedCreateNestedOneWithoutPartnerInput
 }
 
 export type MembershipCreateOrConnectWithoutPaymentInput = {
@@ -1031,7 +1041,7 @@ export type MembershipUpdateWithoutUserInput = {
   season?: Prisma.SeasonUpdateOneRequiredWithoutMembershipsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutMembershipsNestedInput
   partner?: Prisma.MembershipUpdateOneWithoutPartnerOfNestedInput
-  partnerOf?: Prisma.MembershipUpdateManyWithoutPartnerNestedInput
+  partnerOf?: Prisma.MembershipUpdateOneWithoutPartnerNestedInput
 }
 
 export type MembershipUncheckedUpdateWithoutUserInput = {
@@ -1046,7 +1056,7 @@ export type MembershipUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  partnerOf?: Prisma.MembershipUncheckedUpdateManyWithoutPartnerNestedInput
+  partnerOf?: Prisma.MembershipUncheckedUpdateOneWithoutPartnerNestedInput
 }
 
 export type MembershipUncheckedUpdateManyWithoutUserInput = {
@@ -1089,7 +1099,7 @@ export type MembershipUpdateWithoutSeasonInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutMembershipsNestedInput
   partner?: Prisma.MembershipUpdateOneWithoutPartnerOfNestedInput
-  partnerOf?: Prisma.MembershipUpdateManyWithoutPartnerNestedInput
+  partnerOf?: Prisma.MembershipUpdateOneWithoutPartnerNestedInput
 }
 
 export type MembershipUncheckedUpdateWithoutSeasonInput = {
@@ -1104,7 +1114,7 @@ export type MembershipUncheckedUpdateWithoutSeasonInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  partnerOf?: Prisma.MembershipUncheckedUpdateManyWithoutPartnerNestedInput
+  partnerOf?: Prisma.MembershipUncheckedUpdateOneWithoutPartnerNestedInput
 }
 
 export type MembershipUncheckedUpdateManyWithoutSeasonInput = {
@@ -1119,64 +1129,6 @@ export type MembershipUncheckedUpdateManyWithoutSeasonInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type MembershipCreateManyPartnerInput = {
-  id?: string
-  userId: string
-  seasonId: string
-  ffaLicenseNumber?: string | null
-  previousClub?: string | null
-  certificateUrl?: string | null
-  status?: $Enums.MembershipStatus
-  type?: $Enums.MembershipType
-  paymentId?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type MembershipUpdateWithoutPartnerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  ffaLicenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
-  type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
-  season?: Prisma.SeasonUpdateOneRequiredWithoutMembershipsNestedInput
-  payment?: Prisma.PaymentUpdateOneWithoutMembershipsNestedInput
-  partnerOf?: Prisma.MembershipUpdateManyWithoutPartnerNestedInput
-}
-
-export type MembershipUncheckedUpdateWithoutPartnerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  seasonId?: Prisma.StringFieldUpdateOperationsInput | string
-  ffaLicenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
-  type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
-  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  partnerOf?: Prisma.MembershipUncheckedUpdateManyWithoutPartnerNestedInput
-}
-
-export type MembershipUncheckedUpdateManyWithoutPartnerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  seasonId?: Prisma.StringFieldUpdateOperationsInput | string
-  ffaLicenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
-  type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
-  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MembershipCreateManyPaymentInput = {
@@ -1205,7 +1157,7 @@ export type MembershipUpdateWithoutPaymentInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
   season?: Prisma.SeasonUpdateOneRequiredWithoutMembershipsNestedInput
   partner?: Prisma.MembershipUpdateOneWithoutPartnerOfNestedInput
-  partnerOf?: Prisma.MembershipUpdateManyWithoutPartnerNestedInput
+  partnerOf?: Prisma.MembershipUpdateOneWithoutPartnerNestedInput
 }
 
 export type MembershipUncheckedUpdateWithoutPaymentInput = {
@@ -1220,7 +1172,7 @@ export type MembershipUncheckedUpdateWithoutPaymentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  partnerOf?: Prisma.MembershipUncheckedUpdateManyWithoutPartnerNestedInput
+  partnerOf?: Prisma.MembershipUncheckedUpdateOneWithoutPartnerNestedInput
 }
 
 export type MembershipUncheckedUpdateManyWithoutPaymentInput = {
@@ -1237,35 +1189,6 @@ export type MembershipUncheckedUpdateManyWithoutPaymentInput = {
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
-
-/**
- * Count Type MembershipCountOutputType
- */
-
-export type MembershipCountOutputType = {
-  partnerOf: number
-}
-
-export type MembershipCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  partnerOf?: boolean | MembershipCountOutputTypeCountPartnerOfArgs
-}
-
-/**
- * MembershipCountOutputType without action
- */
-export type MembershipCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the MembershipCountOutputType
-   */
-  select?: Prisma.MembershipCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * MembershipCountOutputType without action
- */
-export type MembershipCountOutputTypeCountPartnerOfArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MembershipWhereInput
-}
 
 
 export type MembershipSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1286,7 +1209,6 @@ export type MembershipSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   payment?: boolean | Prisma.Membership$paymentArgs<ExtArgs>
   partner?: boolean | Prisma.Membership$partnerArgs<ExtArgs>
   partnerOf?: boolean | Prisma.Membership$partnerOfArgs<ExtArgs>
-  _count?: boolean | Prisma.MembershipCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["membership"]>
 
 export type MembershipSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1349,7 +1271,6 @@ export type MembershipInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   payment?: boolean | Prisma.Membership$paymentArgs<ExtArgs>
   partner?: boolean | Prisma.Membership$partnerArgs<ExtArgs>
   partnerOf?: boolean | Prisma.Membership$partnerOfArgs<ExtArgs>
-  _count?: boolean | Prisma.MembershipCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MembershipIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1371,7 +1292,7 @@ export type $MembershipPayload<ExtArgs extends runtime.Types.Extensions.Internal
     season: Prisma.$SeasonPayload<ExtArgs>
     payment: Prisma.$PaymentPayload<ExtArgs> | null
     partner: Prisma.$MembershipPayload<ExtArgs> | null
-    partnerOf: Prisma.$MembershipPayload<ExtArgs>[]
+    partnerOf: Prisma.$MembershipPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1784,7 +1705,7 @@ export interface Prisma__MembershipClient<T, Null = never, ExtArgs extends runti
   season<T extends Prisma.SeasonDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SeasonDefaultArgs<ExtArgs>>): Prisma.Prisma__SeasonClient<runtime.Types.Result.GetResult<Prisma.$SeasonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payment<T extends Prisma.Membership$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Membership$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   partner<T extends Prisma.Membership$partnerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Membership$partnerArgs<ExtArgs>>): Prisma.Prisma__MembershipClient<runtime.Types.Result.GetResult<Prisma.$MembershipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  partnerOf<T extends Prisma.Membership$partnerOfArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Membership$partnerOfArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  partnerOf<T extends Prisma.Membership$partnerOfArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Membership$partnerOfArgs<ExtArgs>>): Prisma.Prisma__MembershipClient<runtime.Types.Result.GetResult<Prisma.$MembershipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2281,11 +2202,6 @@ export type Membership$partnerOfArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.MembershipInclude<ExtArgs> | null
   where?: Prisma.MembershipWhereInput
-  orderBy?: Prisma.MembershipOrderByWithRelationInput | Prisma.MembershipOrderByWithRelationInput[]
-  cursor?: Prisma.MembershipWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MembershipScalarFieldEnum | Prisma.MembershipScalarFieldEnum[]
 }
 
 /**

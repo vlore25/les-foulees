@@ -60,7 +60,9 @@ export const ModelName = {
   LegalDocs: 'LegalDocs',
   Season: 'Season',
   Membership: 'Membership',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  SiteConfig: 'SiteConfig',
+  TrainingSchedule: 'TrainingSchedule'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -99,6 +101,7 @@ export const UserScalarFieldEnum = {
   showEmailDirectory: 'showEmailDirectory',
   role: 'role',
   status: 'status',
+  deactivatedAt: 'deactivatedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -150,6 +153,8 @@ export const EventScalarFieldEnum = {
   dateEnd: 'dateEnd',
   location: 'location',
   distances: 'distances',
+  meals: 'meals',
+  accommodations: 'accommodations',
   type: 'type',
   visibility: 'visibility',
   createdAt: 'createdAt',
@@ -164,6 +169,9 @@ export const EventRegistrationScalarFieldEnum = {
   userId: 'userId',
   eventId: 'eventId',
   distance: 'distance',
+  meals: 'meals',
+  accommodations: 'accommodations',
+  carpooling: 'carpooling',
   createdAt: 'createdAt'
 } as const
 
@@ -185,7 +193,7 @@ export const SeasonScalarFieldEnum = {
   name: 'name',
   startDate: 'startDate',
   endDate: 'endDate',
-  isActive: 'isActive',
+  isOpenForRegistration: 'isOpenForRegistration',
   priceStandard: 'priceStandard',
   priceCouple: 'priceCouple',
   priceYoung: 'priceYoung',
@@ -223,12 +231,35 @@ export const PaymentScalarFieldEnum = {
   reference: 'reference',
   date: 'date',
   userId: 'userId',
-  membershipId: 'membershipId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const SiteConfigScalarFieldEnum = {
+  id: 'id',
+  heroDesktopUrl: 'heroDesktopUrl',
+  heroMobileUrl: 'heroMobileUrl',
+  privacyPolicy: 'privacyPolicy',
+  legalNotice: 'legalNotice',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SiteConfigScalarFieldEnum = (typeof SiteConfigScalarFieldEnum)[keyof typeof SiteConfigScalarFieldEnum]
+
+
+export const TrainingScheduleScalarFieldEnum = {
+  id: 'id',
+  day: 'day',
+  hour: 'hour',
+  place: 'place',
+  imgUrl: 'imgUrl',
+  order: 'order'
+} as const
+
+export type TrainingScheduleScalarFieldEnum = (typeof TrainingScheduleScalarFieldEnum)[keyof typeof TrainingScheduleScalarFieldEnum]
 
 
 export const SortOrder = {

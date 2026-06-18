@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { getUserDetailsAction } from "../../user.action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserName } from "@/components/ui/user-name";
+import { TypographyH3, TypographyDetail } from "@/components/ui/typography";
 
 export default function UserListClient({ initialUsers }: { initialUsers: PublicUserList[] }) {
     const [search, setSearch] = useState("");
@@ -45,16 +47,16 @@ export default function UserListClient({ initialUsers }: { initialUsers: PublicU
                         className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
                     >
                         <div className="flex items-center gap-4">
-                            <Avatar className="h-10 w-10 border border-slate-100 rounded-md">
+                            <Avatar className="h-10 w-10 border border-slate-100">
                                 <AvatarImage src={getAssetUrl(user.profileImageUrl)} className="object-cover" />
-                                <AvatarFallback className="bg-slate-50 text-slate-500 font-bold uppercase text-xs rounded-md">
+                                <AvatarFallback className="bg-slate-50 text-slate-500 font-bold uppercase text-xs">
                                     {user.name[0]}{user.lastname[0]}
                                 </AvatarFallback>
                             </Avatar>
                             <div>
-                                <h3 className="font-bold text-slate-900 uppercase text-sm tracking-tight">
-                                    {user.lastname} <span className="text-primary">{user.name}</span>
-                                </h3>
+                                <div className="text-slate-900 text-sm tracking-tight">
+                                    <UserName name={user.name} lastname={user.lastname} />
+                                </div>
                             </div>
                         </div>
 
@@ -69,7 +71,9 @@ export default function UserListClient({ initialUsers }: { initialUsers: PublicU
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-md rounded-md">
                                 <DialogHeader>
-                                    <DialogTitle className="text-lg font-black uppercase text-primary border-b pb-2">Profil</DialogTitle>
+                                    <DialogTitle asChild>
+                                        <TypographyH3 className="text-primary border-b pb-2">Profil</TypographyH3>
+                                    </DialogTitle>
                                 </DialogHeader>
 
                                 {isLoading ? (
@@ -77,17 +81,17 @@ export default function UserListClient({ initialUsers }: { initialUsers: PublicU
                                 ) : selectedUser && (
                                     <div className="space-y-6 py-4">
                                         <div className="flex items-center gap-4">
-                                            <Avatar className="h-14 w-14 border border-slate-200 rounded-md">
+                                            <Avatar className="h-14 w-14 border border-slate-200">
                                                 <AvatarImage src={getAssetUrl(selectedUser.profileImageUrl)} className="object-cover" />
-                                                <AvatarFallback className="bg-slate-50 text-slate-500 text-lg font-bold uppercase rounded-md">
+                                                <AvatarFallback className="bg-slate-50 text-slate-500 text-lg font-bold uppercase">
                                                     {selectedUser.name[0]}{selectedUser.lastname[0]}
                                                 </AvatarFallback>
                                             </Avatar>
                                             <div>
-                                                <p className="text-lg font-black uppercase text-slate-900 leading-none">
-                                                    {selectedUser.lastname} {selectedUser.name}
-                                                </p>
-                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 uppercase">Inscrit le {selectedUser.createdAt}</p>
+                                                <div className="text-slate-900 text-lg leading-none">
+                                                    <UserName name={selectedUser.name} lastname={selectedUser.lastname} />
+                                                </div>
+                                                <TypographyDetail className="block mt-2">Inscrit le {selectedUser.createdAt}</TypographyDetail>
                                             </div>
                                         </div>
 

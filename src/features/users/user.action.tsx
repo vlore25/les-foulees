@@ -121,6 +121,8 @@ export async function sendInviteAction(prevState: InviteUserState, formData: For
       html: emailHtml,
     });
 
+    revalidatePath("/admin/utilisateurs");
+
     return { 
       success: true, 
       message: `Invitation envoyée avec succès à ${email}`,
@@ -129,6 +131,44 @@ export async function sendInviteAction(prevState: InviteUserState, formData: For
   } catch (error) {
     console.log(error)
     return { success: false, message: "Erreur technique lors de l'envoi." };
+  }
+}
+
+export async function resendInviteAction(email: string) {
+  if (!await verifyAdmin()) return { success: false, message: "Action non autorisée." };
+
+  try {
+    const token = await new SignJWT({ email: email })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .sign(secretKey);
+
+    await prisma.invitation.upsert({
+      where: { email },
+      update: { token, createdAt: new Date() },
+      create: { email, token },
+    });
+
+    const invitationLink = `${APP_URL}/inscription?token=${token}`;
+    const emailHtml = await render(<InviteUser InvitationLink={invitationLink} />);
+
+    await resend.emails.send({
+      from: 'Les Foulées Avrillaises <onboarding@resend.dev>',
+      to: [email],
+      subject: 'Rappel : Invitation à rejoindre les Foulées Avrillaises',
+      html: emailHtml,
+    });
+
+    revalidatePath("/admin/utilisateurs");
+
+    return { 
+      success: true, 
+      message: `Invitation renvoyée avec succès à ${email}`,
+    };
+
+  } catch (error) {
+    console.log(error)
+    return { success: false, message: "Erreur technique lors du renvoi." };
   }
 }
 
@@ -145,11 +185,14 @@ export async function statusUserAction(userId: string) {
       throw new Error("Utilisateur non trouvé");
     }
 
-    const newStatus = user.status === "ACTIVE" ? "INACTIVE" : "ACTIVE"; //
+    const newStatus = user.status === "ACTIVE" ? "INACTIVE" : "ACTIVE"; 
 
     await prisma.user.update({
       where: { id: userId },
-      data: { status: newStatus },
+      data: { 
+        status: newStatus,
+        deactivatedAt: newStatus === "INACTIVE" ? new Date() : null,
+      },
     });
 
     revalidatePath("/admin/utilisateurs");
@@ -159,6 +202,36 @@ export async function statusUserAction(userId: string) {
   } catch (error) {
     console.error("Erreur lors du changement de statut:", error);
     return { success: false, error: "Impossible de modifier le statut" };
+  }
+}
+
+export async function toggleRoleUserAction(userId: string) {
+  if (!await verifyAdmin()) return { success: false, error: "Action non autorisée." };
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true }, 
+    });
+
+    if (!user) {
+      throw new Error("Utilisateur non trouvé");
+    }
+
+    const newRole = user.role === "ADMIN" ? "USER" : "ADMIN";
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { role: newRole },
+    });
+
+    revalidatePath("/admin/utilisateurs");
+    revalidatePath(`/admin/utilisateurs/${userId}`); 
+
+    return { success: true, role: newRole };
+  } catch (error) {
+    console.error("Erreur lors du changement de rôle:", error);
+    return { success: false, error: "Impossible de modifier le rôle" };
   }
 }
 
@@ -180,4 +253,44 @@ export async function deleteUserAction(userId: string) {
   });
 
   revalidatePath("/users");
+}
+
+export async function anonymizeUserAction(userId: string) {
+  if (!await verifyAdmin()) return { success: false, error: "Action non autorisée." };
+
+  try {
+      const userToAnon = await prisma.user.findUnique({ where: { id: userId }, select: { profileImageUrl: true } });
+      if (userToAnon?.profileImageUrl) {
+          const { deleteUploadedFile } = await import('@/src/lib/file-storage');
+          await deleteUploadedFile(userToAnon.profileImageUrl);
+      }
+
+      await prisma.user.update({
+          where: { id: userId },
+          data: {
+              name: "Ancien",
+              lastname: "Utilisateur",
+              email: `anonyme_${userId.substring(0, 8)}@les-foulees.fr`,
+              phone: null,
+              address: "Effacée",
+              zipCode: "00000",
+              city: "Effacée",
+              birthdate: null,
+              emergencyName: null,
+              emergencyLastName: null,
+              emergencyPhone: null,
+              profileImageUrl: null,
+              status: "INACTIVE",
+              deactivatedAt: new Date(),
+              password: "",
+              showEmailDirectory: false,
+              showPhoneDirectory: false
+          }
+      });
+      revalidatePath("/admin/utilisateurs");
+      revalidatePath(`/admin/utilisateurs/${userId}`);
+      return { success: true };
+  } catch(e) {
+      return { success: false, error: "Erreur lors de l'anonymisation" };
+  }
 }

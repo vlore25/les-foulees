@@ -9,8 +9,9 @@ import { Loader2, UploadCloud, FileText } from "lucide-react"
 import { cn } from "@/src/lib/utils"
 import { createMembershipRequest } from "../memberships.actions"
 import { Label } from "@/components/ui/Label"
-import { Switch } from "@/components/ui/swtich"
+import { Switch } from "@/components/ui/switch"
 import { SearchUser } from "./SearchUser"
+import { TypographyH3, TypographyP } from "@/components/ui/typography"
 
 interface MembershipFormProps {
     userProfile: any;
@@ -36,13 +37,8 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
         initialData?.licenseType || "RENEWAL"
     );
 
-    // Un partenaire invité n'a pas encore rempli ses infos (certificat/licence) 
-    // s'il n'a ni n° de licence ni certificat, mais qu'il a une adhésion de type COUPLE
-    const isInvitedPartner = initialData && 
-        initialData.type === 'COUPLE' && 
-        !initialData.ffaLicenseNumber && 
-        !initialData.certificateUrl &&
-        initialData.status === 'PENDING';
+    // Un partenaire invité est identifié par la présence d'un partnerId (il est lié à l'adhésion principale)
+    const isInvitedPartner = initialData && !!initialData.partnerId;
 
     return (
             <form action={action} className="space-y-8 bg-white p-6 rounded-2xl border shadow-sm">
@@ -84,28 +80,28 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                 !!initialData && "opacity-60 cursor-not-allowed"
                             )}>
                                 <RadioGroupItem value="INDIVIDUAL" id="t-indi" disabled={!!initialData} />
-                                <Label htmlFor="t-indi" className="flex-1 cursor-pointer font-bold uppercase text-xs">Individuel {season.priceStandard} €</Label>
+                                <Label htmlFor="t-indi">Individuel {season.priceStandard} €</Label>
                             </div>
                             <div className={cn(
                                 "flex items-center space-x-3 border p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
                                 !!initialData && "opacity-60 cursor-not-allowed"
                             )}>
                                 <RadioGroupItem value="COUPLE" id="t-couple" disabled={!!initialData} />
-                                <Label htmlFor="t-couple" className="flex-1 cursor-pointer font-bold uppercase text-xs">Couple {season.priceCouple} €</Label>
+                                <Label htmlFor="t-couple">Couple {season.priceCouple} €</Label>
                             </div>
                             <div className={cn(
                                 "flex items-center space-x-3 border p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
                                 !!initialData && "opacity-60 cursor-not-allowed"
                             )}>
                                 <RadioGroupItem value="YOUNG" id="t-young" disabled={!!initialData} />
-                                <Label htmlFor="t-young" className="flex-1 cursor-pointer font-bold uppercase text-xs">Jeune -18 ans {season.priceYoung} €</Label>
+                                <Label htmlFor="t-young">Jeune -18 ans {season.priceYoung} €</Label>
                             </div>
                             <div className={cn(
                                 "flex items-center space-x-3 border p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
                                 !!initialData && "opacity-60 cursor-not-allowed"
                             )}>
                                 <RadioGroupItem value="LICENSE_RUNNING" id="t-run" disabled={!!initialData} />
-                                <Label htmlFor="t-run" className="flex-1 cursor-pointer font-bold uppercase text-xs">Licence Running FFA {season.priceFfa} €</Label>
+                                <Label htmlFor="t-run">Licence Running FFA {season.priceFfa} €</Label>
                             </div>
                         </RadioGroup>
                         {initialData && <input type="hidden" name="type" value={membershipType} />}
@@ -113,7 +109,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
                         {membershipType === "COUPLE" && (
                             <div className="animate-in fade-in slide-in-from-top-2 duration-300 pt-4 space-y-3 border-t border-dashed mt-4">
-                                <Label className="text-sm font-bold uppercase tracking-wider">Chercher votre conjoint(e) <span className="text-red-500">*</span></Label>
+                                <Label>Chercher votre conjoint(e) <span className="text-red-500">*</span></Label>
                                 <p className="text-xs text-muted-foreground italic">Votre partenaire doit déjà avoir un compte sur le site.</p>
                                 
                                 {initialData ? (
@@ -147,7 +143,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                             <div className="space-y-4">
                             <div className="flex items-center justify-between gap-4 p-4 bg-muted/20 rounded-xl">
                             <div className="space-y-0.5">
-                                <Label htmlFor="has-license-switch" className="text-sm font-bold uppercase">Êtes-vous déjà licencié FFA ?</Label>
+                                <Label htmlFor="has-license-switch">Êtes-vous déjà licencié FFA ?</Label>
                                 <p className="text-[10px] text-muted-foreground italic">Renouvellement ou Mutation depuis un autre club.</p>
                             </div>
                             <Switch
@@ -161,7 +157,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                             {hasLicense ? (
                             <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-5 pt-4">
                                 <div className="space-y-3">
-                                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Votre situation :</Label>
+                                    <Label>Votre situation :</Label>
                                     <RadioGroup
                                         value={licenseSource}
                                         onValueChange={(v) => setLicenseSource(v as "RENEWAL" | "MUTATION")}
@@ -169,17 +165,17 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                     >
                                        <div className="flex items-center space-x-2 border p-3 rounded-xl bg-white flex-1 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
                                             <RadioGroupItem value="RENEWAL" id="src-renew" />
-                                            <Label htmlFor="src-renew" className="font-bold cursor-pointer text-xs uppercase">Renouvellement</Label>
+                                            <Label htmlFor="src-renew">Renouvellement</Label>
                                         </div>
                                         <div className="flex items-center space-x-2 border p-3 rounded-xl bg-white flex-1 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
                                             <RadioGroupItem value="MUTATION" id="src-mut" />
-                                            <Label htmlFor="src-mut" className="font-bold cursor-pointer text-xs uppercase">Mutation (Autre club)</Label>
+                                            <Label htmlFor="src-mut">Mutation (Autre club)</Label>
                                         </div>
                                     </RadioGroup>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="ffa" className="text-xs font-bold uppercase">Numéro de licence <span className="text-red-500">*</span></Label>
+                                    <Label htmlFor="ffa">Numéro de licence <span className="text-red-500">*</span></Label>
                                     <Input
                                         id="ffa"
                                         name="ffa"
@@ -193,7 +189,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
                                 {licenseSource === "MUTATION" && (
                                     <div className="space-y-2 animate-in fade-in pl-4 border-l-2 border-primary">
-                                        <Label htmlFor="club" className="text-xs font-bold uppercase">Ancien club <span className="text-red-500">*</span></Label>
+                                        <Label htmlFor="club">Ancien club <span className="text-red-500">*</span></Label>
                                         <Input
                                             id="club"
                                             name="club"
@@ -208,30 +204,30 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                             </div>
                             ) : (
                             <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-4 pt-4">
-                                {initialData?.medicalCertificateUrl && (
+                                {initialData?.certificateUrl && (
                                     <div className="bg-primary/5 border border-primary/10 rounded-xl p-4 flex items-center justify-between text-sm">
                                         <div className="flex items-center gap-3 text-primary font-bold">
                                             <FileText className="w-5 h-5" />
                                             <span className="uppercase text-xs tracking-tighter">Certificat déjà fourni</span>
                                         </div>
-                                        <a href={initialData.medicalCertificateUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-black uppercase text-primary hover:underline underline-offset-4">
+                                        <a href={initialData.certificateUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-black uppercase text-primary hover:underline underline-offset-4">
                                             Consulter
                                         </a>
                                     </div>
                                 )}
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="medicalCertificate" className="flex items-center gap-2 text-xs font-bold uppercase">
+                                    <Label htmlFor="medicalCertificate">
                                         <UploadCloud className="w-4 h-4" /> 
-                                        {initialData?.medicalCertificateUrl ? "Mettre à jour le certificat" : "Charger votre certificat"} 
-                                        {!initialData?.medicalCertificateUrl && <span className="text-red-500">*</span>}
+                                        {initialData?.certificateUrl ? "Mettre à jour le certificat" : "Charger votre certificat"} 
+                                        {!initialData?.certificateUrl && <span className="text-red-500">*</span>}
                                     </Label>
                                     <Input
                                         id="medicalCertificate"
                                         name="medicalCertificate"
                                         type="file"
                                         accept=".pdf,image/*"
-                                        required={!hasLicense && !initialData?.medicalCertificateUrl}
+                                        required={!hasLicense && !initialData?.certificateUrl}
                                         className="cursor-pointer bg-white file:bg-primary file:text-white file:font-bold file:uppercase file:text-[10px] file:px-4 file:py-2 file:rounded-lg file:border-none rounded-xl"
                                     />
                                     {state?.errors?.medicalCertificate && <p className="text-xs text-red-500 font-bold italic">{state.errors.medicalCertificate[0]}</p>}
@@ -243,9 +239,9 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
                             {!isInvitedPartner ? (
                             <div className="space-y-4 pt-2">
-                            <h3 className="text-lg font-black uppercase tracking-tight border-b pb-2 text-primary">3. Règlement</h3>
+                            <TypographyH3 className="border-b pb-2">3. Règlement</TypographyH3>
                             <div className="space-y-2">
-                            <Label className="text-xs font-bold uppercase">Moyen de paiement</Label>
+                            <Label>Moyen de paiement</Label>
                             <Select name="paymentMethod" defaultValue={initialData?.paymentMethod || initialData?.payment?.method || "TRANSFER"}>
                                 <SelectTrigger className="rounded-xl">
                                     <SelectValue placeholder="Choisir..." />
@@ -262,7 +258,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                             // On garde un input hidden pour le paymentMethod pour la validation Zod
                             <input type="hidden" name="paymentMethod" value={initialData?.payment?.method || "TRANSFER"} />
                             )}                <div className="pt-6">
-                    <Button type="submit" disabled={pending} className="w-full py-6 rounded-xl font-black uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-[0.98]">
+                    <Button type="submit" disabled={pending} className="w-full py-6 rounded-lg font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
                         {pending ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Traitement...</> : initialData ? "Mettre à jour ma demande" : "Soumettre mon adhésion"}
                     </Button>
                 </div>

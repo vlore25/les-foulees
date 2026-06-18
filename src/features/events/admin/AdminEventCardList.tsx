@@ -8,6 +8,7 @@ import { getAssetUrl, formatEventType } from "@/src/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { EventRowActions } from "./EventRowAction";
 import AdminParticipantsModal from "./AdminParticipantsModal";
+import { TypographyH3 } from "@/components/ui/typography";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
@@ -48,17 +49,16 @@ export default function AdminEventCardList({ events }: { events: EventListItem[]
                                     {formatEventType(event.type)}
                                 </Badge>
                             </div>
-                            <div className="absolute top-2 right-2">
-                                <EventRowActions eventId={event.id} />
-                            </div>
                         </div>
 
                         <div className="p-4 flex flex-col flex-grow">
-                            <h3 className="text-sm font-black uppercase text-slate-900 leading-tight mb-3 line-clamp-1">
+                            <TypographyH3 className="text-sm leading-tight mb-3 line-clamp-1">
                                 {event.title}
-                            </h3>
-                            
-                            <div className="space-y-1.5 mb-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                            </TypographyH3>
+                            <div className="absolute top-2 right-2">
+                                <EventRowActions eventId={event.id} />
+                            </div>
+                            <div className="space-y-1.5 mb-4 text-xs font-medium text-slate-500">
                                 <div className="flex items-center gap-2">
                                     <Calendar size={12} className="text-primary/60 shrink-0" />
                                     <span>

@@ -13,11 +13,12 @@ function Title({
   ...props
 }: TitleProps) {
   return (
-    <div className={cn("py-4 w-fit group", className)}>
+    <div className="py-4 w-fit group">
       <h2
         data-slot="title"
         className={cn(
           "text-3xl sm:text-4xl font-black tracking-tighter text-title select-none uppercase",
+          className
         )}
         {...props}
       >

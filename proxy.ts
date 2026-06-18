@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { decrypt } from '@/src/lib/session'
+import { decrypt } from '@/src/lib/session-edge'
  
 const protectedPaths = ['/espace-membre', '/admin']
 const publicPaths = ['/login', '/']
  
-export default async function proxy(req: NextRequest) {
+export default async function middleware(req: NextRequest) {
   // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname
   const isProtectedRoute = protectedPaths.some(prefix => path.startsWith(prefix))

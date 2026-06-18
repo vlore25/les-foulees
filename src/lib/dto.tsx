@@ -23,10 +23,11 @@ export type PublicUserDetails = PublicUserList & {
 
 //-----------ADMIN---------------------
 
-type RawAdminList = Pick<User, 'id' | 'name' | 'lastname' | 'status' | 'createdAt' | 'profileImageUrl'>;
+type RawAdminList = Pick<User, 'id' | 'name' | 'lastname' | 'status' | 'createdAt' | 'profileImageUrl' | 'role'>;
 
 export type AdminUserList = PublicUserList & {
   createdAt: string;
+  role: string;
 }
 
 export type AdminUserDetails = Omit<User, 'password' | 'updatedAt' | 'createdAt'> & {
@@ -73,6 +74,7 @@ export function toAdminList(user: RawAdminList): AdminUserList {
     lastname: user.lastname,
     status: user.status,
     profileImageUrl: user.profileImageUrl,
+    role: user.role,
     createdAt: user.createdAt.toLocaleString('fr-FR', { month: 'long', day: 'numeric', year: 'numeric'})
   }
 }

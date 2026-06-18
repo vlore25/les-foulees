@@ -45,7 +45,7 @@ export type SeasonMinAggregateOutputType = {
   name: string | null
   startDate: Date | null
   endDate: Date | null
-  isActive: boolean | null
+  isOpenForRegistration: boolean | null
   priceStandard: number | null
   priceCouple: number | null
   priceYoung: number | null
@@ -59,7 +59,7 @@ export type SeasonMaxAggregateOutputType = {
   name: string | null
   startDate: Date | null
   endDate: Date | null
-  isActive: boolean | null
+  isOpenForRegistration: boolean | null
   priceStandard: number | null
   priceCouple: number | null
   priceYoung: number | null
@@ -73,7 +73,7 @@ export type SeasonCountAggregateOutputType = {
   name: number
   startDate: number
   endDate: number
-  isActive: number
+  isOpenForRegistration: number
   priceStandard: number
   priceCouple: number
   priceYoung: number
@@ -103,7 +103,7 @@ export type SeasonMinAggregateInputType = {
   name?: true
   startDate?: true
   endDate?: true
-  isActive?: true
+  isOpenForRegistration?: true
   priceStandard?: true
   priceCouple?: true
   priceYoung?: true
@@ -117,7 +117,7 @@ export type SeasonMaxAggregateInputType = {
   name?: true
   startDate?: true
   endDate?: true
-  isActive?: true
+  isOpenForRegistration?: true
   priceStandard?: true
   priceCouple?: true
   priceYoung?: true
@@ -131,7 +131,7 @@ export type SeasonCountAggregateInputType = {
   name?: true
   startDate?: true
   endDate?: true
-  isActive?: true
+  isOpenForRegistration?: true
   priceStandard?: true
   priceCouple?: true
   priceYoung?: true
@@ -232,7 +232,7 @@ export type SeasonGroupByOutputType = {
   name: string
   startDate: Date
   endDate: Date
-  isActive: boolean
+  isOpenForRegistration: boolean
   priceStandard: number
   priceCouple: number
   priceYoung: number
@@ -269,7 +269,7 @@ export type SeasonWhereInput = {
   name?: Prisma.StringFilter<"Season"> | string
   startDate?: Prisma.DateTimeFilter<"Season"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Season"> | Date | string
-  isActive?: Prisma.BoolFilter<"Season"> | boolean
+  isOpenForRegistration?: Prisma.BoolFilter<"Season"> | boolean
   priceStandard?: Prisma.FloatFilter<"Season"> | number
   priceCouple?: Prisma.FloatFilter<"Season"> | number
   priceYoung?: Prisma.FloatFilter<"Season"> | number
@@ -284,7 +284,7 @@ export type SeasonOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
+  isOpenForRegistration?: Prisma.SortOrder
   priceStandard?: Prisma.SortOrder
   priceCouple?: Prisma.SortOrder
   priceYoung?: Prisma.SortOrder
@@ -302,7 +302,7 @@ export type SeasonWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SeasonWhereInput | Prisma.SeasonWhereInput[]
   startDate?: Prisma.DateTimeFilter<"Season"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Season"> | Date | string
-  isActive?: Prisma.BoolFilter<"Season"> | boolean
+  isOpenForRegistration?: Prisma.BoolFilter<"Season"> | boolean
   priceStandard?: Prisma.FloatFilter<"Season"> | number
   priceCouple?: Prisma.FloatFilter<"Season"> | number
   priceYoung?: Prisma.FloatFilter<"Season"> | number
@@ -317,7 +317,7 @@ export type SeasonOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
+  isOpenForRegistration?: Prisma.SortOrder
   priceStandard?: Prisma.SortOrder
   priceCouple?: Prisma.SortOrder
   priceYoung?: Prisma.SortOrder
@@ -339,7 +339,7 @@ export type SeasonScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Season"> | string
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Season"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"Season"> | Date | string
-  isActive?: Prisma.BoolWithAggregatesFilter<"Season"> | boolean
+  isOpenForRegistration?: Prisma.BoolWithAggregatesFilter<"Season"> | boolean
   priceStandard?: Prisma.FloatWithAggregatesFilter<"Season"> | number
   priceCouple?: Prisma.FloatWithAggregatesFilter<"Season"> | number
   priceYoung?: Prisma.FloatWithAggregatesFilter<"Season"> | number
@@ -353,7 +353,7 @@ export type SeasonCreateInput = {
   name: string
   startDate: Date | string
   endDate: Date | string
-  isActive?: boolean
+  isOpenForRegistration?: boolean
   priceStandard?: number
   priceCouple?: number
   priceYoung?: number
@@ -368,7 +368,7 @@ export type SeasonUncheckedCreateInput = {
   name: string
   startDate: Date | string
   endDate: Date | string
-  isActive?: boolean
+  isOpenForRegistration?: boolean
   priceStandard?: number
   priceCouple?: number
   priceYoung?: number
@@ -383,7 +383,7 @@ export type SeasonUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOpenForRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
   priceStandard?: Prisma.FloatFieldUpdateOperationsInput | number
   priceCouple?: Prisma.FloatFieldUpdateOperationsInput | number
   priceYoung?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -398,7 +398,7 @@ export type SeasonUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOpenForRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
   priceStandard?: Prisma.FloatFieldUpdateOperationsInput | number
   priceCouple?: Prisma.FloatFieldUpdateOperationsInput | number
   priceYoung?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -413,7 +413,7 @@ export type SeasonCreateManyInput = {
   name: string
   startDate: Date | string
   endDate: Date | string
-  isActive?: boolean
+  isOpenForRegistration?: boolean
   priceStandard?: number
   priceCouple?: number
   priceYoung?: number
@@ -427,7 +427,7 @@ export type SeasonUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOpenForRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
   priceStandard?: Prisma.FloatFieldUpdateOperationsInput | number
   priceCouple?: Prisma.FloatFieldUpdateOperationsInput | number
   priceYoung?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -441,7 +441,7 @@ export type SeasonUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOpenForRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
   priceStandard?: Prisma.FloatFieldUpdateOperationsInput | number
   priceCouple?: Prisma.FloatFieldUpdateOperationsInput | number
   priceYoung?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -455,7 +455,7 @@ export type SeasonCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
+  isOpenForRegistration?: Prisma.SortOrder
   priceStandard?: Prisma.SortOrder
   priceCouple?: Prisma.SortOrder
   priceYoung?: Prisma.SortOrder
@@ -476,7 +476,7 @@ export type SeasonMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
+  isOpenForRegistration?: Prisma.SortOrder
   priceStandard?: Prisma.SortOrder
   priceCouple?: Prisma.SortOrder
   priceYoung?: Prisma.SortOrder
@@ -490,7 +490,7 @@ export type SeasonMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
+  isOpenForRegistration?: Prisma.SortOrder
   priceStandard?: Prisma.SortOrder
   priceCouple?: Prisma.SortOrder
   priceYoung?: Prisma.SortOrder
@@ -538,7 +538,7 @@ export type SeasonCreateWithoutMembershipsInput = {
   name: string
   startDate: Date | string
   endDate: Date | string
-  isActive?: boolean
+  isOpenForRegistration?: boolean
   priceStandard?: number
   priceCouple?: number
   priceYoung?: number
@@ -552,7 +552,7 @@ export type SeasonUncheckedCreateWithoutMembershipsInput = {
   name: string
   startDate: Date | string
   endDate: Date | string
-  isActive?: boolean
+  isOpenForRegistration?: boolean
   priceStandard?: number
   priceCouple?: number
   priceYoung?: number
@@ -582,7 +582,7 @@ export type SeasonUpdateWithoutMembershipsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOpenForRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
   priceStandard?: Prisma.FloatFieldUpdateOperationsInput | number
   priceCouple?: Prisma.FloatFieldUpdateOperationsInput | number
   priceYoung?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -596,7 +596,7 @@ export type SeasonUncheckedUpdateWithoutMembershipsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOpenForRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
   priceStandard?: Prisma.FloatFieldUpdateOperationsInput | number
   priceCouple?: Prisma.FloatFieldUpdateOperationsInput | number
   priceYoung?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -641,7 +641,7 @@ export type SeasonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name?: boolean
   startDate?: boolean
   endDate?: boolean
-  isActive?: boolean
+  isOpenForRegistration?: boolean
   priceStandard?: boolean
   priceCouple?: boolean
   priceYoung?: boolean
@@ -657,7 +657,7 @@ export type SeasonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   name?: boolean
   startDate?: boolean
   endDate?: boolean
-  isActive?: boolean
+  isOpenForRegistration?: boolean
   priceStandard?: boolean
   priceCouple?: boolean
   priceYoung?: boolean
@@ -671,7 +671,7 @@ export type SeasonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   name?: boolean
   startDate?: boolean
   endDate?: boolean
-  isActive?: boolean
+  isOpenForRegistration?: boolean
   priceStandard?: boolean
   priceCouple?: boolean
   priceYoung?: boolean
@@ -685,7 +685,7 @@ export type SeasonSelectScalar = {
   name?: boolean
   startDate?: boolean
   endDate?: boolean
-  isActive?: boolean
+  isOpenForRegistration?: boolean
   priceStandard?: boolean
   priceCouple?: boolean
   priceYoung?: boolean
@@ -694,7 +694,7 @@ export type SeasonSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SeasonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "startDate" | "endDate" | "isActive" | "priceStandard" | "priceCouple" | "priceYoung" | "priceFfa" | "createdAt" | "updatedAt", ExtArgs["result"]["season"]>
+export type SeasonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "startDate" | "endDate" | "isOpenForRegistration" | "priceStandard" | "priceCouple" | "priceYoung" | "priceFfa" | "createdAt" | "updatedAt", ExtArgs["result"]["season"]>
 export type SeasonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | Prisma.Season$membershipsArgs<ExtArgs>
   _count?: boolean | Prisma.SeasonCountOutputTypeDefaultArgs<ExtArgs>
@@ -712,7 +712,7 @@ export type $SeasonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     name: string
     startDate: Date
     endDate: Date
-    isActive: boolean
+    isOpenForRegistration: boolean
     priceStandard: number
     priceCouple: number
     priceYoung: number
@@ -1147,7 +1147,7 @@ export interface SeasonFieldRefs {
   readonly name: Prisma.FieldRef<"Season", 'String'>
   readonly startDate: Prisma.FieldRef<"Season", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Season", 'DateTime'>
-  readonly isActive: Prisma.FieldRef<"Season", 'Boolean'>
+  readonly isOpenForRegistration: Prisma.FieldRef<"Season", 'Boolean'>
   readonly priceStandard: Prisma.FieldRef<"Season", 'Float'>
   readonly priceCouple: Prisma.FieldRef<"Season", 'Float'>
   readonly priceYoung: Prisma.FieldRef<"Season", 'Float'>

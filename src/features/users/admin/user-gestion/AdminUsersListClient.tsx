@@ -10,6 +10,7 @@ import { UserRowActions } from "./UserRowActions";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { UserName } from "@/components/ui/user-name";
 
 export default function AdminUsersListClient({ users }: { users: AdminUserList[] }) {
     const [search, setSearch] = useState("");
@@ -24,7 +25,7 @@ export default function AdminUsersListClient({ users }: { users: AdminUserList[]
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
                     placeholder="Rechercher un utilisateur..." 
-                    className="pl-10 h-10 bg-white border-slate-200 rounded-md"
+                    className="pl-10 h-10 bg-white rounded-md"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
@@ -37,15 +38,15 @@ export default function AdminUsersListClient({ users }: { users: AdminUserList[]
                         className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
                     >
                         <div className="flex items-center gap-4">
-                            <Avatar className="h-10 w-10 border border-slate-100 rounded-md">
+                            <Avatar className="h-10 w-10 border border-slate-100">
                                 <AvatarImage src={getAssetUrl(user.profileImageUrl)} className="object-cover" />
-                                <AvatarFallback className="bg-slate-50 text-slate-500 font-bold uppercase text-xs rounded-md">
+                                <AvatarFallback className="bg-slate-50 text-slate-500 font-bold uppercase text-xs">
                                     {user.name[0]}{user.lastname[0]}
                                 </AvatarFallback>
                             </Avatar>
                             <div>
-                                <h3 className="font-bold text-slate-900 uppercase text-sm tracking-tight flex items-center gap-2">
-                                    {user.lastname} {user.name}
+                                <h3 className="text-slate-900 text-sm flex items-center gap-2">
+                                    <UserName name={user.name} lastname={user.lastname} />
                                     <Badge className={cn(
                                         "border-none text-[8px] font-black uppercase px-2 py-0 h-4 rounded-sm",
                                         user.status === "ACTIVE" 
@@ -54,8 +55,13 @@ export default function AdminUsersListClient({ users }: { users: AdminUserList[]
                                     )}>
                                         {user.status === "ACTIVE" ? "Actif" : "Inactif"}
                                     </Badge>
+                                    {user.role === "ADMIN" && (
+                                        <Badge className="border-none text-[8px] font-black uppercase px-2 py-0 h-4 rounded-sm bg-purple-100 text-purple-700">
+                                            Admin
+                                        </Badge>
+                                    )}
                                 </h3>
-                                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                                <div className="flex items-center gap-2 text-[10px] font-medium text-slate-400 mt-0.5">
                                     <Calendar size={12} className="text-primary/50" />
                                     <span>Depuis {user.createdAt}</span>
                                 </div>
@@ -68,7 +74,7 @@ export default function AdminUsersListClient({ users }: { users: AdminUserList[]
                                     <Eye size={16} />
                                 </Link>
                             </Button>
-                            <UserRowActions userId={user.id} />
+                            <UserRowActions userId={user.id} role={user.role} />
                         </div>
                     </div>
                 ))}

@@ -5,17 +5,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 
-const getSecretKey = () => {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) throw new Error("JWT_SECRET manquant");
-  return new TextEncoder().encode(secret);
-}
-
-
-type SessionPayload = {
-  userId: string
-  expiresAt: Date
-}
+import { encrypt, decrypt, SessionPayload } from './session-edge'
 
 type Token = {
   token: String
@@ -30,26 +20,6 @@ const cookie = {
     path: '/' 
   },
   duration: 24 * 60 * 60 * 1000,
-}
-
-export async function encrypt(payload: SessionPayload){
-    return new SignJWT(payload)
-      .setProtectedHeader({alg: 'HS256'})
-      .setIssuedAt()
-      .setExpirationTime("1 day")
-      .sign(getSecretKey())
-}
-
-export async function decrypt(session: string | undefined = ''){
-  try{
-    const {payload} = await jwtVerify(session, getSecretKey(), {
-      algorithms: ['HS256']
-    })
-    return payload;
-  }catch (error){
-    return null;
-  }
-  
 }
 
 export async function createSession(userId: string){
@@ -127,6 +97,59 @@ export const verifySessionExternal = cache(async () => {
   return { isAuth: true, userId: session.userId as string }
 })
 
+
+export const verifyValidatedMembership = cache(async () => {
+  const cookieValue = (await cookies()).get(cookie.name)?.value
+  const session = await decrypt(cookieValue)
+ 
+  if (!session?.userId) {
+    redirect('/login')
+  }
+
+  const { prisma } = await import('@/src/lib/prisma')
+  
+  // Vérifier le statut de l'utilisateur
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId as string },
+    select: { status: true, role: true }
+  })
+
+  if (!user || user.status === 'INACTIVE') {
+    redirect('/login')
+  }
+
+  // Les administrateurs ont toujours accès
+  if (user.role === 'ADMIN') {
+    return { isAuth: true, userId: session.userId as string }
+  }
+
+  // Chercher la saison correspondant à la date actuelle
+  const now = new Date();
+  const activeSeason = await prisma.season.findFirst({
+    where: { 
+      startDate: { lte: now },
+      endDate: { gte: now }
+    }
+  })
+
+  if (activeSeason) {
+    // Vérifier si l'utilisateur a une adhésion validée pour cette saison
+    const membership = await prisma.membership.findUnique({
+      where: {
+        userId_seasonId: {
+          userId: session.userId as string,
+          seasonId: activeSeason.id
+        }
+      }
+    })
+
+    if (!membership || membership.status !== 'VALIDATED') {
+      redirect('/espace-membre/adhesion')
+    }
+  }
+
+  return { isAuth: true, userId: session.userId as string }
+})
 
 export async function deleteSession() {
 

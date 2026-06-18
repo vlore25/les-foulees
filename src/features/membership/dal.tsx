@@ -13,7 +13,7 @@ export default async function getAdhesions(
     if (seasonId) {
         whereCondition.seasonId = seasonId;
     } else {
-        whereCondition.season = { isActive: true };
+        whereCondition.season = { isOpenForRegistration: true };
     }
 
     // 2. LOGIQUE DE FILTRE (Statut)
@@ -76,7 +76,7 @@ export async function getAdhesionStats(seasonId?: string) {
     if (seasonId) {
         whereCondition.seasonId = seasonId;
     } else {
-        whereCondition.season = { isActive: true };
+        whereCondition.season = { isOpenForRegistration: true };
     }
 
     const [total, validated, toHandle] = await Promise.all([
@@ -112,7 +112,7 @@ export async function getUserMembershipForActiveSeason(userId: string) {
         const memberShip = await prisma.membership.findFirst({
             where: {
                 userId: session.userId,
-                season: { isActive: true } 
+                season: { isOpenForRegistration: true } 
             },
             include: {
                 payment: true,

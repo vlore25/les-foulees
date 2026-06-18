@@ -6,9 +6,12 @@ import { Title } from "@/components/ui/title";
 import { Clock, MapPin } from "lucide-react";
 import Image from "next/image";
 
-export default function TrainingSchedule() {
+import { getTrainingSchedules } from "@/src/features/site-config/dal";
 
-    const tableItems = [
+export default async function TrainingSchedule() {
+    let tableItems = await getTrainingSchedules();
+
+    const defaultItems = [
         {
             day: "Mardi  et jeudi",
             hour: "18h30/20h00",
@@ -29,6 +32,11 @@ export default function TrainingSchedule() {
         },
     ];
 
+    if (tableItems.length === 0) {
+        // @ts-ignore - map fields for the fallback
+        tableItems = defaultItems.map(item => ({ ...item, imgUrl: item.img }));
+    }
+
     return (
         <section className="my-16 max-w-6xl mx-auto px-4">
             <Title className="mb-2">
@@ -43,7 +51,7 @@ export default function TrainingSchedule() {
                         
                         <div className="relative w-full h-52 sm:hidden  ">
                             <Image
-                                src={item.img}
+                                src={item.imgUrl || "/images/training/training1.jpg"}
                                 fill
                                 alt={item.day}
                                 className="rounded-tl-[2rem] rounded-br-[2rem] object-cover shadow-md"
@@ -69,7 +77,7 @@ export default function TrainingSchedule() {
                             
                             <div className="relative h-40 col-span-3 overflow-hidden rounded-tl-[2rem] rounded-br-[2rem] shadow-sm group-hover:shadow-md transition-shadow">
                                 <Image
-                                    src={item.img}
+                                    src={item.imgUrl || "/images/training/training1.jpg"}
                                     fill
                                     alt={item.day}
                                     className="object-cover transition-transform duration-700 group-hover:scale-110"

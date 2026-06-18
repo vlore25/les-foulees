@@ -61,6 +61,8 @@ export type EventCountAggregateOutputType = {
   dateEnd: number
   location: number
   distances: number
+  meals: number
+  accommodations: number
   type: number
   visibility: number
   createdAt: number
@@ -106,6 +108,8 @@ export type EventCountAggregateInputType = {
   dateEnd?: true
   location?: true
   distances?: true
+  meals?: true
+  accommodations?: true
   type?: true
   visibility?: true
   createdAt?: true
@@ -194,6 +198,8 @@ export type EventGroupByOutputType = {
   dateEnd: Date | null
   location: string
   distances: string[]
+  meals: string[]
+  accommodations: string[]
   type: $Enums.EventType
   visibility: $Enums.Visibility
   createdAt: Date
@@ -230,6 +236,8 @@ export type EventWhereInput = {
   dateEnd?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   location?: Prisma.StringFilter<"Event"> | string
   distances?: Prisma.StringNullableListFilter<"Event">
+  meals?: Prisma.StringNullableListFilter<"Event">
+  accommodations?: Prisma.StringNullableListFilter<"Event">
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFilter<"Event"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -246,6 +254,8 @@ export type EventOrderByWithRelationInput = {
   dateEnd?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrder
   distances?: Prisma.SortOrder
+  meals?: Prisma.SortOrder
+  accommodations?: Prisma.SortOrder
   type?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -265,6 +275,8 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   dateEnd?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
   location?: Prisma.StringFilter<"Event"> | string
   distances?: Prisma.StringNullableListFilter<"Event">
+  meals?: Prisma.StringNullableListFilter<"Event">
+  accommodations?: Prisma.StringNullableListFilter<"Event">
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFilter<"Event"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -281,6 +293,8 @@ export type EventOrderByWithAggregationInput = {
   dateEnd?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrder
   distances?: Prisma.SortOrder
+  meals?: Prisma.SortOrder
+  accommodations?: Prisma.SortOrder
   type?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -302,6 +316,8 @@ export type EventScalarWhereWithAggregatesInput = {
   dateEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
   location?: Prisma.StringWithAggregatesFilter<"Event"> | string
   distances?: Prisma.StringNullableListFilter<"Event">
+  meals?: Prisma.StringNullableListFilter<"Event">
+  accommodations?: Prisma.StringNullableListFilter<"Event">
   type?: Prisma.EnumEventTypeWithAggregatesFilter<"Event"> | $Enums.EventType
   visibility?: Prisma.EnumVisibilityWithAggregatesFilter<"Event"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
@@ -317,6 +333,8 @@ export type EventCreateInput = {
   dateEnd?: Date | string | null
   location: string
   distances?: Prisma.EventCreatedistancesInput | string[]
+  meals?: Prisma.EventCreatemealsInput | string[]
+  accommodations?: Prisma.EventCreateaccommodationsInput | string[]
   type: $Enums.EventType
   visibility?: $Enums.Visibility
   createdAt?: Date | string
@@ -333,6 +351,8 @@ export type EventUncheckedCreateInput = {
   dateEnd?: Date | string | null
   location: string
   distances?: Prisma.EventCreatedistancesInput | string[]
+  meals?: Prisma.EventCreatemealsInput | string[]
+  accommodations?: Prisma.EventCreateaccommodationsInput | string[]
   type: $Enums.EventType
   visibility?: $Enums.Visibility
   createdAt?: Date | string
@@ -349,6 +369,8 @@ export type EventUpdateInput = {
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
   distances?: Prisma.EventUpdatedistancesInput | string[]
+  meals?: Prisma.EventUpdatemealsInput | string[]
+  accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -365,6 +387,8 @@ export type EventUncheckedUpdateInput = {
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
   distances?: Prisma.EventUpdatedistancesInput | string[]
+  meals?: Prisma.EventUpdatemealsInput | string[]
+  accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -381,6 +405,8 @@ export type EventCreateManyInput = {
   dateEnd?: Date | string | null
   location: string
   distances?: Prisma.EventCreatedistancesInput | string[]
+  meals?: Prisma.EventCreatemealsInput | string[]
+  accommodations?: Prisma.EventCreateaccommodationsInput | string[]
   type: $Enums.EventType
   visibility?: $Enums.Visibility
   createdAt?: Date | string
@@ -396,6 +422,8 @@ export type EventUpdateManyMutationInput = {
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
   distances?: Prisma.EventUpdatedistancesInput | string[]
+  meals?: Prisma.EventUpdatemealsInput | string[]
+  accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -411,6 +439,8 @@ export type EventUncheckedUpdateManyInput = {
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
   distances?: Prisma.EventUpdatedistancesInput | string[]
+  meals?: Prisma.EventUpdatemealsInput | string[]
+  accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -434,6 +464,8 @@ export type EventCountOrderByAggregateInput = {
   dateEnd?: Prisma.SortOrder
   location?: Prisma.SortOrder
   distances?: Prisma.SortOrder
+  meals?: Prisma.SortOrder
+  accommodations?: Prisma.SortOrder
   type?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -477,7 +509,25 @@ export type EventCreatedistancesInput = {
   set: string[]
 }
 
+export type EventCreatemealsInput = {
+  set: string[]
+}
+
+export type EventCreateaccommodationsInput = {
+  set: string[]
+}
+
 export type EventUpdatedistancesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type EventUpdatemealsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type EventUpdateaccommodationsInput = {
   set?: string[]
   push?: string | string[]
 }
@@ -513,6 +563,8 @@ export type EventCreateWithoutRegistrationsInput = {
   dateEnd?: Date | string | null
   location: string
   distances?: Prisma.EventCreatedistancesInput | string[]
+  meals?: Prisma.EventCreatemealsInput | string[]
+  accommodations?: Prisma.EventCreateaccommodationsInput | string[]
   type: $Enums.EventType
   visibility?: $Enums.Visibility
   createdAt?: Date | string
@@ -528,6 +580,8 @@ export type EventUncheckedCreateWithoutRegistrationsInput = {
   dateEnd?: Date | string | null
   location: string
   distances?: Prisma.EventCreatedistancesInput | string[]
+  meals?: Prisma.EventCreatemealsInput | string[]
+  accommodations?: Prisma.EventCreateaccommodationsInput | string[]
   type: $Enums.EventType
   visibility?: $Enums.Visibility
   createdAt?: Date | string
@@ -559,6 +613,8 @@ export type EventUpdateWithoutRegistrationsInput = {
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
   distances?: Prisma.EventUpdatedistancesInput | string[]
+  meals?: Prisma.EventUpdatemealsInput | string[]
+  accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -574,6 +630,8 @@ export type EventUncheckedUpdateWithoutRegistrationsInput = {
   dateEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   location?: Prisma.StringFieldUpdateOperationsInput | string
   distances?: Prisma.EventUpdatedistancesInput | string[]
+  meals?: Prisma.EventUpdatemealsInput | string[]
+  accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -620,6 +678,8 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   dateEnd?: boolean
   location?: boolean
   distances?: boolean
+  meals?: boolean
+  accommodations?: boolean
   type?: boolean
   visibility?: boolean
   createdAt?: boolean
@@ -637,6 +697,8 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   dateEnd?: boolean
   location?: boolean
   distances?: boolean
+  meals?: boolean
+  accommodations?: boolean
   type?: boolean
   visibility?: boolean
   createdAt?: boolean
@@ -652,6 +714,8 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   dateEnd?: boolean
   location?: boolean
   distances?: boolean
+  meals?: boolean
+  accommodations?: boolean
   type?: boolean
   visibility?: boolean
   createdAt?: boolean
@@ -667,13 +731,15 @@ export type EventSelectScalar = {
   dateEnd?: boolean
   location?: boolean
   distances?: boolean
+  meals?: boolean
+  accommodations?: boolean
   type?: boolean
   visibility?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "imgUrl" | "description" | "dateStart" | "dateEnd" | "location" | "distances" | "type" | "visibility" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "imgUrl" | "description" | "dateStart" | "dateEnd" | "location" | "distances" | "meals" | "accommodations" | "type" | "visibility" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrations?: boolean | Prisma.Event$registrationsArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
@@ -695,6 +761,8 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     dateEnd: Date | null
     location: string
     distances: string[]
+    meals: string[]
+    accommodations: string[]
     type: $Enums.EventType
     visibility: $Enums.Visibility
     createdAt: Date
@@ -1131,6 +1199,8 @@ export interface EventFieldRefs {
   readonly dateEnd: Prisma.FieldRef<"Event", 'DateTime'>
   readonly location: Prisma.FieldRef<"Event", 'String'>
   readonly distances: Prisma.FieldRef<"Event", 'String[]'>
+  readonly meals: Prisma.FieldRef<"Event", 'String[]'>
+  readonly accommodations: Prisma.FieldRef<"Event", 'String[]'>
   readonly type: Prisma.FieldRef<"Event", 'EventType'>
   readonly visibility: Prisma.FieldRef<"Event", 'Visibility'>
   readonly createdAt: Prisma.FieldRef<"Event", 'DateTime'>

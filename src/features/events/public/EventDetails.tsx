@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { getAssetUrl, formatEventType } from "@/src/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { Quote } from "@/components/ui/quote";
+import { TypographyH1, TypographyH4, TypographyP } from "@/components/ui/typography";
 
 interface EventDetailsProps {
     event: {
@@ -18,12 +20,19 @@ interface EventDetailsProps {
         dateStart: Date | null;
         dateEnd: Date | null;
         distances: string[];
+        meals: string[];
+        accommodations: string[];
         isParticipant: boolean;
-        selectedDistance: string | null;
+        userDistance: string | null;
+        userMeals: string[];
+        userAccommodations: string[];
         participantCount: number;
         registrations: {
             id: string;
             distance: string | null;
+            meals: string[];
+            accommodations: string[];
+            carpooling: boolean;
             user: {
                 id: string;
                 name: string;
@@ -35,16 +44,20 @@ interface EventDetailsProps {
 
 export default function EventDetails({ event }: EventDetailsProps) {
     const groupedRegistrations = event.registrations.reduce((acc, reg) => {
-        const distanceLabel = reg.distance || "Inscription classique";
-        if (!acc[distanceLabel]) {
-            acc[distanceLabel] = [];
+        const distanceLabel = reg.distance || "Général";
+        const mealsLabel = reg.meals?.length > 0 ? ` + ${reg.meals.join(", ")}` : "";
+        const accLabel = reg.accommodations?.length > 0 ? ` + ${reg.accommodations.join(", ")}` : "";
+        
+        const finalLabel = `${distanceLabel}${mealsLabel}${accLabel}`;
+        if (!acc[finalLabel]) {
+            acc[finalLabel] = [];
         }
-        acc[distanceLabel].push(reg);
+        acc[finalLabel].push(reg);
         return acc;
     }, {} as Record<string, typeof event.registrations>);
 
     return (
-        <div className="max-w-5xl mx-auto px-4 pb-12 sm:px-6 lg:px-8 space-y-6 sm:space-y-8 animate-in fade-in duration-500">
+        <div className="max-w-5xl mx-auto px-2 pb-12 sm:px-2 lg:px-2 space-y-6 sm:space-y-8 animate-in fade-in duration-500">
             {/* Navigation & Breadcrumb */}
             <div className="pt-4">
                 <Button variant="ghost" asChild className="-ml-2 px-2 h-9 text-muted-foreground hover:text-foreground transition-colors">
@@ -55,40 +68,34 @@ export default function EventDetails({ event }: EventDetailsProps) {
             </div>
 
             {/* Hero Section */}
-            <div className="flex flex-col lg:grid lg:grid-cols-12 lg:gap-8 xl:gap-12 items-start">
+            <div className="flex flex-col lg:gap-8 xl:gap-12 items-start">
                 
                 {/* Image Section */}
                 <div className="lg:col-span-7 xl:col-span-8 w-full order-1">
-                    <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden shadow-lg border bg-muted group">
+                    <div className="relative aspect-[16/9] w-full overflow-hidden shadow-lg border bg-muted group">
                         <img
                             src={getAssetUrl(event.imgUrl)}
                             alt={event.title}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="w-full h-full object-cover"
                         />
-                        <div className="absolute top-4 left-4">
-                            <Badge className="bg-primary/90 hover:bg-primary backdrop-blur-sm px-3 py-1 text-xs uppercase tracking-wider font-bold shadow-sm">
-                                {formatEventType(event.type)}
-                            </Badge>
-                        </div>
                     </div>
                 </div>
 
                 {/* Main Info Card */}
                 <div className="lg:col-span-5 xl:col-span-4 w-full mt-6 lg:mt-0 space-y-6 order-2 lg:sticky lg:top-8">
-                    <div className="space-y-4">
-                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight text-primary leading-tight">
+                    <div className="space-y-2">
+                        <TypographyH1>
                             {event.title}
-                        </h1>
+                        </TypographyH1>
 
-                        <div className="space-y-3">
+                        <div className="space-y-1">
                             {/* Date Info */}
-                            <div className="flex items-start gap-3">
-                                <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
+                            <div className="flex items-center gap-1">
+                                <div className="p-2 text-primary">
                                     <CalendarIcon className="w-5 h-5" />
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">Date</p>
-                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                    <div className="flex items-center gap-1 flex-wrap">
                                         <span className="text-sm font-semibold sm:text-base">
                                             {event.dateStart
                                                 ? new Date(event.dateStart).toLocaleDateString("fr-FR", {
@@ -116,12 +123,11 @@ export default function EventDetails({ event }: EventDetailsProps) {
                             </div>
 
                             {/* Location Info */}
-                            <div className="flex items-start gap-3">
-                                <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
+                            <div className="flex items-center gap-1">
+                                <div className="p-2 text-primary">
                                     <MapPinIcon className="w-5 h-5" />
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">Lieu</p>
                                     <p className="text-sm font-semibold sm:text-base leading-snug">
                                         {event.location}
                                     </p>
@@ -129,50 +135,38 @@ export default function EventDetails({ event }: EventDetailsProps) {
                             </div>
 
                             {/* Activity Type Info */}
-                            <div className="flex items-start gap-3">
-                                <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
+                            <div className="flex items-center gap-1">
+                                <div className="p-2 text-primary">
                                     <TagIcon className="w-5 h-5" />
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">Type</p>
                                     <p className="text-sm font-semibold sm:text-base">
                                         {formatEventType(event.type)}
                                     </p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <Separator className="bg-primary/10" />
-
-                    {/* Registration & Participants */}
-                    <div className="space-y-4 pt-2">
-                        <div className="flex flex-col gap-4">
-                            <JoinEventButton
-                                eventId={event.id}
-                                isParticipant={event.isParticipant}
-                                distances={event.distances}
-                                userDistance={event.selectedDistance}
-                            />
-
-                            <div className="flex items-center justify-between px-1">
-                                {!event.participantCount ? (
-                                    <p className="text-sm text-muted-foreground italic font-medium">
-                                        Aucun inscrit pour le moment.
-                                    </p>
-                                ) : (
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <button className="group flex items-center gap-2 text-sm font-bold text-primary hover:text-primary/80 transition-colors">
-                                                <UsersIcon className="w-4 h-4" />
-                                                <span>Liste des participants ({event.participantCount})</span>
-                                            </button>
-                                        </DialogTrigger>
-                                        <DialogContent className="sm:max-w-[450px] rounded-2xl overflow-hidden p-0 gap-0">
-                                            <div className="bg-primary p-6 text-white">
+                            <div className="flex items-center gap-1">
+                                <div className="p-2 text-primary">
+                                    <UsersIcon className="w-5 h-5" />
+                                </div>
+                                <div className="space-y-1">
+                                    {!event.participantCount ? (
+                                        <p className="text-sm font-semibold sm:text-base">
+                                            Aucun inscrit pour le moment.
+                                        </p>
+                                    ) : (
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <button className="text-sm font-semibold sm:text-base text-primary hover:text-primary/80 transition-colors text-left hover:underline underline-offset-4 hover:cursor-pointer">
+                                                    Liste des participants ({event.participantCount})
+                                                </button>
+                                            </DialogTrigger>
+                                            <DialogContent className="sm:max-w-[450px] rounded-md overflow-hidden p-0 gap-0">
+                                            <div className="p-6 text-white">
                                                 <DialogHeader>
-                                                    <DialogTitle className="text-xl font-black uppercase tracking-tight">
-                                                        Participants : {event.title}
+                                                    <DialogTitle className="text-xl font-black tracking-tight border-b">
+                                                        Participants : {event.title.toLowerCase()}
                                                     </DialogTitle>
                                                 </DialogHeader>
                                             </div>
@@ -182,7 +176,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
                                                     {Object.entries(groupedRegistrations).map(([distance, regs]) => (
                                                         <div key={distance} className="space-y-4">
                                                             <div className="flex items-center justify-between border-b border-primary/10 pb-2">
-                                                                <h4 className="font-black uppercase text-sm tracking-widest text-primary italic">{distance}</h4>
+                                                                <TypographyH4>{distance.toLowerCase()}</TypographyH4>
                                                                 <Badge variant="secondary" className="font-bold">
                                                                     {regs.length} {regs.length > 1 ? 'inscrits' : 'inscrit'}
                                                                 </Badge>
@@ -191,8 +185,13 @@ export default function EventDetails({ event }: EventDetailsProps) {
                                                                 {regs.map((reg) => (
                                                                     <div key={reg.id} className="text-sm flex items-center gap-2">
                                                                         <div className="w-1.5 h-1.5 rounded-full bg-primary/40 shrink-0" />
-                                                                        <span className="font-medium">
-                                                                            {reg.user.name} <span className="font-bold uppercase">{reg.user.lastname}</span>
+                                                                        <span className="font-medium flex items-center gap-2">
+                                                                            {reg.user.name} <span className="font-bold capitalize">{reg.user.lastname}</span>
+                                                                            {reg.carpooling && (
+                                                                                <span className="bg-primary/20 text-primary text-[10px] font-medium px-1.5 py-0.5 rounded-sm  text-nowrap" title="Propose un covoiturage">
+                                                                                    Propose covoiturage
+                                                                                </span>
+                                                                            )}
                                                                         </span>
                                                                     </div>
                                                                 ))}
@@ -204,7 +203,25 @@ export default function EventDetails({ event }: EventDetailsProps) {
                                         </DialogContent>
                                     </Dialog>
                                 )}
+                                </div>
                             </div>
+                        </div>
+                    </div>
+
+
+                    {/* Registration & Participants */}
+                    <div className="space-y-4 pt-2">
+                        <div className="flex flex-col gap-4">
+                            <JoinEventButton
+                                eventId={event.id}
+                                isParticipant={event.isParticipant}
+                                distances={event.distances}
+                                meals={event.meals}
+                                accommodations={event.accommodations}
+                                userDistance={event.userDistance}
+                                userMeals={event.userMeals}
+                                userAccommodations={event.userAccommodations}
+                            />
                         </div>
                     </div>
                 </div>
@@ -213,12 +230,10 @@ export default function EventDetails({ event }: EventDetailsProps) {
             {/* Description Section */}
             <div className="pt-4 lg:pt-8 lg:max-w-[58%]">
                 <div className="space-y-6">
-                    <div className="inline-flex items-center gap-2 border-b-2 border-primary pb-1">
-                        <h2 className="text-xl font-black uppercase tracking-tight italic text-primary">À propos de l'événement</h2>
-                    </div>
-                    <div className="prose prose-sm sm:prose-base max-w-none text-muted-foreground/90 whitespace-pre-wrap leading-relaxed font-medium bg-muted/30 p-6 rounded-2xl border border-primary/5">
+                    <Quote>À propos de l'événement</Quote>
+                    <TypographyP className="whitespace-pre-wrap text-foreground text-base">
                         {event.description || "Aucune description fournie pour cet événement."}
-                    </div>
+                    </TypographyP>
                 </div>
             </div>
         </div>

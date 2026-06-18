@@ -13,9 +13,14 @@ export type EventListItem = {
   dateEnd: Date | null;
   location: string;
   type: string;
-  distances: string[]; // NOUVEAU
-  isParticipant: boolean; // CORRIGÉ : Plus de "?", c'est un booléen strict
-  selectedDistance: string | null; // NOUVEAU
+  distances: string[];
+  meals: string[];
+  accommodations: string[];
+  isParticipant: boolean; 
+  userDistance: string | null;
+  userMeals: string[];
+  userAccommodations: string[];
+  carpooling: boolean;
   participantCount: number;
 }
 
@@ -34,11 +39,12 @@ export async function getAllevents(): Promise<EventListItem[]> {
       dateEnd: true,
       location: true,
       type: true,
-      distances: true, // 2. On récupère les distances de l'événement
-      // 3. CORRIGÉ : Utilisation de "registrations" au lieu de "participants"
+      distances: true,
+      meals: true,
+      accommodations: true,
       registrations: {
         where: { userId: userId ?? "" },
-        select: { distance: true } // On récupère la distance choisie par l'utilisateur
+        select: { distance: true, meals: true, accommodations: true, carpooling: true } 
       },
       _count: {
         select: { registrations: true }
@@ -57,8 +63,13 @@ export async function getAllevents(): Promise<EventListItem[]> {
     location: event.location,
     type: event.type,
     distances: event.distances,
+    meals: event.meals,
+    accommodations: event.accommodations,
     isParticipant: event.registrations.length > 0, 
-    selectedDistance: event.registrations[0]?.distance || null, 
+    userDistance: event.registrations[0]?.distance || null,
+    userMeals: event.registrations[0]?.meals || [],
+    userAccommodations: event.registrations[0]?.accommodations || [],
+    carpooling: event.registrations[0]?.carpooling || false,
     participantCount: event._count.registrations
   }));
 }
@@ -104,7 +115,10 @@ export const getEventWithParticipationStatus = cache(async (eventId: string) => 
   return { 
     ...event, 
     isParticipant,
-    selectedDistance: userRegistration?.distance || null,
+    userDistance: userRegistration?.distance || null,
+    userMeals: userRegistration?.meals || [],
+    userAccommodations: userRegistration?.accommodations || [],
+    carpooling: userRegistration?.carpooling || false,
     participantCount: event._count.registrations
   };
 });

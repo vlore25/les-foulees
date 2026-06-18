@@ -3,6 +3,7 @@ import { verifyInvitationToken } from "../auth.actions";
 import { UserPlus } from "lucide-react";
 import ErrorCard from "@/components/common/feedback/ErrorCard";
 import RegistrationForm from "./forms/RegistrationForm";
+import { Title } from "@/components/ui/title";
 
 interface InscriptionFeatureProps {
   token: string | undefined;
@@ -24,16 +25,16 @@ export async function InscriptionFeature({ token }: InscriptionFeatureProps) {
   }
 
   return (
-    <Card className="grid min-h-svh lg:grid-cols-2 p-0">
-      <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <h3>Activation de votre espace adhérent</h3>
+    <Card className="grid min-h-svh lg:grid-cols-2 p-0 bg-white">
+      <div className="flex flex-col gap-2 p-3 md:p-10">
+        <div className="flex justify-center gap-1 md:justify-start">
+          <Title className="text-lg lg:text-xl"> Activation de votre espace adhérent</Title>
         </div>
         <div className="flex flex-1 items-center justify-center">
           <RegistrationForm email={invitation.email} token={invitation.token} />
         </div>
       </div>
-      <div className="relative hidden lg:flex flex-col justify-end p-8 h-full min-h-[600px] rounded-e-xl overflow-hidden">
+      <div className="relative hidden lg:flex flex-col justify-end p-4 h-full min-h-[600px] rounded-e-xl overflow-hidden">
         <img
           src="/images/registration-hero.jpg"
           alt="Membres"

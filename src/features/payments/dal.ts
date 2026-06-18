@@ -10,6 +10,7 @@ export const getAllPayments = cache(async () => {
           name: true,
           lastname: true,
           email: true,
+          profileImageUrl: true,
         }
       },
       memberships: {

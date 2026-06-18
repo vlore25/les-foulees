@@ -4,6 +4,24 @@ import { ReactNode } from "react";
 import { UserStatusControl } from "./UserStatusCOntrol";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+const formatGender = (gender: string | null | undefined) => {
+    if (!gender) return "Non renseigné";
+    switch (gender) {
+        case "MALE": return "Homme";
+        case "FEMALE": return "Femme";
+        default: return gender;
+    }
+};
+
+const formatRole = (role: string | null | undefined) => {
+    if (!role) return "Non renseigné";
+    switch (role) {
+        case "USER": return "Utilisateur";
+        case "ADMIN": return "Administrateur";
+        default: return role;
+    }
+};
+
 interface UserInfoProps {
     user: AdminUserDetails;
 }
@@ -30,7 +48,7 @@ export default function UserInfo({ user }: UserInfoProps) {
                 <div className="flex flex-col space-y-1">
                     <InfoRow label="Prénom" value={user.name} />
                     <InfoRow label="Nom" value={user.lastname} />
-                    <InfoRow label="Genre" value={user.genre} />
+                    <InfoRow label="Genre" value={formatGender(user.genre)} />
                     <InfoRow
                         label="Date de naissance"
                         value={user.birthdate ? new Date(user.birthdate).toLocaleDateString("fr-FR") : "Non renseignée"}
@@ -60,7 +78,7 @@ export default function UserInfo({ user }: UserInfoProps) {
                             </Badge>
                         }
                     />
-                    <InfoRow label="Rôle" value={user.role} />
+                    <InfoRow label="Rôle" value={formatRole(user.role)} />
                     <InfoRow
                         label="Enregistré le"
                         value={user.createdAt ? new Date(user.createdAt).toLocaleDateString("fr-FR") : "Inconnue"}

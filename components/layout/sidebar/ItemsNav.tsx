@@ -1,4 +1,4 @@
-import { Banknote, BookUser, Calendar, Calendars, ClipboardClock, FileText, LucideIcon, PersonStanding, Users, UserSquare, UserStar } from "lucide-react"
+import { Banknote, BookUser, Calendar, Calendars, ClipboardClock, FileText, LucideIcon, PersonStanding, Users, UserSquare, UserStar, Settings } from "lucide-react"
 
 export interface NavItem {
   title: string;
@@ -22,7 +22,8 @@ export const ItemsNavAdmin: NavSection[] = [
       { title: "Documents", url: "/admin/documents", icon: FileText },
       { title: "Saisons", url: "/admin/seasons", icon: ClipboardClock },
       { title: "Paiements", url: "/admin/paiements", icon: Banknote },
-      { title: "Adherants", url: "/admin/adherants", icon: BookUser },
+      { title: "Adhérents", url: "/admin/adherants", icon: BookUser },
+      { title: "Paramètres", url: "/admin/parametres", icon: Settings },
     ]
   },
   {

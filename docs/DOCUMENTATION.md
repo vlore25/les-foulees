@@ -3,17 +3,19 @@
 Ce document présente les fonctionnalités actuelles du projet "Les Foulées Avrillaises" ainsi que les pistes d'amélioration identifiées.
 
 ## 1. Présentation du projet
-Le projet "Les Foulées Avrillaises" est une application web destinée à la gestion d'une association de course à pied de la ville de Avrillé. Elle permet de gérer les adhérents, les événements, les adhésions annuelles et les documents administratifs du club.
+Le projet "Les Foulées Avrillaises" est une application web destinée à la gestion d'une association de course à pied de la ville d'Avrillé. Elle permet de gérer les adhérents, les événements, les adhésions annuelles et les documents administratifs du club.
 
 ## 2. Pile Technique (Stack)
-- **Framework :** Next.js 15 (App Router, Server Actions)
+- **Framework :** Next.js 16 (App Router, Server Actions, Edge Runtime, Turbopack)
 - **Langage :** TypeScript
-- **Base de données :** PostgreSQL avec Prisma ORM
-- **Authentification :** Gestion personnalisée avec `iron-session` et `jose`
+- **Base de données :** PostgreSQL (via Neon Serverless DB) avec Prisma ORM et gestionnaire de connexions (`pg` Pool)
+- **Authentification :** Gestion personnalisée avec `jose` compatible Edge Runtime via le fichier `proxy.ts` (anciennement middleware).
 - **Stylisation :** Tailwind CSS, Radix UI, Lucide React
 - **Emails :** Resend et React Email
+- **Stockage de Fichiers :** Vercel Blob
 - **Documents :** PDF-lib, React-PDF pour la génération et l'affichage de documents
-- **Déploiement :** Docker & Docker Compose
+- **Déploiement :** Vercel (Edge Functions pour l'authentification)
+- **Gestionnaire de Paquets :** Bun
 
 ## 3. Fonctionnalités Principales
 
@@ -22,6 +24,7 @@ Le projet "Les Foulées Avrillaises" est une application web destinée à la ges
 - **Récupération de mot de passe :** Flux complet via email avec jetons temporaires.
 - **Profil Utilisateur :** Mise à jour des informations personnelles (adresse, téléphone, contact d'urgence, etc.).
 - **Paramètres de visibilité :** Option pour afficher ou masquer son email/téléphone dans l'annuaire des membres.
+- **Protection des Routes (Edge) :** Interception ultra-rapide des connexions au niveau de Vercel Edge (`proxy.ts`).
 
 ### B. Espace Adhérent
 - **Adhésion en ligne :** Formulaire complet pour s'inscrire à une saison (type d'adhésion, licence FFA, certificat médical).
@@ -47,7 +50,6 @@ Le projet "Les Foulées Avrillaises" est une application web destinée à la ges
 ### Technique & Maintenance
 - **Tests Automatisés :** Augmenter la couverture des tests unitaires et d'intégration (actuellement gérés par Jest).
 - **Validation des données :** Harmoniser l'utilisation de Zod pour la validation côté serveur et client (Server Actions).
-- **Stockage des fichiers :** Actuellement, les fichiers sont stockés localement (`public/uploads`). Pour la production, une migration vers un service de stockage objet (S3, Cloudinary) est recommandée.
 - **Logs et Monitoring :** Mettre en place un système de journalisation (Sentry ou Winston) pour le suivi des erreurs en production.
 
 ### Fonctionnalités
@@ -58,5 +60,5 @@ Le projet "Les Foulées Avrillaises" est une application web destinée à la ges
 - **Accessibilité (A11y) :** Vérifier et améliorer la conformité aux normes d'accessibilité sur l'ensemble des composants.
 
 ### Architecture
-- **Optimisation des Images :** Exploiter davantage `next/image` pour l'optimisation automatique (actuellement configuré avec un pattern distant).
+- **Optimisation des Images :** Exploiter davantage `next/image` pour l'optimisation automatique.
 - **Mise en cache :** Optimiser le cache Next.js pour les requêtes de données fréquentes (annuaire, liste des événements).

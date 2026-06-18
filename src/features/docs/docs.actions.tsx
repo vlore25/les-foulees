@@ -45,7 +45,7 @@ export async function createLegalDocAction(
     return { message: "Erreur base de données." };
   }
 
-  revalidatePath("/admin/dashboard");
+  revalidatePath("/admin/documents");
   return { message: "Document ajouté avec succès !" };
 }
 
@@ -83,7 +83,7 @@ export async function updateLegalDocAction(
     return { message: "Erreur lors de la modification." };
   }
 
-  revalidatePath("/admin/dashboard");
+  revalidatePath("/admin/documents");
   return { message: "Document modifié avec succès !" };
 }
 
@@ -91,7 +91,7 @@ export async function updateLegalDocAction(
 export async function deleteLegalDocAction(id: string) {
   try {
     await prisma.legalDocs.delete({ where: { id } });
-    revalidatePath("/admin/dashboard");
+    revalidatePath("/admin/documents");
   } catch (error) {
     console.error("Erreur suppression", error);
   }

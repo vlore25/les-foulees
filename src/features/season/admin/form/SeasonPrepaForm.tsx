@@ -32,7 +32,7 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
                         {/* --- MODIFICATION ICI : NOM AUTOMATIQUE --- */}
                         <div className="space-y-3">
                             <div>
-                                <Label className="text-xs text-gray-500 uppercase tracking-wider font-bold">Nouvelle Saison</Label>
+                                <Label>Nouvelle Saison</Label>
                                 {/* Affichage visuel du nom calculé */}
                                 <div className="text-2xl font-bold text-slate-800 mt-1">
                                     {preview.data.name}
@@ -43,7 +43,7 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <Label className="text-xs text-gray-500">Date de début</Label>
+                                    <Label>Date de début</Label>
                                     <Input
                                         name="startDate"
                                         type="date"
@@ -53,7 +53,7 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
                                     />
                                 </div>
                                 <div>
-                                    <Label className="text-xs text-gray-500">Date de fin</Label>
+                                    <Label>Date de fin</Label>
                                     <Input
                                         name="endDate"
                                         type="date"
@@ -71,15 +71,15 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
                             <div className="grid grid-cols-2 gap-3 pt-2 ">
                             
                             <div className="space-y-1">
-                                <Label className="text-xs">Individuel</Label>
+                                <Label>Individuel</Label>
                                 <Input name="priceStandard" type="number" step="0.5" defaultValue={preview.data.prices.priceStandard} className="h-8 bg-white" />
                             </div>
                             <div className="space-y-1">
-                                <Label className="text-xs">Jeune</Label>
+                                <Label>Jeune</Label>
                                 <Input name="priceYoung" type="number" step="0.5" defaultValue={preview.data.prices.priceYoung} className="h-8 bg-white" />
                             </div>
                             <div className="space-y-1">
-                                <Label className="text-xs">Licence FFA</Label>
+                                <Label>Licence FFA</Label>
                                 <Input name="priceFfa" type="number" step="0.5" defaultValue={preview.data.prices.priceFfa} className="h-8 bg-white" />
                             </div>
                         </div>

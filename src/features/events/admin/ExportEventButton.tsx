@@ -10,10 +10,10 @@ import { exportEventParticipantsAction } from "../events.actions";
 interface ExportBtnProps {
     eventId: string;
     participantCount: number;
-    distance?: string; // NOUVEAU
+    participation?: string; // NOUVEAU
 }
 
-export default function ExportEventButton({ eventId, participantCount, distance }: ExportBtnProps) {
+export default function ExportEventButton({ eventId, participantCount, participation }: ExportBtnProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleExport = async () => {
@@ -24,8 +24,7 @@ export default function ExportEventButton({ eventId, participantCount, distance 
 
         setIsLoading(true);
         try {
-            // On passe la distance à l'action
-            const result = await exportEventParticipantsAction(eventId, distance);
+            const result = await exportEventParticipantsAction(eventId, participation);
 
             if (!result.success || !result.csv) {
                 toast.error(result.message || "Erreur lors de l'export.");
@@ -40,7 +39,7 @@ export default function ExportEventButton({ eventId, participantCount, distance 
 
 
             const cleanTitle = result.title.replace(/\s+/g, '_').toLowerCase();
-            const cleanDistance = distance ? `_${distance.replace(/\s+/g, '_').toLowerCase()}` : '';
+            const cleanDistance = participation ? `_${participation.replace(/\s+/g, '_').toLowerCase()}` : '';
 
             link.setAttribute('download', `inscrits_${cleanTitle}${cleanDistance}.csv`);
 
@@ -62,7 +61,7 @@ export default function ExportEventButton({ eventId, participantCount, distance 
             size="icon"
             onClick={handleExport}
             disabled={isLoading}
-            title={distance ? `Exporter les inscrits (${distance})` : "Exporter tous les inscrits"}
+            title={participation ? `Exporter les inscrits (${participation})` : "Exporter tous les inscrits"}
             className="h-10 w-10"
         >
             <Download className="w-4 h-4 text-primary" />

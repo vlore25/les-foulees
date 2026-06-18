@@ -1,6 +1,7 @@
 import PageContentAdmin from "@/components/common/PageContentAdmin";
 import { getAllPayments } from "@/src/features/payments/dal";
 import AdminPaymentsList from "@/src/features/payments/components/AdminPaymentsList";
+import { TypographyPageDescription } from "@/components/ui/typography";
 
 export default async function PaymentsPage() {
   const payments = await getAllPayments();
@@ -8,9 +9,9 @@ export default async function PaymentsPage() {
   return (
     <PageContentAdmin title="Gestion des paiements">
       <div className="space-y-4">
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">
+        <TypographyPageDescription>
             Consultez et validez les paiements des adhérents avant de valider leur dossier.
-        </p>
+        </TypographyPageDescription>
         <AdminPaymentsList payments={payments} />
       </div>
     </PageContentAdmin>

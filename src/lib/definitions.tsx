@@ -82,11 +82,9 @@ export const eventBase = z.object({
     .trim().min(2, { message: "Le lieu doit contenir au moins 2 caractères." }),
   eventtype: EventTypeEnum,
   description: z.string().max(3000, { message: "La description est trop longue." }).optional().or(z.literal("")),
-  distances: z.preprocess((val) => {
-    if (!val) return [];
-    if (Array.isArray(val)) return val;
-    return [val];
-  }, z.array(z.string())).optional(),
+  distances: z.array(z.string()).optional(),
+  meals: z.array(z.string()).optional(),
+  accommodations: z.array(z.string()).optional(),
 });
 
 // CREATE : L'image est obligatoire, et on vérifie que dateEnd > dateStart
@@ -214,6 +212,8 @@ export type EventFormState = {
     eventtype?: string[];
     description?: string[];
     distances?: string[];
+    meals?: string[];
+    accommodations?: string[];
     picture?: string[];
   };
   message?: string | null;

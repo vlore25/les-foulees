@@ -14,8 +14,9 @@ import { useActionState, useState } from "react";
 import { getAssetUrl } from "@/src/lib/utils";
 import { createEvent, updateEventAction, type EventFormState } from "../../events.actions";
 import { Event } from "@/prisma/generated/client";
-import DistanceManager from "./DistanceManage";
+import DynamicListManager from "./ParticipationManage";
 import { Label } from "@/components/ui/Label";
+import { TypographyH3, TypographyPageDescription } from "@/components/ui/typography";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/src/lib/utils";
 
@@ -36,18 +37,18 @@ export default function EventForm({ event }: EventFormProps) {
     return (
         <form action={action} className="space-y-8 bg-white p-8 rounded-[2rem] border shadow-sm max-w-3xl" noValidate>
             <div className="space-y-2">
-                <h3 className="text-xl font-black uppercase tracking-tight border-b pb-2 text-primary">
+                <TypographyH3 className="text-xl tracking-tight border-b pb-2 text-primary">
                     {event ? "Modifier l'événement" : "Nouvel événement"}
-                </h3>
-                <p className="text-xs text-muted-foreground italic">
+                </TypographyH3>
+                <TypographyPageDescription>
                     Remplissez les informations ci-dessous pour {event ? "mettre à jour" : "publier"} un événement.
-                </p>
+                </TypographyPageDescription>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* TITRE */}
                 <div className="space-y-2 flex flex-col">
-                    <Label htmlFor="title" className="text-xs font-bold uppercase tracking-widest text-primary ml-1">
+                    <Label htmlFor="title">
                         Titre de l'événement
                     </Label>
                     <Input
@@ -58,13 +59,13 @@ export default function EventForm({ event }: EventFormProps) {
                         className="rounded-xl border-primary/10 focus:border-primary/30"
                     />
                     {state?.error?.title && (
-                        <p className="text-red-500 text-[10px] font-bold uppercase">{state.error.title[0]}</p>
+                        <p className="text-red-500 text-sm">{state.error.title[0]}</p>
                     )}
                 </div>
 
                 {/* LIEU */}
                 <div className="space-y-2 flex flex-col">
-                    <Label htmlFor="place" className="text-xs font-bold uppercase tracking-widest text-primary ml-1">
+                    <Label htmlFor="place">
                         Lieu / Localisation
                     </Label>
                     <div className="relative">
@@ -78,57 +79,94 @@ export default function EventForm({ event }: EventFormProps) {
                         />
                     </div>
                     {state?.error?.place && (
-                        <p className="text-red-500 text-[10px] font-bold uppercase">{state.error.place[0]}</p>
+                        <p className="text-red-500 text-sm">{state.error.place[0]}</p>
                     )}
                 </div>
             </div>
 
             {/* DATES */}
             <div className="space-y-3">
-                <Label className="text-xs font-bold uppercase tracking-widest text-primary ml-1">
+                <Label>
                     Dates de l'événement
                 </Label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                        <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Début</span>
+                        <span className="text-sm font-medium text-muted-foreground ml-1">Début</span>
                         <EventDatePicker name="dateStart" initialDate={event?.dateStart} />
                     </div>
                     <div className="space-y-1">
-                        <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Fin (Optionnel)</span>
+                        <span className="text-sm font-medium text-muted-foreground ml-1">Fin (Optionnel)</span>
                         <EventDatePicker name="dateEnd" initialDate={event?.dateEnd} />
                     </div>
                 </div>
                 {state?.error?.dateStart && (
-                    <p className="text-red-500 text-[10px] font-bold uppercase">{state.error.dateStart[0]}</p>
+                    <p className="text-red-500 text-sm">{state.error.dateStart[0]}</p>
                 )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* TYPE */}
                 <div className="space-y-2 flex flex-col">
-                    <Label className="text-xs font-bold uppercase tracking-widest text-primary ml-1">
+                    <Label>
                         Type d'activité
                     </Label>
                     <EventTypeSelect name="eventtype" initialValue={event?.type} />
                     {state?.error?.eventtype && (
-                        <p className="text-red-500 text-[10px] font-bold uppercase">{state.error.eventtype[0]}</p>
+                        <p className="text-red-500 text-sm">{state.error.eventtype[0]}</p>
                     )}
                 </div>
 
                 {/* DISTANCES */}
                 <div className="space-y-2 flex flex-col">
-                    <Label className="text-xs font-bold uppercase tracking-widest text-primary ml-1">
-                        Distances proposées
+                    <Label>
+                        Distances / Rôles
                     </Label>
                     <div className="p-4 border border-primary/10 rounded-xl bg-muted/20">
-                        <DistanceManager />
+                        <DynamicListManager 
+                            name="distances"
+                            label="Ajouter des distances (Ex: 10km, Bénévole)"
+                            placeholder="Ex: 10km, 5km..."
+                            initialItems={event?.distances} 
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* REPAS */}
+                <div className="space-y-2 flex flex-col">
+                    <Label>
+                        Options de Repas
+                    </Label>
+                    <div className="p-4 border border-primary/10 rounded-xl bg-muted/20">
+                        <DynamicListManager 
+                            name="meals"
+                            label="Ajouter des repas (Ex: Repas samedi)"
+                            placeholder="Ex: Repas végétarien..."
+                            initialItems={event?.meals} 
+                        />
+                    </div>
+                </div>
+
+                {/* HEBERGEMENT */}
+                <div className="space-y-2 flex flex-col">
+                    <Label>
+                        Options d'Hébergement
+                    </Label>
+                    <div className="p-4 border border-primary/10 rounded-xl bg-muted/20">
+                        <DynamicListManager 
+                            name="accommodations"
+                            label="Ajouter des hébergements (Ex: Nuit du 12)"
+                            placeholder="Ex: Nuit Gymnase..."
+                            initialItems={event?.accommodations} 
+                        />
                     </div>
                 </div>
             </div>
 
             {/* DESCRIPTION */}
             <div className="space-y-2 flex flex-col">
-                <Label htmlFor="description" className="text-xs font-bold uppercase tracking-widest text-primary ml-1">
+                <Label htmlFor="description">
                     Description détaillée
                 </Label>
                 <Textarea
@@ -139,13 +177,13 @@ export default function EventForm({ event }: EventFormProps) {
                     className="rounded-xl border-primary/10 focus:border-primary/30 min-h-[120px]"
                 />
                 {state?.error?.description && (
-                    <p className="text-red-500 text-[10px] font-bold uppercase">{state.error.description[0]}</p>
+                    <p className="text-red-500 text-sm">{state.error.description[0]}</p>
                 )}
             </div>
 
             {/* IMAGE */}
             <div className="space-y-4 pt-2">
-                <Label htmlFor="picture" className="text-xs font-bold uppercase tracking-widest text-primary ml-1 flex items-center gap-2">
+                <Label htmlFor="picture">
                     <UploadCloud size={16} />
                     Image de couverture
                 </Label>
@@ -178,7 +216,7 @@ export default function EventForm({ event }: EventFormProps) {
                     </div>
                 </div>
                 {state?.error?.picture && (
-                    <p className="text-red-500 text-[10px] font-bold uppercase">{state.error.picture[0]}</p>
+                    <p className="text-red-500 text-sm">{state.error.picture[0]}</p>
                 )}
             </div>
 

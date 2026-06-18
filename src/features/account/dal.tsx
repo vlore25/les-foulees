@@ -30,7 +30,7 @@ export const getProfile = cache(async (userId: string) => {
       memberships: {
         where: {
           season: {
-            isActive: true
+            isOpenForRegistration: true
           }
         },
         select: {

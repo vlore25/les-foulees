@@ -72,6 +72,7 @@ export const getAllUsersAdminList = cache(async (): Promise<AdminUserList[]> => 
       lastname: true,
       status: true,
       profileImageUrl: true,
+      role: true,
       createdAt: true
     },
     orderBy: { lastname: 'asc' }
@@ -142,4 +143,11 @@ export async function getUsersCount(): Promise<number> {
 
   return count;
 }
+
+export const getAllInvitations = cache(async () => {
+  const invitations = await prisma.invitation.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+  return invitations;
+});
 

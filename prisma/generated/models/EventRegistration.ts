@@ -29,6 +29,7 @@ export type EventRegistrationMinAggregateOutputType = {
   userId: string | null
   eventId: string | null
   distance: string | null
+  carpooling: boolean | null
   createdAt: Date | null
 }
 
@@ -37,6 +38,7 @@ export type EventRegistrationMaxAggregateOutputType = {
   userId: string | null
   eventId: string | null
   distance: string | null
+  carpooling: boolean | null
   createdAt: Date | null
 }
 
@@ -45,6 +47,9 @@ export type EventRegistrationCountAggregateOutputType = {
   userId: number
   eventId: number
   distance: number
+  meals: number
+  accommodations: number
+  carpooling: number
   createdAt: number
   _all: number
 }
@@ -55,6 +60,7 @@ export type EventRegistrationMinAggregateInputType = {
   userId?: true
   eventId?: true
   distance?: true
+  carpooling?: true
   createdAt?: true
 }
 
@@ -63,6 +69,7 @@ export type EventRegistrationMaxAggregateInputType = {
   userId?: true
   eventId?: true
   distance?: true
+  carpooling?: true
   createdAt?: true
 }
 
@@ -71,6 +78,9 @@ export type EventRegistrationCountAggregateInputType = {
   userId?: true
   eventId?: true
   distance?: true
+  meals?: true
+  accommodations?: true
+  carpooling?: true
   createdAt?: true
   _all?: true
 }
@@ -152,6 +162,9 @@ export type EventRegistrationGroupByOutputType = {
   userId: string
   eventId: string
   distance: string | null
+  meals: string[]
+  accommodations: string[]
+  carpooling: boolean
   createdAt: Date
   _count: EventRegistrationCountAggregateOutputType | null
   _min: EventRegistrationMinAggregateOutputType | null
@@ -181,6 +194,9 @@ export type EventRegistrationWhereInput = {
   userId?: Prisma.StringFilter<"EventRegistration"> | string
   eventId?: Prisma.StringFilter<"EventRegistration"> | string
   distance?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  meals?: Prisma.StringNullableListFilter<"EventRegistration">
+  accommodations?: Prisma.StringNullableListFilter<"EventRegistration">
+  carpooling?: Prisma.BoolFilter<"EventRegistration"> | boolean
   createdAt?: Prisma.DateTimeFilter<"EventRegistration"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
@@ -191,6 +207,9 @@ export type EventRegistrationOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   distance?: Prisma.SortOrderInput | Prisma.SortOrder
+  meals?: Prisma.SortOrder
+  accommodations?: Prisma.SortOrder
+  carpooling?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   event?: Prisma.EventOrderByWithRelationInput
@@ -205,6 +224,9 @@ export type EventRegistrationWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"EventRegistration"> | string
   eventId?: Prisma.StringFilter<"EventRegistration"> | string
   distance?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  meals?: Prisma.StringNullableListFilter<"EventRegistration">
+  accommodations?: Prisma.StringNullableListFilter<"EventRegistration">
+  carpooling?: Prisma.BoolFilter<"EventRegistration"> | boolean
   createdAt?: Prisma.DateTimeFilter<"EventRegistration"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
@@ -215,6 +237,9 @@ export type EventRegistrationOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   distance?: Prisma.SortOrderInput | Prisma.SortOrder
+  meals?: Prisma.SortOrder
+  accommodations?: Prisma.SortOrder
+  carpooling?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.EventRegistrationCountOrderByAggregateInput
   _max?: Prisma.EventRegistrationMaxOrderByAggregateInput
@@ -229,12 +254,18 @@ export type EventRegistrationScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"EventRegistration"> | string
   eventId?: Prisma.StringWithAggregatesFilter<"EventRegistration"> | string
   distance?: Prisma.StringNullableWithAggregatesFilter<"EventRegistration"> | string | null
+  meals?: Prisma.StringNullableListFilter<"EventRegistration">
+  accommodations?: Prisma.StringNullableListFilter<"EventRegistration">
+  carpooling?: Prisma.BoolWithAggregatesFilter<"EventRegistration"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"EventRegistration"> | Date | string
 }
 
 export type EventRegistrationCreateInput = {
   id?: string
   distance?: string | null
+  meals?: Prisma.EventRegistrationCreatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationCreateaccommodationsInput | string[]
+  carpooling?: boolean
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutEventRegistrationsInput
   event: Prisma.EventCreateNestedOneWithoutRegistrationsInput
@@ -245,12 +276,18 @@ export type EventRegistrationUncheckedCreateInput = {
   userId: string
   eventId: string
   distance?: string | null
+  meals?: Prisma.EventRegistrationCreatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationCreateaccommodationsInput | string[]
+  carpooling?: boolean
   createdAt?: Date | string
 }
 
 export type EventRegistrationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meals?: Prisma.EventRegistrationUpdatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationUpdateaccommodationsInput | string[]
+  carpooling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutEventRegistrationsNestedInput
   event?: Prisma.EventUpdateOneRequiredWithoutRegistrationsNestedInput
@@ -261,6 +298,9 @@ export type EventRegistrationUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meals?: Prisma.EventRegistrationUpdatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationUpdateaccommodationsInput | string[]
+  carpooling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -269,12 +309,18 @@ export type EventRegistrationCreateManyInput = {
   userId: string
   eventId: string
   distance?: string | null
+  meals?: Prisma.EventRegistrationCreatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationCreateaccommodationsInput | string[]
+  carpooling?: boolean
   createdAt?: Date | string
 }
 
 export type EventRegistrationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meals?: Prisma.EventRegistrationUpdatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationUpdateaccommodationsInput | string[]
+  carpooling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -283,6 +329,9 @@ export type EventRegistrationUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meals?: Prisma.EventRegistrationUpdatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationUpdateaccommodationsInput | string[]
+  carpooling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -306,6 +355,9 @@ export type EventRegistrationCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   distance?: Prisma.SortOrder
+  meals?: Prisma.SortOrder
+  accommodations?: Prisma.SortOrder
+  carpooling?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -314,6 +366,7 @@ export type EventRegistrationMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   distance?: Prisma.SortOrder
+  carpooling?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -322,6 +375,7 @@ export type EventRegistrationMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   eventId?: Prisma.SortOrder
   distance?: Prisma.SortOrder
+  carpooling?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -409,9 +463,30 @@ export type EventRegistrationUncheckedUpdateManyWithoutEventNestedInput = {
   deleteMany?: Prisma.EventRegistrationScalarWhereInput | Prisma.EventRegistrationScalarWhereInput[]
 }
 
+export type EventRegistrationCreatemealsInput = {
+  set: string[]
+}
+
+export type EventRegistrationCreateaccommodationsInput = {
+  set: string[]
+}
+
+export type EventRegistrationUpdatemealsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type EventRegistrationUpdateaccommodationsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
 export type EventRegistrationCreateWithoutUserInput = {
   id?: string
   distance?: string | null
+  meals?: Prisma.EventRegistrationCreatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationCreateaccommodationsInput | string[]
+  carpooling?: boolean
   createdAt?: Date | string
   event: Prisma.EventCreateNestedOneWithoutRegistrationsInput
 }
@@ -420,6 +495,9 @@ export type EventRegistrationUncheckedCreateWithoutUserInput = {
   id?: string
   eventId: string
   distance?: string | null
+  meals?: Prisma.EventRegistrationCreatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationCreateaccommodationsInput | string[]
+  carpooling?: boolean
   createdAt?: Date | string
 }
 
@@ -457,12 +535,18 @@ export type EventRegistrationScalarWhereInput = {
   userId?: Prisma.StringFilter<"EventRegistration"> | string
   eventId?: Prisma.StringFilter<"EventRegistration"> | string
   distance?: Prisma.StringNullableFilter<"EventRegistration"> | string | null
+  meals?: Prisma.StringNullableListFilter<"EventRegistration">
+  accommodations?: Prisma.StringNullableListFilter<"EventRegistration">
+  carpooling?: Prisma.BoolFilter<"EventRegistration"> | boolean
   createdAt?: Prisma.DateTimeFilter<"EventRegistration"> | Date | string
 }
 
 export type EventRegistrationCreateWithoutEventInput = {
   id?: string
   distance?: string | null
+  meals?: Prisma.EventRegistrationCreatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationCreateaccommodationsInput | string[]
+  carpooling?: boolean
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutEventRegistrationsInput
 }
@@ -471,6 +555,9 @@ export type EventRegistrationUncheckedCreateWithoutEventInput = {
   id?: string
   userId: string
   distance?: string | null
+  meals?: Prisma.EventRegistrationCreatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationCreateaccommodationsInput | string[]
+  carpooling?: boolean
   createdAt?: Date | string
 }
 
@@ -504,12 +591,18 @@ export type EventRegistrationCreateManyUserInput = {
   id?: string
   eventId: string
   distance?: string | null
+  meals?: Prisma.EventRegistrationCreatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationCreateaccommodationsInput | string[]
+  carpooling?: boolean
   createdAt?: Date | string
 }
 
 export type EventRegistrationUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meals?: Prisma.EventRegistrationUpdatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationUpdateaccommodationsInput | string[]
+  carpooling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   event?: Prisma.EventUpdateOneRequiredWithoutRegistrationsNestedInput
 }
@@ -518,6 +611,9 @@ export type EventRegistrationUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meals?: Prisma.EventRegistrationUpdatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationUpdateaccommodationsInput | string[]
+  carpooling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -525,6 +621,9 @@ export type EventRegistrationUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   eventId?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meals?: Prisma.EventRegistrationUpdatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationUpdateaccommodationsInput | string[]
+  carpooling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -532,12 +631,18 @@ export type EventRegistrationCreateManyEventInput = {
   id?: string
   userId: string
   distance?: string | null
+  meals?: Prisma.EventRegistrationCreatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationCreateaccommodationsInput | string[]
+  carpooling?: boolean
   createdAt?: Date | string
 }
 
 export type EventRegistrationUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meals?: Prisma.EventRegistrationUpdatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationUpdateaccommodationsInput | string[]
+  carpooling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutEventRegistrationsNestedInput
 }
@@ -546,6 +651,9 @@ export type EventRegistrationUncheckedUpdateWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meals?: Prisma.EventRegistrationUpdatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationUpdateaccommodationsInput | string[]
+  carpooling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -553,6 +661,9 @@ export type EventRegistrationUncheckedUpdateManyWithoutEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meals?: Prisma.EventRegistrationUpdatemealsInput | string[]
+  accommodations?: Prisma.EventRegistrationUpdateaccommodationsInput | string[]
+  carpooling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -563,6 +674,9 @@ export type EventRegistrationSelect<ExtArgs extends runtime.Types.Extensions.Int
   userId?: boolean
   eventId?: boolean
   distance?: boolean
+  meals?: boolean
+  accommodations?: boolean
+  carpooling?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
@@ -573,6 +687,9 @@ export type EventRegistrationSelectCreateManyAndReturn<ExtArgs extends runtime.T
   userId?: boolean
   eventId?: boolean
   distance?: boolean
+  meals?: boolean
+  accommodations?: boolean
+  carpooling?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
@@ -583,6 +700,9 @@ export type EventRegistrationSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   userId?: boolean
   eventId?: boolean
   distance?: boolean
+  meals?: boolean
+  accommodations?: boolean
+  carpooling?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
@@ -593,10 +713,13 @@ export type EventRegistrationSelectScalar = {
   userId?: boolean
   eventId?: boolean
   distance?: boolean
+  meals?: boolean
+  accommodations?: boolean
+  carpooling?: boolean
   createdAt?: boolean
 }
 
-export type EventRegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "eventId" | "distance" | "createdAt", ExtArgs["result"]["eventRegistration"]>
+export type EventRegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "eventId" | "distance" | "meals" | "accommodations" | "carpooling" | "createdAt", ExtArgs["result"]["eventRegistration"]>
 export type EventRegistrationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
@@ -621,6 +744,9 @@ export type $EventRegistrationPayload<ExtArgs extends runtime.Types.Extensions.I
     userId: string
     eventId: string
     distance: string | null
+    meals: string[]
+    accommodations: string[]
+    carpooling: boolean
     createdAt: Date
   }, ExtArgs["result"]["eventRegistration"]>
   composites: {}
@@ -1051,6 +1177,9 @@ export interface EventRegistrationFieldRefs {
   readonly userId: Prisma.FieldRef<"EventRegistration", 'String'>
   readonly eventId: Prisma.FieldRef<"EventRegistration", 'String'>
   readonly distance: Prisma.FieldRef<"EventRegistration", 'String'>
+  readonly meals: Prisma.FieldRef<"EventRegistration", 'String[]'>
+  readonly accommodations: Prisma.FieldRef<"EventRegistration", 'String[]'>
+  readonly carpooling: Prisma.FieldRef<"EventRegistration", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"EventRegistration", 'DateTime'>
 }
     

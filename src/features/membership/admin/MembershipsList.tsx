@@ -7,6 +7,7 @@ import SeasonFilter from "./SeasonFilter";
 import ExportButton from "./ExportButton";
 import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import { Calendar } from "lucide-react";
+import { TypographyH3, TypographyDetail } from "@/components/ui/typography";
 
 export default async function MembershipsList({
     searchParams
@@ -20,10 +21,10 @@ export default async function MembershipsList({
     // 2. Charger les saisons
     const allSeasons = await prisma.season.findMany({
         orderBy: { startDate: 'desc' },
-        select: { id: true, name: true, isActive: true }
+        select: { id: true, name: true, isOpenForRegistration: true }
     });
 
-    const activeSeason = allSeasons.find(s => s.isActive);
+    const activeSeason = allSeasons.find(s => s.isOpenForRegistration);
     
     // 3. Déterminer l'ID cible
     const targetSeasonId = urlSeasonId || activeSeason?.id || allSeasons[0]?.id;
@@ -74,7 +75,7 @@ export default async function MembershipsList({
                         Saison :
                     </span>
                     <SeasonFilter 
-                        seasons={allSeasons} 
+                        seasons={allSeasons.map(s => ({ id: s.id, name: s.name, isOpenForRegistration: s.isOpenForRegistration }))} 
                         currentSeasonId={targetSeasonId} 
                     />
                 </div>
@@ -86,18 +87,18 @@ export default async function MembershipsList({
             </div>
 
             <div className="space-y-1">
-                <h3 className="text-lg font-black uppercase tracking-tight text-slate-800">
+                <TypographyH3 className="text-lg tracking-tight text-slate-800">
                     Gestion des adhésions
-                </h3>
-                <p className="text-xs font-bold text-primary uppercase tracking-widest italic">
+                </TypographyH3>
+                <TypographyDetail className="text-primary italic">
                     Saison {currentSeason?.name}
-                </p>
+                </TypographyDetail>
             </div>
 
             <Tabs defaultValue="TO_HANDLE" className="gap-6" key={targetSeasonId}>
                 <TabsList className="h-auto p-1 bg-slate-100/50 rounded-md border border-slate-200 flex flex-wrap gap-1 justify-start w-full sm:w-auto">
                     {tabConfig.map((tab) => (
-                        <TabsTrigger key={tab.key} value={tab.key} className="flex gap-2 rounded-sm px-3 py-2 font-bold uppercase text-xs tracking-widest data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                        <TabsTrigger key={tab.key} value={tab.key} className="flex gap-2 rounded-sm px-3 py-2 font-medium text-sm data-[state=active]:bg-white data-[state=active]:shadow-sm">
                             {tab.label}
                             <Badge variant={tab.variant as any} className="ml-1 px-1.5 py-0 h-5 min-w-[1.5rem] text-xs border-none rounded-sm flex items-center justify-center font-black">
                                 {tab.count}

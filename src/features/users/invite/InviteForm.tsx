@@ -21,7 +21,6 @@ export default function InviteForm() {
 
     return (
         <div className="flex flex-col space-y-4 w-full lg:w-[50%]">
-            <h4>Inviter un nouveau membre</h4>
             <form action={action} noValidate>
                 <Field>
                     <InputGroup>

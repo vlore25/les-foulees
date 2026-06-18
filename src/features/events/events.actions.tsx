@@ -19,7 +19,7 @@ export type EventFormState = {
     description?: string[];
     distance?: string[]
     picture?: string[];
-    distances?: string[]; 
+    participations?: string[]; 
   };
   message?: string | null;
 } | undefined;
@@ -28,10 +28,14 @@ export type EventFormState = {
 export async function createEvent(state: EventFormState, formData: FormData): Promise<EventFormState> {
 
   const rawDistances = formData.getAll('distances') as string[];
+  const rawMeals = formData.getAll('meals') as string[];
+  const rawAccommodations = formData.getAll('accommodations') as string[];
 
   const dataForValidation = {
     ...Object.fromEntries(formData.entries()),
-    distances: rawDistances
+    distances: rawDistances,
+    meals: rawMeals,
+    accommodations: rawAccommodations
   };
 
   const validatedFields = eventSchema.safeParse(dataForValidation);
@@ -41,7 +45,7 @@ export async function createEvent(state: EventFormState, formData: FormData): Pr
   }
 
 
-  const { title, dateStart, dateEnd, place, eventtype, description, picture, distances } = validatedFields.data;
+  const { title, dateStart, dateEnd, place, eventtype, description, picture, distances, meals, accommodations } = validatedFields.data;
 
   const eventTypeRaw = eventtype;
 
@@ -64,6 +68,8 @@ export async function createEvent(state: EventFormState, formData: FormData): Pr
         type: eventTypeRaw,
         description: description,
         distances: distances || [],
+        meals: meals || [],
+        accommodations: accommodations || [],
         imgUrl: imageUrlPath,
       },
     })
@@ -88,10 +94,14 @@ export async function updateEventAction(
   if (!session) return { message: "Non autorisé" };
 
   const rawDistances = formData.getAll('distances') as string[];
+  const rawMeals = formData.getAll('meals') as string[];
+  const rawAccommodations = formData.getAll('accommodations') as string[];
 
   const dataForValidation = {
     ...Object.fromEntries(formData.entries()),
-    distances: rawDistances
+    distances: rawDistances,
+    meals: rawMeals,
+    accommodations: rawAccommodations
   };
 
   // 2. Validation
@@ -101,7 +111,7 @@ export async function updateEventAction(
     return { error: validatedFields.error.flatten().fieldErrors };
   }
 
-  const { title, dateStart, dateEnd, place, eventtype, description, picture, distances } = validatedFields.data;
+  const { title, dateStart, dateEnd, place, eventtype, description, picture, distances, meals, accommodations } = validatedFields.data;
   const eventTypeRaw = eventtype;
 
   if (!Object.values(EventType).includes(eventTypeRaw as EventType)) {
@@ -116,7 +126,9 @@ export async function updateEventAction(
       location: place,
       type: eventtype as EventType,
       description,
-      distances: distances || [], //
+      distances: distances || [],
+      meals: meals || [],
+      accommodations: accommodations || [],
     };
 
     if (picture instanceof File && picture.size > 0) {
@@ -133,8 +145,8 @@ export async function updateEventAction(
       data: dataToUpdate,
     }); 
 
-    revalidatePath("/events"); //
-    revalidatePath(`/events/${eventId}`); //
+    revalidatePath("/evenements"); //
+    revalidatePath(`/evenements/${eventId}`); //
     revalidatePath("/admin/evenements");
 
     return { message: 'Événement modifié avec succès !' };
@@ -151,11 +163,11 @@ export async function deleteEventAction(eventId: string) {
     where: { id: eventId },
   });
 
-  revalidatePath("/events");
+  revalidatePath("/evenements");
 }
 
 //========JOIN EVENT=========
-export async function joinEventAction(eventId: string, selectedDistance?: string) {
+export async function joinEventAction(eventId: string, distance: string | null = null, selectedMeals: string[] = [], selectedAccommodations: string[] = [], carpooling: boolean = false) {
 
   const session = await verifySession();
 
@@ -172,7 +184,10 @@ export async function joinEventAction(eventId: string, selectedDistance?: string
       data: {
         userId: session.userId,
         eventId: eventId,
-        distance: selectedDistance || null // Enregistre la distance si elle est fournie
+        distance: distance,
+        meals: selectedMeals,
+        accommodations: selectedAccommodations,
+        carpooling: carpooling
       }
     });
 
@@ -214,7 +229,7 @@ export async function leaveEventAction(eventId: string) {
 
 
 
-export async function exportEventParticipantsAction(eventId: string, targetDistance?: string) {
+export async function exportEventParticipantsAction(eventId: string, targetParticipation?: string) {
     const user = await getCurrentUser();   
 
     if (user?.role !== "ADMIN") {
@@ -228,28 +243,30 @@ export async function exportEventParticipantsAction(eventId: string, targetDista
         return { success: false, message: "Événement introuvable" };
     }
 
-    // NOUVEAU : Filtrage par distance
     let registrationsToExport = event.registrations;
-    if (targetDistance) {
+    if (targetParticipation) {
         registrationsToExport = event.registrations.filter(
-            reg => (reg.distance || "Général") === targetDistance
+            reg => reg.distance === targetParticipation || reg.meals.includes(targetParticipation) || reg.accommodations.includes(targetParticipation)
         );
     }
 
     if (registrationsToExport.length === 0) {
-        return { success: false, message: "Aucun participant pour cette distance." };
+        return { success: false, message: "Aucun participant avec cette option." };
     }
 
-    const csvHeader = "Nom;Prénom;Email;Téléphone;Distance\n";
+    const csvHeader = "Nom;Prénom;Email;Téléphone;Distance;Repas;Hébergement;Covoiturage\n";
     
     const csvRows = registrationsToExport.map(reg => {
         const lastname = reg.user.lastname.replace(/;/g, ' ');
         const name = reg.user.name.replace(/;/g, ' ');
         const email = reg.user.email.replace(/;/g, ' ');
         const phone = reg.user.phone?.replace(/;/g, ' ') || "";
-        const distance = reg.distance || "Général";
+        const distanceStr = reg.distance || "Général";
+        const mealsStr = reg.meals.length > 0 ? reg.meals.join(", ") : "Aucun";
+        const accStr = reg.accommodations.length > 0 ? reg.accommodations.join(", ") : "Aucun";
+        const carpoolingStatus = reg.carpooling ? "Oui" : "Non";
         
-        return `${lastname};${name};${email};${phone};${distance}`;
+        return `${lastname};${name};${email};${phone};${distanceStr};${mealsStr};${accStr};${carpoolingStatus}`;
     }).join("\n");
 
     return { 

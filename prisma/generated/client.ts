@@ -91,3 +91,13 @@ export type Membership = Prisma.MembershipModel
  * 
  */
 export type Payment = Prisma.PaymentModel
+/**
+ * Model SiteConfig
+ * 
+ */
+export type SiteConfig = Prisma.SiteConfigModel
+/**
+ * Model TrainingSchedule
+ * 
+ */
+export type TrainingSchedule = Prisma.TrainingScheduleModel

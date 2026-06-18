@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
       hostname: 'localhost',
       pathname: '/uploads/les-foulees/**',
     },
+    {
+      protocol: 'https',
+      hostname: 'uuukalgwtpny3ch1.public.blob.vercel-storage.com',
+      pathname: '/**',
+    },
   ],
   },
 

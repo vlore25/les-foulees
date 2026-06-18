@@ -157,7 +157,7 @@ export async function createMembershipRequest(prevState: any, formData: FormData
 
             const existing = await tx.membership.findUnique({
                 where: { userId_seasonId: { userId: session.userId, seasonId: season.id } },
-                include: { payment: true }
+                include: { payment: true, partnerOf: true }
             });
 
             if (existing) {
@@ -179,32 +179,89 @@ export async function createMembershipRequest(prevState: any, formData: FormData
                     // Sinon, on garde l'ancien certificat si on n'en a pas chargé un nouveau
                     const newCertificateUrl = hasValidLicense ? null : (certificateUrl || existing.certificateUrl);
 
-                    await tx.membership.update({
-                        where: { id: existing.id },
-                        data: {
-                            type,
-                            ffaLicenseNumber: newLicenseNumber,
-                            previousClub,
-                            status: "PENDING",
-                            certificateUrl: newCertificateUrl,
+                    const isInvitedPartner = !!existing.partnerId;
+
+                    if (isInvitedPartner) {
+                        // C'est le conjoint invité qui met à jour son propre dossier (certificat/FFA)
+                        // On ne touche pas au paiement commun ni au type.
+                        await tx.membership.update({
+                            where: { id: existing.id },
+                            data: {
+                                ffaLicenseNumber: newLicenseNumber,
+                                previousClub: hasValidLicense ? previousClub : null,
+                                status: "PENDING",
+                                certificateUrl: newCertificateUrl,
+                            }
+                        });
+                    } else {
+                        // C'est l'utilisateur principal
+                        await tx.membership.update({
+                            where: { id: existing.id },
+                            data: {
+                                type,
+                                ffaLicenseNumber: newLicenseNumber,
+                                previousClub: hasValidLicense ? previousClub : null,
+                                status: "PENDING",
+                                certificateUrl: newCertificateUrl,
+                            }
+                        });
+
+                        // Mise à jour Paiement
+                        if (existing.payment) {
+                            await tx.payment.update({
+                                where: { id: existing.payment.id },
+                                data: {
+                                    amount,
+                                    method: paymentMethod,
+                                    status: "PENDING"
+                                }
+                            });
                         }
-                    });
+
+                        if (type === "COUPLE") {
+                            if (existing.partnerOf) {
+                                // Il y a déjà un partenaire lié. On le repasse en PENDING s'il était REJECTED
+                                if (existing.partnerOf.status === 'REJECTED') {
+                                    await tx.membership.update({
+                                        where: { id: existing.partnerOf.id },
+                                        data: { status: "PENDING" }
+                                    });
+                                }
+                            } else if (partnerUserId) {
+                                // Passage de INDIVIDUAL à COUPLE
+                                const partnerExisting = await tx.membership.findUnique({
+                                    where: { userId_seasonId: { userId: partnerUserId, seasonId: season.id } }
+                                });
+                                if (partnerExisting && partnerExisting.status !== 'REJECTED') {
+                                    throw new Error("Votre partenaire a déjà un dossier en cours pour cette saison.");
+                                }
+                                if (partnerExisting && partnerExisting.status === 'REJECTED') {
+                                    await tx.membership.delete({ where: { id: partnerExisting.id } });
+                                }
+                                await tx.membership.create({
+                                    data: {
+                                        userId: partnerUserId,
+                                        seasonId: season.id,
+                                        type: "COUPLE",
+                                        status: "PENDING",
+                                        partnerId: existing.id,
+                                        paymentId: existing.paymentId
+                                    }
+                                });
+                            }
+                        } else {
+                            // Passage de COUPLE à INDIVIDUAL : on supprime le conjoint lié
+                            if (existing.partnerOf) {
+                                await tx.membership.delete({
+                                    where: { id: existing.partnerOf.id }
+                                });
+                            }
+                        }
+                    }
 
                     // Si on a un ancien certificat à supprimer, on le fait APRES la mise à jour DB réussie
                     if (oldCertificateToDelete) {
                         await deleteUploadedFile(oldCertificateToDelete);
-                    }
-
-                    // Mise à jour Paiement (on force le statut PENDING pour re-vérification)
-                    if (existing.payment) {
-                        await tx.payment.update({
-                            where: { id: existing.payment.id },
-                            data: {
-                                amount,
-                                method: paymentMethod,
-                                status: "PENDING"
-                            }
-                        });
                     }
                     // On sort de la transaction ici car le travail est fait
                     return;
@@ -213,6 +270,16 @@ export async function createMembershipRequest(prevState: any, formData: FormData
                 // Si le dossier existe et n'est pas REJETÉ
                 throw new Error("Dossier déjà existant pour cette saison");
             }
+
+            // Création Paiement (sans membershipId car retiré de la BDD)
+            const payment = await tx.payment.create({
+                data: {
+                    userId: session.userId,
+                    amount,
+                    method: paymentMethod,
+                    status: "PENDING",
+                }
+            })
 
             // Création de l'adhésion principale
             const membership = await tx.membership.create({
@@ -224,14 +291,12 @@ export async function createMembershipRequest(prevState: any, formData: FormData
                     previousClub,
                     status: "PENDING",
                     certificateUrl: certificateUrl,
+                    paymentId: payment.id
                 }
             })
 
-            let partnerMembershipId = null;
-
-            // Si c'est un COUPLE, on crée automatiquement l'adhésion du partenaire en lien
+            // Si c'est un COUPLE, on crée l'adhésion du partenaire en lien (Strict 1-to-1)
             if (type === "COUPLE" && partnerUserId) {
-                // On revérifie au cas où (sécurité transactionnelle)
                 const partnerExisting = await tx.membership.findUnique({
                     where: { userId_seasonId: { userId: partnerUserId, seasonId: season.id } }
                 });
@@ -240,53 +305,19 @@ export async function createMembershipRequest(prevState: any, formData: FormData
                     throw new Error("Votre partenaire a déjà un dossier en cours pour cette saison.");
                 }
 
-                // Si le partenaire avait un dossier REJECTED, on le supprime ou on le met à jour ? 
-                // Pour l'instant on part du principe qu'il n'en a pas ou qu'on en crée un nouveau lié.
                 if (partnerExisting && partnerExisting.status === 'REJECTED') {
-                    // On peut choisir de le mettre à jour ou de le supprimer pour le recréer
                     await tx.membership.delete({ where: { id: partnerExisting.id } });
                 }
 
-                const partnerMembership = await tx.membership.create({
+                await tx.membership.create({
                     data: {
                         userId: partnerUserId,
                         seasonId: season.id,
                         type: "COUPLE",
                         status: "PENDING",
-                        partnerId: membership.id, // Lien vers l'adhésion d'origine
+                        partnerId: membership.id, // Relation stricte (Unique)
+                        paymentId: payment.id
                     }
-                });
-
-                partnerMembershipId = partnerMembership.id;
-
-                // On met à jour l'adhésion d'origine pour pointer vers le partenaire (lien bidirectionnel)
-                await tx.membership.update({
-                    where: { id: membership.id },
-                    data: { partnerId: partnerMembershipId }
-                });
-            }
-
-            // Création Paiement associé et lien avec les adhésions
-            const payment = await tx.payment.create({
-                data: {
-                    userId: session.userId,
-                    membershipId: membership.id,
-                    amount,
-                    method: paymentMethod,
-                    status: "PENDING",
-                }
-            })
-
-            // Mise à jour des adhésions pour pointer vers le paiement
-            await tx.membership.update({
-                where: { id: membership.id },
-                data: { paymentId: payment.id }
-            });
-
-            if (partnerMembershipId) {
-                await tx.membership.update({
-                    where: { id: partnerMembershipId },
-                    data: { paymentId: payment.id }
                 });
             }
         })
@@ -360,7 +391,7 @@ export async function deleteMembershipAction(membershipId: string) {
     try {
         const membership = await prisma.membership.findUnique({
             where: { id: membershipId },
-            include: { payment: true }
+            include: { payment: true, partnerOf: true }
         });
 
         if (!membership) return { success: false, message: "Dossier introuvable." };
@@ -368,31 +399,62 @@ export async function deleteMembershipAction(membershipId: string) {
             return { success: false, message: "Impossible de supprimer un dossier déjà validé." };
         }
 
-        const certifToDelete = membership.certificateUrl;
+        const idsToDelete = [membership.id];
+        if (membership.partnerId) idsToDelete.push(membership.partnerId);
+        if (membership.partnerOf) idsToDelete.push(membership.partnerOf.id);
+
+        const membershipsToDelete = await prisma.membership.findMany({
+            where: { id: { in: idsToDelete } }
+        });
 
         await prisma.$transaction(async (tx) => {
+            // Supprimer les adhésions EN PREMIER pour éviter l'erreur de clé étrangère sur le paiement
+            await tx.membership.deleteMany({
+                where: { id: { in: idsToDelete } }
+            });
+
             // Supprimer le paiement lié (si présent)
             if (membership.paymentId) {
                 await tx.payment.delete({
                     where: { id: membership.paymentId }
                 });
             }
-
-            // Supprimer l'adhésion
-            await tx.membership.delete({
-                where: { id: membershipId }
-            });
         });
 
-        // Suppression du fichier physique après transaction réussie
-        if (certifToDelete) {
-            await deleteUploadedFile(certifToDelete);
+        // Suppression des fichiers physiques après transaction réussie
+        for (const m of membershipsToDelete) {
+            if (m.certificateUrl) {
+                await deleteUploadedFile(m.certificateUrl);
+            }
         }
 
         revalidatePath("/admin/adherants")
-        return { success: true, message: "Dossier supprimé avec succès." };
+        return { success: true, message: "Dossier(s) supprimé(s) avec succès." };
     } catch (e) {
         console.error("Erreur suppression dossier:", e);
         return { success: false, message: "Erreur technique lors de la suppression." };
+    }
+}
+
+export async function getMembershipDetailsAction(membershipId: string) {
+    if (!await verifyAdmin()) return { success: false, message: "Action non autorisée." };
+
+    try {
+        const membership = await prisma.membership.findUnique({
+            where: { id: membershipId },
+            include: {
+                season: true,
+                user: true,
+                payment: true,
+                partner: {
+                    include: { user: true }
+                }
+            }
+        });
+        if (!membership) return { success: false, message: "Dossier introuvable." };
+
+        return { success: true, data: membership };
+    } catch (e) {
+        return { success: false, message: "Erreur serveur" };
     }
 }

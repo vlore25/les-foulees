@@ -6,6 +6,7 @@ import { CheckCircle2, Clock, XCircle, FileText, Download, ExternalLink, BookUse
 import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import MembershipRowActions from "./MembershipRowActions";
 import { cn } from "@/src/lib/utils";
+import { UserName } from "@/components/ui/user-name";
 
 interface MembershipWithRelations {
     id: string;
@@ -67,13 +68,8 @@ export default function MembershipCardList({ memberships }: MembershipCardListPr
                     >
                         <div className="p-6 space-y-4">
                             <div className="flex justify-between items-start">
-                                <div className="space-y-1">
-                                    <h3 className="font-black uppercase text-slate-900 leading-tight">
-                                        {m.user.lastname}
-                                    </h3>
-                                    <p className="text-sm font-bold text-primary italic">
-                                        {m.user.name}
-                                    </p>
+                                <div className="space-y-1 flex flex-col items-start">
+                                    <UserName name={m.user.name} lastname={m.user.lastname} className="text-slate-900 text-base" />
                                 </div>
                                 <MembershipRowActions
                                     id={m.id}

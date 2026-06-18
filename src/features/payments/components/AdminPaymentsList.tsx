@@ -4,8 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { CreditCard, User, Calendar, Banknote } from "lucide-react";
 import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import PaymentRowActions from "./PaymentRowActions";
-import { cn } from "@/src/lib/utils";
+import { cn, getAssetUrl } from "@/src/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PaymentStatus, PaymentMethod } from "@/prisma/generated/enums";
+import { TypographyDetail } from "@/components/ui/typography";
+import { UserName } from "@/components/ui/user-name";
 
 interface PaymentWithRelations {
   id: string;
@@ -17,6 +20,7 @@ interface PaymentWithRelations {
     name: string;
     lastname: string;
     email: string;
+    profileImageUrl?: string;
   };
   memberships?: {
     season: {
@@ -67,35 +71,38 @@ export default function AdminPaymentsList({ payments }: AdminPaymentsListProps) 
           >
             {/* IDENTITÉ ET MONTANT */}
             <div className="flex items-center gap-4 min-w-0 flex-1">
-              <div className="h-10 w-10 rounded-md bg-primary/5 flex items-center justify-center text-primary shrink-0">
-                <Banknote size={20} />
-              </div>
+              <Avatar className="h-10 w-10 border border-slate-100 shrink-0">
+                <AvatarImage src={getAssetUrl(p.user.profileImageUrl)} className="object-cover" />
+                <AvatarFallback className="bg-slate-50 text-slate-500 font-bold uppercase text-xs">
+                    {p.user.name?.[0]}{p.user.lastname?.[0]}
+                </AvatarFallback>
+              </Avatar>
               <div className="min-w-0">
-                <h3 className="font-bold text-slate-900 uppercase text-sm tracking-tight truncate">
-                  {p.user.lastname} <span className="text-primary">{p.user.name}</span>
-                </h3>
+                <div className="text-slate-900 text-sm truncate">
+                  <UserName name={p.user.name} lastname={p.user.lastname} />
+                </div>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-sm font-black text-slate-700">
+                  <span className="text-sm font-semibold text-slate-700">
                     {p.amount.toFixed(2)} €
                   </span>
                   <span className="text-slate-300">•</span>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  <TypographyDetail className="capitalize">
                     {getMethodLabel(p.method)}
-                  </span>
+                  </TypographyDetail>
                 </div>
               </div>
             </div>
 
             {/* DATE ET STATUT */}
             <div className="flex items-center gap-6 sm:gap-8 justify-between sm:justify-end">
-              <div className="hidden md:flex flex-col items-end">
-                <span className="text-[8px] font-black uppercase text-slate-400 tracking-tighter">Date</span>
-                <span className="text-[10px] font-bold text-slate-500 leading-none">
+              <div className="hidden md:flex flex-col items-end gap-1">
+                <TypographyDetail className="text-[10px]">Date</TypographyDetail>
+                <span className="text-xs font-medium text-slate-500 leading-none">
                   {new Date(p.createdAt).toLocaleDateString('fr-FR')}
                 </span>
               </div>
 
-              <Badge className={cn("border-none font-black uppercase tracking-widest text-[9px] px-2 h-5 rounded-sm", statusInfo.color)}>
+              <Badge className={cn("border-none font-semibold text-[10px] px-2 h-5 rounded-sm", statusInfo.color)}>
                 {statusInfo.label}
               </Badge>
 

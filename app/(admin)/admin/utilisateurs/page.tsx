@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Title2 } from "@/components/ui/title2";
 import AdminUsersList from "@/src/features/users/admin/user-gestion/AdminUsersList";
-import InviteForm from "@/src/features/users/invite/InviteForm";
+import AdminInvitesList from "@/src/features/users/invite/AdminInvitesList";
 
 export default function UsersPage() {
   //Tabs elements
@@ -17,7 +17,7 @@ export default function UsersPage() {
       name: 'Inviter',
       value: 'invite',
       content: (
-        <InviteForm />
+        <AdminInvitesList />
       )
     },
   ]

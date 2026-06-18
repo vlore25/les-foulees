@@ -5,6 +5,8 @@ import { ExternalLink, BookUser, CreditCard,  Banknote } from "lucide-react";
 import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import MembershipRowActions from "./MembershipRowActions";
 import { cn } from "@/src/lib/utils";
+import { TypographyDetail } from "@/components/ui/typography";
+import { UserName } from "@/components/ui/user-name";
 
 interface MembershipWithRelations {
     id: string;
@@ -70,13 +72,13 @@ export default function MembershipSimpleList({ memberships }: MembershipSimpleLi
                                 <Banknote size={24} />
                             </div>
                             <div className="min-w-0">
-                                <h3 className="font-bold text-slate-900 uppercase text-base tracking-tight truncate">
-                                    {m.user.lastname} <span className="text-primary">{m.user.name}</span>
-                                </h3>
+                                <div className="text-slate-900 text-base tracking-tight truncate">
+                                    <UserName name={m.user.name} lastname={m.user.lastname} />
+                                </div>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                                    <TypographyDetail>
                                         {formatMembershipType(m.type)}
-                                    </span>
+                                    </TypographyDetail>
                                     <span className="text-slate-300">•</span>
                                     <div className="flex items-center gap-1.5">
                                         <CreditCard size={14} className={isPaid ? "text-green-500" : "text-slate-400"} />

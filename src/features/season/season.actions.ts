@@ -21,7 +21,7 @@ export async function generateNextSeason(prevState: any, formData: FormData) {
     const shouldBeActive = seasonCount === 0;
     const existingFutureSeason = await prisma.season.findFirst({
       where: {
-        isActive: false, // Elle n'est pas active
+        isOpenForRegistration: false, // Elle n'est pas ouverte
         startDate: {
           gt: new Date() // Et elle commence dans le futur
         }
@@ -43,7 +43,7 @@ export async function generateNextSeason(prevState: any, formData: FormData) {
         name,
         startDate,
         endDate,
-        isActive: shouldBeActive,
+        isOpenForRegistration: shouldBeActive,
         priceStandard,
         priceYoung,
         priceFfa
@@ -62,12 +62,12 @@ export async function activateSeasonAction(seasonId: string) {
   try {
     await prisma.$transaction([
       prisma.season.updateMany({
-        where: { isActive: true },
-        data: { isActive: false }
+        where: { isOpenForRegistration: true },
+        data: { isOpenForRegistration: false }
       }),
       prisma.season.update({
         where: { id: seasonId },
-        data: { isActive: true }
+        data: { isOpenForRegistration: true }
       })
     ]);
     revalidatePath('/admin');

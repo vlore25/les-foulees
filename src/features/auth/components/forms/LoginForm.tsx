@@ -47,8 +47,7 @@ const LoginForm = () => {
                     )}
                     <div className="space-y-2">
                         <Label
-                            htmlFor="credentials-email" 
-                            className="text-xs font-bold uppercase tracking-widest text-primary-700 ml-1"
+                            htmlFor="credentials-email"
                         >
                             Email
                         </Label>
@@ -71,8 +70,7 @@ const LoginForm = () => {
 
                     <div className="space-y-2">
                         <Label 
-                            htmlFor="credentials-password" 
-                            className="text-xs font-bold uppercase tracking-widest text-primary-700 ml-1"
+                            htmlFor="credentials-password"
                         >
                             Mot de passe
                         </Label>

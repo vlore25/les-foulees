@@ -6,6 +6,7 @@ import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 import { getLegalDocs } from "../../dal";
 import { getCurrentUser } from "@/src/features/users/dal";
 import { Badge } from "@/components/ui/badge";
+import { TypographyH3, TypographyP, TypographyDetail } from "@/components/ui/typography";
 
 
 interface LegalDocsCardMobileProps {
@@ -51,16 +52,16 @@ export default async function LegalDocsCardMobile({ isAdminPage }: LegalDocsCard
                         }
 
                         <div className="absolute bottom-4 left-6 right-6">
-                            <h3 className="text-lg font-black uppercase text-primary leading-tight line-clamp-2">
+                            <TypographyH3 className="line-clamp-2">
                                 {doc.title}
-                            </h3>
+                            </TypographyH3>
                         </div>
                     </div>
 
                     <div className="p-6 flex flex-col flex-grow space-y-4">
-                        <p className="text-sm text-muted-foreground/90 line-clamp-3 font-medium leading-relaxed italic">
+                        <TypographyP className="line-clamp-3 italic">
                             {doc.description || "Aucune description pour ce document."}
-                        </p>
+                        </TypographyP>
 
                         <div className="pt-4 mt-auto border-t border-primary/5 flex justify-end">
                             {doc.Url ? (
@@ -76,7 +77,7 @@ export default async function LegalDocsCardMobile({ isAdminPage }: LegalDocsCard
                                     </div>
                                 </a>
                             ) : (
-                                <span className="text-xs text-muted-foreground font-bold italic">Indisponible</span>
+                                <TypographyDetail>Indisponible</TypographyDetail>
                             )}
                         </div>
                     </div>

@@ -3,11 +3,12 @@
 "use client";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { EventListItem } from "../dal";
-import JoinEventButton from "./JointEventButton";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronRight, Calendar, MapPin } from "lucide-react";
 import Link from "next/link";
 import { getAssetUrl, formatEventType } from "@/src/lib/utils";
+import { TypographyH3, TypographyP, TypographyDetail } from "@/components/ui/typography";
 
 interface EventsProps {
     events: EventListItem[];
@@ -26,7 +27,7 @@ export default function EventsCardMobile({ events }: EventsProps) {
                             <img
                                 src={getAssetUrl(event.imgUrl)}
                                 alt={event.title}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                className="w-full h-full object-cover"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
                             <div className="absolute top-4 left-4">
@@ -39,15 +40,15 @@ export default function EventsCardMobile({ events }: EventsProps) {
                         <div className="flex flex-col flex-grow p-5 space-y-4">
                             <div className="space-y-2">
                                 <Link href={`/espace-membre/evenements/${event.id}`}>
-                                    <h3 className="text-xl font-black uppercase text-primary leading-tight line-clamp-2 hover:text-primary/80 transition-colors">
+                                    <TypographyH3 className="line-clamp-2 hover:text-primary/80 transition-colors">
                                         {event.title}
-                                    </h3>
+                                    </TypographyH3>
                                 </Link>
                                 
                                 <div className="space-y-1.5 pt-1">
-                                    <div className="flex items-center gap-2 text-muted-foreground font-semibold text-xs italic">
+                                    <div className="flex items-center gap-2">
                                         <Calendar className="w-3.5 h-3.5 text-primary" />
-                                        <span>
+                                        <TypographyDetail>
                                             {event.dateStart
                                                 ? new Date(event.dateStart).toLocaleDateString("fr-FR", {
                                                     day: "numeric",
@@ -56,26 +57,25 @@ export default function EventsCardMobile({ events }: EventsProps) {
                                                 })
                                                 : "À définir"
                                             }
-                                        </span>
+                                        </TypographyDetail>
                                     </div>
-                                    <div className="flex items-center gap-2 text-muted-foreground font-semibold text-xs italic">
+                                    <div className="flex items-center gap-2">
                                         <MapPin className="w-3.5 h-3.5 text-primary" />
-                                        <span className="line-clamp-1">{event.location}</span>
+                                        <TypographyDetail className="line-clamp-1">{event.location}</TypographyDetail>
                                     </div>
                                 </div>
                             </div>
 
-                            <p className="text-sm text-muted-foreground/90 line-clamp-3 font-medium leading-relaxed">
+                            <TypographyP className="line-clamp-3">
                                 {event.description}
-                            </p>
+                            </TypographyP>
 
                             <div className="pt-2 mt-auto border-t border-primary/5 flex items-center justify-between gap-3">
-                                <JoinEventButton
-                                    eventId={event.id}
-                                    isParticipant={event.isParticipant}
-                                    distances={event.distances} 
-                                    userDistance={event.selectedDistance} 
-                                />
+                                <Button asChild className="w-full" variant={event.isParticipant ? "secondary" : "default"}>
+                                    <Link href={`/espace-membre/evenements/${event.id}`}>
+                                        {event.isParticipant ? "Gérer mon inscription" : "Savoir plus"}
+                                    </Link>
+                                </Button>
                             </div>
                         </div>
                     </Card>

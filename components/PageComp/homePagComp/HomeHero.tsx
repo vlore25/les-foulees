@@ -2,14 +2,18 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function HomeHero() {
+import { getSiteConfig } from "@/src/features/site-config/dal";
+
+export default async function HomeHero() {
+    const config = await getSiteConfig();
+
     return (
         <section className="relative flex flex-col w-full bg-background overflow-hidden">
             <div className="relative h-[75vh] md:h-[90vh] w-full overflow-hidden rounded-br-[4rem] lg:rounded-br-[8rem]">
                 
                 {/* Images avec gestion Mobile/Desktop */}
                 <Image
-                    src="/images/home-hero-mobile.jpg"
+                    src={config?.heroMobileUrl || "/images/home-hero-mobile.jpg"}
                     alt="Les Foulées Avrillaises en action"
                     fill
                     priority
@@ -17,7 +21,7 @@ export default function HomeHero() {
                     sizes="100vw"
                 />
                 <Image
-                    src="/images/home-hero-desktop.jpg"
+                    src={config?.heroDesktopUrl || "/images/home-hero-desktop.jpg"}
                     alt="Les Foulées Avrillaises en action"
                     fill
                     priority
@@ -47,17 +51,6 @@ export default function HomeHero() {
                                 Le plaisir de courir ensemble
                             </p>
                         </article>
-
-                        <article className="flex items-center">
-                            <Button 
-                                asChild 
-                                size="lg" 
-                                className="h-16 px-10 text-xl font-bold uppercase italic  hover:scale-105 shadow-xl"
-                            >
-                                <Link href="/contact">Devenir membre</Link>
-                            </Button>
-                        </article>
-
                     </div>
                 </div>
 

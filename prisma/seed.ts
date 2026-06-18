@@ -32,7 +32,7 @@ async function main() {
       name: "Saison 2024-2025",
       startDate: new Date("2024-09-01"),
       endDate: new Date("2025-08-31"),
-      isActive: false,
+      isOpenForRegistration: false,
     }
   });
 
@@ -41,7 +41,7 @@ async function main() {
       name: "Saison 2025-2026",
       startDate: new Date("2025-09-01"),
       endDate: new Date("2026-08-31"),
-      isActive: true,
+      isOpenForRegistration: true,
     }
   });
 
@@ -127,7 +127,6 @@ async function main() {
         amount,
         method,
         status: status === MembershipStatus.VALIDATED ? PaymentStatus.PAID : PaymentStatus.PENDING,
-        membershipId: faker.string.uuid(), // Temporaire et unique
       }
     });
 
@@ -142,10 +141,6 @@ async function main() {
       }
     });
 
-    await prisma.payment.update({
-      where: { id: payment.id },
-      data: { membershipId: membership.id }
-    });
   }
 
   console.log(`✅ ${createdUsers.length} utilisateurs et leurs adhésions créés.`);
@@ -162,6 +157,8 @@ async function main() {
       dateEnd: new Date("2026-10-31T23:30:00"),
       imgUrl: "/uploads/apocalipsis.png",
       distances: ["13km (Le Survivant)", "6.66km (L'Initié)"],
+      meals: ["Repas de clôture"],
+      accommodations: ["Nuit en gymnase"],
     },
     {
       title: "Trail du Cap Sizun - Pointe du Raz",
@@ -172,6 +169,8 @@ async function main() {
       dateEnd: new Date("2026-04-12T16:00:00"),
       imgUrl: "/uploads/capsizun.jpg",
       distances: ["15km", "30km", "50km"],
+      meals: [],
+      accommodations: [],
     },
     {
       title: "Trail de la Baie - Entre Terre et Mer",
@@ -182,6 +181,8 @@ async function main() {
       dateEnd: new Date("2026-06-14T14:00:00"),
       imgUrl: "/uploads/labaie.webp",
       distances: ["10km", "22km", "34km"],
+      meals: [],
+      accommodations: [],
     },
     {
       title: "Course de la Solidarité - Téléthon Avrillé",
@@ -192,6 +193,8 @@ async function main() {
       dateEnd: new Date("2025-12-06T13:00:00"),
       imgUrl: "/uploads/telethon.jpg",
       distances: ["5km (Course)", "10km (Course)", "5km (Marche)"],
+      meals: [],
+      accommodations: [],
     },
   ];
 
@@ -216,6 +219,8 @@ async function main() {
           distance: event.distances && event.distances.length > 0 
             ? faker.helpers.arrayElement(event.distances) 
             : "Libre",
+          meals: [],
+          accommodations: [],
         }
       }).catch(() => {}); // Ignorer doublons potentiels
     }

@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.6.0
- * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
+ * Prisma Client JS version: 7.8.0
+ * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.6.0",
-  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
+  client: "7.8.0",
+  engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
 }
 
 /**
@@ -393,7 +393,9 @@ export const ModelName = {
   LegalDocs: 'LegalDocs',
   Season: 'Season',
   Membership: 'Membership',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  SiteConfig: 'SiteConfig',
+  TrainingSchedule: 'TrainingSchedule'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -409,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "invitation" | "passwordResetToken" | "event" | "eventRegistration" | "legalDocs" | "season" | "membership" | "payment"
+    modelProps: "user" | "session" | "invitation" | "passwordResetToken" | "event" | "eventRegistration" | "legalDocs" | "season" | "membership" | "payment" | "siteConfig" | "trainingSchedule"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1153,6 +1155,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SiteConfig: {
+      payload: Prisma.$SiteConfigPayload<ExtArgs>
+      fields: Prisma.SiteConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SiteConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SiteConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.SiteConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SiteConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteConfigPayload>
+        }
+        findMany: {
+          args: Prisma.SiteConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteConfigPayload>[]
+        }
+        create: {
+          args: Prisma.SiteConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteConfigPayload>
+        }
+        createMany: {
+          args: Prisma.SiteConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SiteConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.SiteConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteConfigPayload>
+        }
+        update: {
+          args: Prisma.SiteConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.SiteConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SiteConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SiteConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.SiteConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.SiteConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSiteConfig>
+        }
+        groupBy: {
+          args: Prisma.SiteConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SiteConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SiteConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SiteConfigCountAggregateOutputType> | number
+        }
+      }
+    }
+    TrainingSchedule: {
+      payload: Prisma.$TrainingSchedulePayload<ExtArgs>
+      fields: Prisma.TrainingScheduleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TrainingScheduleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainingSchedulePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TrainingScheduleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainingSchedulePayload>
+        }
+        findFirst: {
+          args: Prisma.TrainingScheduleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainingSchedulePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TrainingScheduleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainingSchedulePayload>
+        }
+        findMany: {
+          args: Prisma.TrainingScheduleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainingSchedulePayload>[]
+        }
+        create: {
+          args: Prisma.TrainingScheduleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainingSchedulePayload>
+        }
+        createMany: {
+          args: Prisma.TrainingScheduleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TrainingScheduleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainingSchedulePayload>[]
+        }
+        delete: {
+          args: Prisma.TrainingScheduleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainingSchedulePayload>
+        }
+        update: {
+          args: Prisma.TrainingScheduleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainingSchedulePayload>
+        }
+        deleteMany: {
+          args: Prisma.TrainingScheduleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TrainingScheduleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TrainingScheduleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainingSchedulePayload>[]
+        }
+        upsert: {
+          args: Prisma.TrainingScheduleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TrainingSchedulePayload>
+        }
+        aggregate: {
+          args: Prisma.TrainingScheduleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTrainingSchedule>
+        }
+        groupBy: {
+          args: Prisma.TrainingScheduleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TrainingScheduleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TrainingScheduleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TrainingScheduleCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1212,6 +1362,7 @@ export const UserScalarFieldEnum = {
   showEmailDirectory: 'showEmailDirectory',
   role: 'role',
   status: 'status',
+  deactivatedAt: 'deactivatedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1263,6 +1414,8 @@ export const EventScalarFieldEnum = {
   dateEnd: 'dateEnd',
   location: 'location',
   distances: 'distances',
+  meals: 'meals',
+  accommodations: 'accommodations',
   type: 'type',
   visibility: 'visibility',
   createdAt: 'createdAt',
@@ -1277,6 +1430,9 @@ export const EventRegistrationScalarFieldEnum = {
   userId: 'userId',
   eventId: 'eventId',
   distance: 'distance',
+  meals: 'meals',
+  accommodations: 'accommodations',
+  carpooling: 'carpooling',
   createdAt: 'createdAt'
 } as const
 
@@ -1298,7 +1454,7 @@ export const SeasonScalarFieldEnum = {
   name: 'name',
   startDate: 'startDate',
   endDate: 'endDate',
-  isActive: 'isActive',
+  isOpenForRegistration: 'isOpenForRegistration',
   priceStandard: 'priceStandard',
   priceCouple: 'priceCouple',
   priceYoung: 'priceYoung',
@@ -1336,12 +1492,35 @@ export const PaymentScalarFieldEnum = {
   reference: 'reference',
   date: 'date',
   userId: 'userId',
-  membershipId: 'membershipId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const SiteConfigScalarFieldEnum = {
+  id: 'id',
+  heroDesktopUrl: 'heroDesktopUrl',
+  heroMobileUrl: 'heroMobileUrl',
+  privacyPolicy: 'privacyPolicy',
+  legalNotice: 'legalNotice',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SiteConfigScalarFieldEnum = (typeof SiteConfigScalarFieldEnum)[keyof typeof SiteConfigScalarFieldEnum]
+
+
+export const TrainingScheduleScalarFieldEnum = {
+  id: 'id',
+  day: 'day',
+  hour: 'hour',
+  place: 'place',
+  imgUrl: 'imgUrl',
+  order: 'order'
+} as const
+
+export type TrainingScheduleScalarFieldEnum = (typeof TrainingScheduleScalarFieldEnum)[keyof typeof TrainingScheduleScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1655,6 +1834,21 @@ export type PrismaClientOptions = ({
    * ```
    */
   comments?: runtime.SqlCommenterPlugin[]
+  /**
+   * Optional maximum size for the query plan cache. If not provided, a default size will be used.
+   * A value of `0` can be used to disable the cache entirely. A higher cache size can improve
+   * performance for applications that execute a large number of unique queries, while a smaller
+   * cache size can reduce memory usage.
+   * 
+   * @example
+   * ```
+   * const prisma = new PrismaClient({
+   *   adapter,
+   *   queryPlanCacheMaxSize: 100,
+   * })
+   * ```
+   */
+  queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
@@ -1667,6 +1861,8 @@ export type GlobalOmitConfig = {
   season?: Prisma.SeasonOmit
   membership?: Prisma.MembershipOmit
   payment?: Prisma.PaymentOmit
+  siteConfig?: Prisma.SiteConfigOmit
+  trainingSchedule?: Prisma.TrainingScheduleOmit
 }
 
 /* Types for Logging */

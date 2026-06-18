@@ -8,6 +8,7 @@ import { MembershipForm } from "./MembershipForm";
 import { MembershipStatus } from "@/prisma/generated/enums";
 import { memberCardPdf } from "../memberCardPdf";
 import { cn } from "@/src/lib/utils";
+import { TypographyH1, TypographyH3, TypographyPageDescription, TypographyP, TypographyDetail } from "@/components/ui/typography";
 
 const STATUS_INFO = {
     [MembershipStatus.PENDING]: {
@@ -67,7 +68,7 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
         const Icon = info.icon;
 
         return (
-            <div className="w-full max-w-4xl mx-auto space-y-8 px-4">
+            <div className="w-full max-w-4xl mx-auto space-y-8 px-2">
                 <div className="relative overflow-hidden bg-white rounded-tl-[3rem] rounded-br-[3rem] border-none shadow-xl">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-16 -mt-16" />
                     
@@ -77,9 +78,9 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                                 <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none font-black uppercase tracking-widest text-xs px-3 py-1">
                                     Saison {season.name}
                                 </Badge>
-                                <h2 className="text-3xl sm:text-4xl font-black uppercase tracking-tighter text-slate-900">
+                                <TypographyH1 className="text-3xl sm:text-4xl text-slate-900">
                                     Mon Adhésion
-                                </h2>
+                                </TypographyH1>
                             </div>
                             
                             <div className={cn(
@@ -93,33 +94,33 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                             <div className="space-y-3 p-6 bg-muted/30 rounded-2xl border border-primary/5">
-                                <div className="flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs">
+                                <div className="flex items-center gap-2 text-primary">
                                     <User size={14} />
-                                    <span>Type d'offre</span>
+                                    <TypographyDetail className="text-primary not-italic">Type d'offre</TypographyDetail>
                                 </div>
-                                <p className="text-xl font-bold italic text-slate-800">
+                                <TypographyP className="text-xl font-bold text-slate-800 italic">
                                     {TYPE_LABELS[membership.type] || membership.type}
-                                </p>
+                                </TypographyP>
                             </div>
 
                             <div className="space-y-3 p-6 bg-muted/30 rounded-2xl border border-primary/5">
-                                <div className="flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs">
+                                <div className="flex items-center gap-2 text-primary">
                                     <Calendar size={14} />
-                                    <span>Date de demande</span>
+                                    <TypographyDetail className="text-primary not-italic">Date de demande</TypographyDetail>
                                 </div>
-                                <p className="text-xl font-bold italic text-slate-800">
+                                <TypographyP className="text-xl font-bold text-slate-800 italic">
                                     {new Date(membership.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                                </p>
+                                </TypographyP>
                             </div>
 
                             <div className="space-y-3 p-6 bg-muted/30 rounded-2xl border border-primary/5">
-                                <div className="flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs">
+                                <div className="flex items-center gap-2 text-primary">
                                     <FileText size={14} />
-                                    <span>Paiement</span>
+                                    <TypographyDetail className="text-primary not-italic">Paiement</TypographyDetail>
                                 </div>
-                                <p className="text-xl font-bold italic text-slate-800 uppercase">
+                                <TypographyP className="text-xl font-bold text-slate-800 italic">
                                     {membership.paymentMethod || "Virement"}
-                                </p>
+                                </TypographyP>
                             </div>
                         </div>
 
@@ -141,8 +142,8 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                             <div className="flex items-start gap-4 bg-primary/5 p-6 rounded-2xl border border-primary/10">
                                 <Clock className="w-6 h-6 shrink-0 mt-0.5 text-primary" />
                                 <div className="space-y-1">
-                                    <p className="font-bold uppercase tracking-tight text-primary text-base">Dossier en cours d'examen</p>
-                                    <p className="text-sm sm:text-base text-slate-600 italic">Votre demande est en cours de validation par le bureau. Un email de confirmation vous sera envoyé prochainement.</p>
+                                    <TypographyH3 className="text-base tracking-tight">Dossier en cours d'examen</TypographyH3>
+                                    <TypographyP className="text-slate-600 italic">Votre demande est en cours de validation par le bureau. Un email de confirmation vous sera envoyé prochainement.</TypographyP>
                                 </div>
                             </div>
                         )}
@@ -153,7 +154,7 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
     }
 
     return (
-        <div className="w-full max-w-4xl mx-auto space-y-10 px-4">
+        <div className="w-full max-w-4xl mx-auto space-y-10 px-2">
             {membership && membership.status === 'REJECTED' && (
                 <div className="animate-in fade-in slide-in-from-top-4 duration-500">
                     <ErrorCard
@@ -167,12 +168,12 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                 <Badge className="bg-primary/10 text-primary border-none font-black uppercase tracking-widest text-xs px-3 py-1">
                     Saison {season.name}
                 </Badge>
-                <h1 className="text-4xl sm:text-5xl font-black uppercase tracking-tighter text-slate-900">
+                <TypographyH1>
                     {membership ? "Corriger ma demande" : "Nouvelle Adhésion"}
-                </h1>
-                <p className="text-muted-foreground text-lg sm:text-xl italic max-w-2xl">
+                </TypographyH1>
+                <TypographyPageDescription>
                     Rejoignez les Foulées Avrillaises pour une nouvelle saison de course et de convivialité.
-                </p>
+                </TypographyPageDescription>
             </div>
 
             <MembershipForm

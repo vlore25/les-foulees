@@ -49,6 +49,7 @@ model User {
   showEmailDirectory Boolean      @default(false)
   role               Role         @default(USER)
   status             Status       @default(ACTIVE)
+  deactivatedAt      DateTime?
   sessions           Session[]
   eventRegistrations EventRegistration[]
   memberships        Membership[]
@@ -112,7 +113,9 @@ model Event {
   dateStart    DateTime?
   dateEnd      DateTime?
   location     String
-  distances    String[]  
+  distances    String[]
+  meals        String[]
+  accommodations String[]
   type         EventType
   visibility   Visibility @default(PUBLIC)
   createdAt    DateTime   @default(now())
@@ -124,7 +127,10 @@ model EventRegistration {
   id        String   @id @default(cuid())
   userId    String
   eventId   String
-  distance  String?  
+  distance  String?
+  meals     String[]
+  accommodations String[]
+  carpooling Boolean @default(false)
   createdAt DateTime @default(now())
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -150,7 +156,7 @@ model Season {
   name          String       @unique
   startDate     DateTime
   endDate       DateTime
-  isActive      Boolean      @default(false)
+  isOpenForRegistration Boolean @default(false)
   priceStandard Float        @default(35.0)
   priceCouple   Float        @default(60.0)
   priceYoung    Float        @default(25.0)
@@ -191,9 +197,9 @@ model Membership {
   updatedAt        DateTime         @updatedAt
   payment          Payment?         @relation(fields: [paymentId], references: [id])
   
-  partnerId        String?
+  partnerId        String?          @unique
   partner          Membership?      @relation("CoupleMembership", fields: [partnerId], references: [id])
-  partnerOf        Membership[]     @relation("CoupleMembership")
+  partnerOf        Membership?      @relation("CoupleMembership")
 
   @@unique([userId, seasonId])
 }
@@ -223,7 +229,27 @@ model Payment {
   user         User          @relation(fields: [userId], references: [id])
   userId       String
   memberships  Membership[]
-  membershipId String        @unique
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
+
+// ==============SITE CONFIGURATION=================
+
+model SiteConfig {
+  id               String   @id @default("default")
+  heroDesktopUrl   String?
+  heroMobileUrl    String?
+  privacyPolicy    String?
+  legalNotice      String?
+  updatedAt        DateTime @updatedAt
+}
+
+model TrainingSchedule {
+  id        String  @id @default(cuid())
+  day       String
+  hour      String
+  place     String
+  imgUrl    String?
+  order     Int     @default(0)
+}
+

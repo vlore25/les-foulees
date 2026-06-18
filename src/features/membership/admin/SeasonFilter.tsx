@@ -11,7 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
 
 interface SeasonFilterProps {
-  seasons: { id: string; name: string; isActive: boolean }[];
+  seasons: { id: string; name: string; isOpenForRegistration: boolean }[];
   currentSeasonId?: string;
 }
 
@@ -50,7 +50,7 @@ export default function SeasonFilter({ seasons, currentSeasonId }: SeasonFilterP
             <SelectItem key={s.id} value={s.id}>
               {/* On coupe le texte s'il est trop long */}
               <span className="truncate block max-w-[200px]">
-                  {s.name || "Saison sans nom"} {s.isActive && "(Active)"}
+                  {s.name || "Saison sans nom"} {s.isOpenForRegistration && "(Active)"}
               </span>
             </SelectItem>
           ))}

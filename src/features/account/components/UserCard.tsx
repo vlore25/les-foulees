@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { ChevronsUpDown } from "lucide-react";
 import LogoutButton from "../../auth/components/buttons/LogoutButton";
 import { getAssetUrl } from "@/src/lib/utils";
+import { UserName } from "@/components/ui/user-name";
 
 
 export default function UserCard() {
@@ -30,8 +31,8 @@ export default function UserCard() {
                         <AvatarFallback className='bg-primary/10'>{initials}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start overflow-hidden">
-                        <div className="flex gap-1.5 font-medium whitespace-nowrap truncate w-full">
-                            <span>{user.name}</span><span>{user.lastname}</span>
+                        <div className="flex whitespace-nowrap truncate w-full text-sm text-foreground">
+                            <UserName name={user.name} lastname={user.lastname} />
                         </div>
                         <p className="text-xs lowercase">{user.email}</p>
                     </div>
