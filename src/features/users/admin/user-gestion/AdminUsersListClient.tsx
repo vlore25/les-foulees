@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import { AdminUserList } from "@/src/lib/dto";
-import { Search, Eye, Calendar } from "lucide-react";
+import { Search, Calendar } from "lucide-react";
 import { cn, getAssetUrl } from "@/src/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { UserRowActions } from "./UserRowActions";
-import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { UserName } from "@/components/ui/user-name";
 
+import { useRouter } from "next/navigation";
+
 export default function AdminUsersListClient({ users }: { users: AdminUserList[] }) {
     const [search, setSearch] = useState("");
+    const router = useRouter();
 
     const filteredUsers = users.filter(user => 
         (`${user.name} ${user.lastname}`.toLowerCase().includes(search.toLowerCase()))
@@ -35,11 +37,12 @@ export default function AdminUsersListClient({ users }: { users: AdminUserList[]
                 {filteredUsers.map((user) => (
                     <div
                         key={user.id}
-                        className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
+                        onClick={() => router.push(`/admin/utilisateurs/${user.id}`)}
+                        className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors cursor-pointer group"
                     >
                         <div className="flex items-center gap-4">
                             <Avatar className="h-10 w-10 border border-slate-100">
-                                <AvatarImage src={getAssetUrl(user.profileImageUrl)} className="object-cover" />
+                                <AvatarImage src={user.profileImageUrl ? getAssetUrl(user.profileImageUrl) : undefined} className="object-cover" />
                                 <AvatarFallback className="bg-slate-50 text-slate-500 font-bold uppercase text-xs">
                                     {user.name[0]}{user.lastname[0]}
                                 </AvatarFallback>
@@ -68,12 +71,10 @@ export default function AdminUsersListClient({ users }: { users: AdminUserList[]
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
-                            <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-md text-slate-400 hover:text-primary hover:bg-slate-100">
-                                <Link href={`/admin/utilisateurs/${user.id}`}>
-                                    <Eye size={16} />
-                                </Link>
-                            </Button>
+                        <div 
+                            className="flex items-center gap-2"
+                            onClick={(e) => e.stopPropagation()}
+                        >
                             <UserRowActions userId={user.id} role={user.role} />
                         </div>
                     </div>

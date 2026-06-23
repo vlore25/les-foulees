@@ -62,7 +62,7 @@ const CONTACT_DETAILS: ContactDetailItem[] = [
 
 const ContactInfoRow = ({ item }: { item: ContactDetailItem }) => (
     <div className="flex items-start space-x-2">
-        <div className="p-3 bg-primary-500 rounded-tl-xl rounded-br-xl shadow-md">
+        <div className="p-3 bg-primary-500 rounded-tl-lg rounded-br-lg shadow-md">
             <item.icon className="w-5 h-5 text-white" />
         </div>
         <div>

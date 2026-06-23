@@ -97,6 +97,10 @@ export async function updateEventAction(
   const rawMeals = formData.getAll('meals') as string[];
   const rawAccommodations = formData.getAll('accommodations') as string[];
 
+  const distancesRenamesStr = formData.get('distances_renames') as string;
+  const mealsRenamesStr = formData.get('meals_renames') as string;
+  const accommodationsRenamesStr = formData.get('accommodations_renames') as string;
+
   const dataForValidation = {
     ...Object.fromEntries(formData.entries()),
     distances: rawDistances,
@@ -144,6 +148,68 @@ export async function updateEventAction(
       where: { id: eventId },
       data: dataToUpdate,
     }); 
+
+    // Gérer les renommages pour les inscriptions existantes
+    try {
+      const distancesRenames = distancesRenamesStr ? JSON.parse(distancesRenamesStr) : [];
+      const mealsRenames = mealsRenamesStr ? JSON.parse(mealsRenamesStr) : [];
+      const accommodationsRenames = accommodationsRenamesStr ? JSON.parse(accommodationsRenamesStr) : [];
+
+      if (distancesRenames.length > 0 || mealsRenames.length > 0 || accommodationsRenames.length > 0) {
+        const registrations = await prisma.eventRegistration.findMany({
+          where: { eventId }
+        });
+
+        const updates = registrations.map(reg => {
+          let hasChanges = false;
+          let newDistance = reg.distance;
+          let newMeals = [...reg.meals];
+          let newAccommodations = [...reg.accommodations];
+
+          if (newDistance) {
+            const rename = distancesRenames.find((r: any) => r.old === newDistance);
+            if (rename) {
+              newDistance = rename.new;
+              hasChanges = true;
+            }
+          }
+
+          mealsRenames.forEach((r: any) => {
+            const idx = newMeals.indexOf(r.old);
+            if (idx !== -1) {
+              newMeals[idx] = r.new;
+              hasChanges = true;
+            }
+          });
+
+          accommodationsRenames.forEach((r: any) => {
+            const idx = newAccommodations.indexOf(r.old);
+            if (idx !== -1) {
+              newAccommodations[idx] = r.new;
+              hasChanges = true;
+            }
+          });
+
+          if (hasChanges) {
+            return prisma.eventRegistration.update({
+              where: { id: reg.id },
+              data: {
+                distance: newDistance,
+                meals: newMeals,
+                accommodations: newAccommodations
+              }
+            });
+          }
+          return null;
+        }).filter(Boolean);
+
+        if (updates.length > 0) {
+          await Promise.all(updates);
+        }
+      }
+    } catch (renameError) {
+      console.error("Erreur lors de la mise à jour des inscriptions (renommage):", renameError);
+    }
 
     revalidatePath("/evenements"); //
     revalidatePath(`/evenements/${eventId}`); //

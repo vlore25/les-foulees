@@ -17,7 +17,7 @@ export default function ForgotPasswordForm() {
 
     return (
         <main className='
-            flex flex-col w-full max-w-md mx-auto my-10 bg-white shadow-2xl rounded-2xl overflow-hidden
+            flex flex-col w-full max-w-md mx-auto my-10 bg-white shadow-2xl rounded-lg overflow-hidden
             lg:grid lg:grid-cols-2 lg:max-w-5xl lg:min-h-[600px]
         '>
             <div className='flex flex-col items-center justify-center w-full p-6 py-10 lg:p-12 gap-6'>

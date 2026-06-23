@@ -64,7 +64,7 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
     }
 
     return (
-        <div className='overflow-x-auto rounded-xl border bg-white shadow-sm'>
+        <div className='overflow-x-auto rounded-lg border bg-white shadow-sm'>
             <Table>
                 <TableHeader className="bg-slate-50/50">
                     <TableRow>

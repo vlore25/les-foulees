@@ -56,7 +56,7 @@ export default async function TrainingSchedule() {
                                 alt={item.day}
                                 className="rounded-tl-[2rem] rounded-br-[2rem] object-cover shadow-md"
                             />
-                            <article className="bg-primary-300 rounded-tl-2xl rounded-br-2xl w-fit p-3 text-primary-900 absolute -bottom-6 -left-2 shadow-lg">
+                            <article className="bg-primary-300 rounded-tl-lg rounded-br-lg w-fit p-3 text-primary-900 absolute -bottom-6 -left-2 shadow-lg">
                                 <h4 className="font-bold text-xl leading-none mb-2 uppercase tracking-tight">
                                     {item.day}
                                 </h4>

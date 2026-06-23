@@ -134,7 +134,7 @@ export function SiteConfigManager({ initialConfig, initialSchedules }: { initial
                     {schedules.map((schedule, index) => (
                         <form 
                             key={schedule.id || index} 
-                            className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 border border-slate-100 bg-slate-50 rounded-xl items-end"
+                            className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 border border-slate-100 bg-slate-50 rounded-lg items-end"
                             onSubmit={(e) => { e.preventDefault(); handleSaveSchedule(schedule, index, e.currentTarget); }}
                         >
                             <div className="md:col-span-3 space-y-2">

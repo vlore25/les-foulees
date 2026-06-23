@@ -11,12 +11,15 @@ import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
 import { cn } from "@/src/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 
+import { fr } from "date-fns/locale"
+
 function Calendar({
   className,
   classNames,
-  showOutsideDays = true,
+  showOutsideDays = false,
   captionLayout = "label",
   buttonVariant = "ghost",
+  locale = fr,
   formatters,
   components,
   ...props
@@ -28,6 +31,8 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
+      locale={locale}
+      weekStartsOn={0}
       className={cn(
         "bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
         String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
@@ -37,7 +42,15 @@ function Calendar({
       captionLayout={captionLayout}
       formatters={{
         formatMonthDropdown: (date) =>
-          date.toLocaleString("default", { month: "short" }),
+          date.toLocaleString("fr-FR", { month: "short" }),
+        formatCaption: (date) => {
+          const month = date.toLocaleString("fr-FR", { month: "long" })
+          return month.charAt(0).toUpperCase() + month.slice(1) + " " + date.getFullYear()
+        },
+        formatWeekdayName: (date) => {
+          const day = date.toLocaleString("fr-FR", { weekday: "short" })
+          return day.charAt(0).toUpperCase() + day.slice(1)
+        },
         ...formatters,
       }}
       classNames={{

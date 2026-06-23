@@ -53,7 +53,7 @@ export default async function SocialProof() {
 
                             <div className="relative z-10 flex flex-col h-full">
                                 <div className="flex items-center gap-4 mb-2">
-                                    <div className="p-3 bg-primary-500 rounded-tl-xl rounded-br-xl shadow-md">
+                                    <div className="p-3 bg-primary-500 rounded-tl-lg rounded-br-lg shadow-md">
                                         <IconTag className="w-6 h-6 text-white" />
                                     </div>
                                     <span className="text-5xl font-black text-primary-700 tracking-tighter">

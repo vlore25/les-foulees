@@ -72,7 +72,7 @@ export default function RegistrationForm({
 
   if (state?.success) {
     return (
-      <div className="w-full max-w-lg mx-auto p-8 bg-green-50 border border-green-200 rounded-xl flex flex-col items-center justify-center text-center space-y-4 animate-in fade-in zoom-in duration-300">
+      <div className="w-full max-w-lg mx-auto p-8 bg-green-50 border border-green-200 rounded-lg flex flex-col items-center justify-center text-center space-y-4 animate-in fade-in zoom-in duration-300">
         <div className="bg-green-100 p-4 rounded-full">
           <CheckCircle2 className="w-12 h-12 text-green-600" />
         </div>
@@ -367,7 +367,7 @@ export default function RegistrationForm({
                   name="emergencyName"
                   placeholder="Ex: Marie"
                   defaultValue={state?.fields?.emergencyName}
-                  className="h-12 rounded-xl"
+                  className="h-12 rounded-lg"
                 />
               </Field>
               <ErrorText>{state?.errors?.emergencyName}</ErrorText>
@@ -381,7 +381,7 @@ export default function RegistrationForm({
                   name="emergencyLastName"
                   placeholder="Ex: DUPONT"
                   defaultValue={state?.fields?.emergencyLastName}
-                  className="h-12 rounded-xl"
+                  className="h-12 rounded-lg"
                 />
               </Field>
               <ErrorText>{state?.errors?.emergencyLastName}</ErrorText>
@@ -396,7 +396,7 @@ export default function RegistrationForm({
                 name="emergencyPhone"
                 placeholder="06 .. .. .. .."
                 defaultValue={state?.fields?.emergencyPhone}
-                className="h-12 rounded-xl"
+                className="h-12 rounded-lg"
               />
             </Field>
             <ErrorText>{state?.errors?.emergencyPhone} </ErrorText>
@@ -428,7 +428,7 @@ export default function RegistrationForm({
               name="email"
               value={email}
               readOnly
-              className="h-12 rounded-xl bg-slate-50 text-slate-500 font-bold border-slate-200"
+              className="h-12 rounded-lg bg-slate-50 text-slate-500 font-bold border-slate-200"
             />
             <p className="text-[10px] text-slate-400 italic mt-1.5 px-1">
               Cette adresse est liée à votre invitation et ne peut être
@@ -448,7 +448,7 @@ export default function RegistrationForm({
                   type="password"
                   required
                   defaultValue={state?.fields?.password}
-                  className="h-12 rounded-xl"
+                  className="h-12 rounded-lg"
                 />
               </Field>
               <ErrorText>{state?.errors?.password} </ErrorText>
@@ -464,14 +464,14 @@ export default function RegistrationForm({
                   type="password"
                   defaultValue={state?.fields?.confirmPassword}
                   required
-                  className="h-12 rounded-xl"
+                  className="h-12 rounded-lg"
                 />
               </Field>
               <ErrorText>{state?.errors?.confirmPassword}</ErrorText>
             </div>
           </div>
 
-          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
+          <div className="bg-slate-50 p-6 rounded-lg border border-slate-100 space-y-4">
             <div className="space-y-1">
               <p className="text-xs font-black uppercase tracking-widest text-slate-900">
                 Confidentialité de l'annuaire
@@ -483,7 +483,7 @@ export default function RegistrationForm({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+              <div className="flex items-center gap-3 bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
                 <Checkbox
                   id="showPhoneDirectory"
                   name="showPhoneDirectory"
@@ -496,7 +496,7 @@ export default function RegistrationForm({
                   Diffuser mon numéro
                 </Label>
               </div>
-              <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+              <div className="flex items-center gap-3 bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
                 <Checkbox
                   id="showEmailDirectory"
                   name="showEmailDirectory"
@@ -512,7 +512,7 @@ export default function RegistrationForm({
             </div>
           </div>
 
-          <div className="flex items-start gap-3 mt-6 p-4 bg-slate-50/50 rounded-2xl border border-slate-100 group transition-colors hover:bg-slate-50">
+          <div className="flex items-start gap-3 mt-6 p-4 bg-slate-50/50 rounded-lg border border-slate-100 group transition-colors hover:bg-slate-50">
             <Checkbox
               id="terms-conditions"
               name="terms-conditions"
@@ -555,7 +555,7 @@ export default function RegistrationForm({
             onClick={handlePrev}
             disabled={currentStep === 0}
             className={cn(
-              "font-black uppercase tracking-widest text-[10px] h-12 px-6 rounded-xl hover:bg-slate-50",
+              "font-black uppercase tracking-widest text-[10px] h-12 px-6 rounded-lg hover:bg-slate-50",
               currentStep === 0 && "invisible",
             )}
           >
@@ -567,7 +567,7 @@ export default function RegistrationForm({
               key="next-button"
               type="button"
               onClick={handleNext}
-              className="font-black uppercase tracking-widest text-[10px] h-12 px-8 rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95"
+              className="font-black uppercase tracking-widest text-[10px] h-12 px-8 rounded-lg shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95"
             >
               Suivant <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
@@ -576,7 +576,7 @@ export default function RegistrationForm({
               key="submit-button"
               type="submit"
               disabled={pending}
-              className="font-black uppercase tracking-widest text-[10px] h-12 px-8 rounded-xl shadow-lg shadow-primary/30 transition-all hover:scale-105 active:scale-95 bg-primary"
+              className="font-black uppercase tracking-widest text-[10px] h-12 px-8 rounded-lg shadow-lg shadow-primary/30 transition-all hover:scale-105 active:scale-95 bg-primary"
             >
               {pending ? "Création..." : "Finaliser l’inscription"}
             </Button>
@@ -609,7 +609,7 @@ function BirthDayPicker({
             variant="outline"
             type="button"
             className={cn(
-              "w-full h-12 justify-between text-left font-bold rounded-md border-slate-200 px-4",
+              "w-full h-12 justify-between text-left font-bold rounded-md border-slate-200 px-4 hover:bg-slate-50 hover:text-slate-900 hover:scale-100 transition-none",
               !date && "text-slate-400 font-normal",
             )}
           >
@@ -624,12 +624,13 @@ function BirthDayPicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-auto p-0 rounded-2xl shadow-2xl border-slate-100"
+          className="w-auto p-0 rounded-lg shadow-lg border-slate-100"
           align="start"
         >
           <Calendar
             mode="single"
             selected={date}
+            defaultMonth={date || new Date("1990-01-01")}
             onSelect={(d) => {
               setDate(d);
               setOpen(false);
@@ -637,11 +638,11 @@ function BirthDayPicker({
             disabled={(date) =>
               date > new Date() || date < new Date("1900-01-01")
             }
-            initialFocus
+            autoFocus
             captionLayout="dropdown"
             fromYear={1920}
             toYear={new Date().getFullYear()}
-            className="rounded-2xl"
+            className="rounded-lg"
           />
         </PopoverContent>
       </Popover>
@@ -661,7 +662,7 @@ function GenreSelect({
       <SelectTrigger className="w-full border-slate-200 font-bold">
         <SelectValue placeholder="Genre" />
       </SelectTrigger>
-      <SelectContent className="rounded-xl shadow-xl border-slate-100">
+      <SelectContent className="rounded-lg shadow-xl border-slate-100">
         <SelectGroup>
           <SelectItem
             value="FEMALE"

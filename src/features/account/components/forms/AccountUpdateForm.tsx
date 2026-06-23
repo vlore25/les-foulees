@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { CalendarIcon, Loader2 } from 'lucide-react'
+import { CalendarIcon, Loader2, User } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { cn, getAssetUrl } from '@/src/lib/utils'
 import { updateProfile } from '../../user.action'
@@ -46,7 +46,7 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
     const [showPhone, setShowPhone] = useState(defaultValues.showPhoneDirectory);
     const [showEmail, setShowEmail] = useState(defaultValues.showEmailDirectory);
 
-    const [previewUrl, setPreviewUrl] = useState<string | null>(getAssetUrl(defaultValues.profileImageUrl));
+    const [previewUrl, setPreviewUrl] = useState<string | null>(defaultValues.profileImageUrl ? getAssetUrl(defaultValues.profileImageUrl) : null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -69,7 +69,7 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
     useEffect(() => {
         setShowPhone(defaultValues.showPhoneDirectory);
         setShowEmail(defaultValues.showEmailDirectory);
-        setPreviewUrl(getAssetUrl(defaultValues.profileImageUrl));
+        setPreviewUrl(defaultValues.profileImageUrl ? getAssetUrl(defaultValues.profileImageUrl) : null);
     }, [defaultValues.showPhoneDirectory, defaultValues.showEmailDirectory, defaultValues.profileImageUrl]);
 
     const handleFormChange = () => {
@@ -85,7 +85,7 @@ export const ProfileForm = ({ defaultValues }: ProfileFormProps) => {
                 <div className="relative group">
                     <label className="cursor-pointer block relative">
                         <Avatar className="w-24 h-24 border-2 border-primary/10 transition-all group-hover:border-primary/30">
-                            <AvatarImage src={getAssetUrl(previewUrl)} className="object-cover" />
+                            {previewUrl && <AvatarImage src={previewUrl} className="object-cover" />}
                             <AvatarFallback className="text-2xl bg-primary/5 text-primary">
                                 {defaultValues.name?.[0]}{defaultValues.lastname?.[0]}
                             </AvatarFallback>
@@ -316,7 +316,7 @@ function BirthDayPicker({ name, defaultValue, onDateChange }: BirthDayPickerProp
                     <Button
                         variant="outline"
                         className={cn(
-                            "w-full justify-between text-left font-normal mt-1",
+                            "w-full justify-between text-left font-normal mt-1 hover:bg-slate-50 hover:text-slate-900 hover:scale-100 transition-none",
                             !date && "text-muted-foreground"
                         )}
                     >

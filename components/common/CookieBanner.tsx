@@ -44,7 +44,7 @@ export default function CookieBanner() {
         <div className="fixed bottom-4 left-4 right-4 z-[100] sm:left-auto sm:right-8 sm:max-w-md animate-in slide-in-from-bottom-full duration-500">
             <Card className="p-6 shadow-2xl border-2 border-primary/20 rounded-tl-[2rem] rounded-br-[2rem] bg-white/95 backdrop-blur-md">
                 <div className="flex gap-4 items-start">
-                    <div className="bg-primary/10 p-2.5 rounded-xl text-primary shrink-0">
+                    <div className="bg-primary/10 p-2.5 rounded-lg text-primary shrink-0">
                         <Cookie className="w-6 h-6" />
                     </div>
                     <div className="space-y-3">
@@ -59,14 +59,14 @@ export default function CookieBanner() {
                         <div className="flex flex-wrap gap-2 pt-2">
                             <Button 
                                 onClick={handleAccept} 
-                                className="rounded-tl-xl rounded-br-xl font-bold uppercase tracking-widest text-xs px-6"
+                                className="rounded-tl-lg rounded-br-lg font-bold uppercase tracking-widest text-xs px-6"
                             >
                                 Tout accepter
                             </Button>
                             <Button 
                                 variant="outline" 
                                 onClick={handleDecline}
-                                className="rounded-tl-xl rounded-br-xl font-bold uppercase tracking-widest text-xs px-6"
+                                className="rounded-tl-lg rounded-br-lg font-bold uppercase tracking-widest text-xs px-6"
                             >
                                 Refuser le tracking
                             </Button>

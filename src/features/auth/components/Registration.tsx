@@ -45,7 +45,7 @@ export async function InscriptionFeature({ token }: InscriptionFeatureProps) {
 
 
           <div className="absolute -top-2 -right-2 z-20">
-            <div className="bg-primary text-white h-14 w-14 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-6 transition-transform cursor-pointer">
+            <div className="bg-primary text-white h-14 w-14 rounded-lg flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-6 transition-transform cursor-pointer">
 
               <UserPlus className="w-6 h-6" />
             </div>

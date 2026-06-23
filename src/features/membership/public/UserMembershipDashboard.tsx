@@ -84,7 +84,7 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                             </div>
                             
                             <div className={cn(
-                                "flex items-center gap-3 px-6 py-3 rounded-2xl border font-bold uppercase tracking-widest text-sm",
+                                "flex items-center gap-3 px-6 py-3 rounded-lg border font-bold uppercase tracking-widest text-sm",
                                 info.color
                             )}>
                                 <Icon className="w-5 h-5" />
@@ -93,7 +93,7 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                            <div className="space-y-3 p-6 bg-muted/30 rounded-2xl border border-primary/5">
+                            <div className="space-y-3 p-6 bg-muted/30 rounded-lg border border-primary/5">
                                 <div className="flex items-center gap-2 text-primary">
                                     <User size={14} />
                                     <TypographyDetail className="text-primary not-italic">Type d'offre</TypographyDetail>
@@ -103,7 +103,7 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                                 </TypographyP>
                             </div>
 
-                            <div className="space-y-3 p-6 bg-muted/30 rounded-2xl border border-primary/5">
+                            <div className="space-y-3 p-6 bg-muted/30 rounded-lg border border-primary/5">
                                 <div className="flex items-center gap-2 text-primary">
                                     <Calendar size={14} />
                                     <TypographyDetail className="text-primary not-italic">Date de demande</TypographyDetail>
@@ -113,7 +113,7 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                                 </TypographyP>
                             </div>
 
-                            <div className="space-y-3 p-6 bg-muted/30 rounded-2xl border border-primary/5">
+                            <div className="space-y-3 p-6 bg-muted/30 rounded-lg border border-primary/5">
                                 <div className="flex items-center gap-2 text-primary">
                                     <FileText size={14} />
                                     <TypographyDetail className="text-primary not-italic">Paiement</TypographyDetail>
@@ -132,14 +132,14 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                                         memberShipData: membership,
                                         season: season
                                     })}
-                                    className="px-8 py-6 rounded-xl font-black uppercase tracking-widest flex items-center gap-3 shadow-lg hover:shadow-primary/20 transition-all hover:scale-105 text-sm"
+                                    className="px-8 py-6 rounded-lg font-black uppercase tracking-widest flex items-center gap-3 shadow-lg hover:shadow-primary/20 transition-all hover:scale-105 text-sm"
                                 >
                                     <Download size={20} />
                                     Télécharger ma carte
                                 </Button>
                             </div>
                         ) : (
-                            <div className="flex items-start gap-4 bg-primary/5 p-6 rounded-2xl border border-primary/10">
+                            <div className="flex items-start gap-4 bg-primary/5 p-6 rounded-lg border border-primary/10">
                                 <Clock className="w-6 h-6 shrink-0 mt-0.5 text-primary" />
                                 <div className="space-y-1">
                                     <TypographyH3 className="text-base tracking-tight">Dossier en cours d'examen</TypographyH3>

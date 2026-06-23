@@ -41,7 +41,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
     const isInvitedPartner = initialData && !!initialData.partnerId;
 
     return (
-            <form action={action} className="space-y-8 bg-white p-6 rounded-2xl border shadow-sm">
+            <form action={action} className="space-y-8 bg-white p-6 rounded-lg border shadow-sm">
 
                 {initialData?.id && <input type="hidden" name="membershipId" value={initialData.id} />}
                 
@@ -49,7 +49,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
                 {state?.message && (
                     <div className={cn(
-                        "p-4 rounded-xl text-sm flex items-center gap-2",
+                        "p-4 rounded-lg text-sm flex items-center gap-2",
                         state.success ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
                     )}>
                         {state.message}
@@ -62,7 +62,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                         <h3 className="text-lg font-black uppercase tracking-tight border-b pb-2 text-primary">1. Type d'adhésion</h3>
                         
                         {initialData && (
-                            <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl mb-4">
+                            <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg mb-4">
                                 <p className="text-xs font-bold text-amber-700 uppercase">Modification de dossier</p>
                                 <p className="text-[10px] text-amber-600 italic">Le type d'adhésion ne peut plus être modifié une fois la demande soumise.</p>
                             </div>
@@ -76,28 +76,28 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                             className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                         >
                             <div className={cn(
-                                "flex items-center space-x-3 border p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
+                                "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
                                 !!initialData && "opacity-60 cursor-not-allowed"
                             )}>
                                 <RadioGroupItem value="INDIVIDUAL" id="t-indi" disabled={!!initialData} />
                                 <Label htmlFor="t-indi">Individuel {season.priceStandard} €</Label>
                             </div>
                             <div className={cn(
-                                "flex items-center space-x-3 border p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
+                                "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
                                 !!initialData && "opacity-60 cursor-not-allowed"
                             )}>
                                 <RadioGroupItem value="COUPLE" id="t-couple" disabled={!!initialData} />
                                 <Label htmlFor="t-couple">Couple {season.priceCouple} €</Label>
                             </div>
                             <div className={cn(
-                                "flex items-center space-x-3 border p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
+                                "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
                                 !!initialData && "opacity-60 cursor-not-allowed"
                             )}>
                                 <RadioGroupItem value="YOUNG" id="t-young" disabled={!!initialData} />
                                 <Label htmlFor="t-young">Jeune -18 ans {season.priceYoung} €</Label>
                             </div>
                             <div className={cn(
-                                "flex items-center space-x-3 border p-4 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
+                                "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
                                 !!initialData && "opacity-60 cursor-not-allowed"
                             )}>
                                 <RadioGroupItem value="LICENSE_RUNNING" id="t-run" disabled={!!initialData} />
@@ -113,7 +113,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                 <p className="text-xs text-muted-foreground italic">Votre partenaire doit déjà avoir un compte sur le site.</p>
                                 
                                 {initialData ? (
-                                    <div className="p-3 bg-slate-50 border rounded-xl text-xs font-bold text-slate-500">
+                                    <div className="p-3 bg-slate-50 border rounded-lg text-xs font-bold text-slate-500">
                                         Partenaire déjà lié.
                                     </div>
                                 ) : (
@@ -130,7 +130,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                 ) : (
                             <div className="space-y-4">
                             <h3 className="text-lg font-black uppercase tracking-tight border-b pb-2 text-primary">1. Type d'adhésion</h3>
-                            <div className="p-4 bg-primary/5 border border-primary/10 rounded-xl">
+                            <div className="p-4 bg-primary/5 border border-primary/10 rounded-lg">
                             <p className="text-sm font-bold text-primary uppercase">Offre Couple</p>
                             <p className="text-xs text-slate-600 italic">Adhésion groupée avec votre partenaire.</p>
                             <input type="hidden" name="type" value="COUPLE" />
@@ -141,7 +141,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                             <div className="space-y-6 pt-2">
                             <h3 className="text-lg font-black uppercase tracking-tight border-b pb-2 text-primary">2. Infos & Licence</h3>
                             <div className="space-y-4">
-                            <div className="flex items-center justify-between gap-4 p-4 bg-muted/20 rounded-xl">
+                            <div className="flex items-center justify-between gap-4 p-4 bg-muted/20 rounded-lg">
                             <div className="space-y-0.5">
                                 <Label htmlFor="has-license-switch">Êtes-vous déjà licencié FFA ?</Label>
                                 <p className="text-[10px] text-muted-foreground italic">Renouvellement ou Mutation depuis un autre club.</p>
@@ -163,11 +163,11 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                         onValueChange={(v) => setLicenseSource(v as "RENEWAL" | "MUTATION")}
                                         className="flex flex-col sm:flex-row gap-3"
                                     >
-                                       <div className="flex items-center space-x-2 border p-3 rounded-xl bg-white flex-1 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
+                                       <div className="flex items-center space-x-2 border p-3 rounded-lg bg-white flex-1 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
                                             <RadioGroupItem value="RENEWAL" id="src-renew" />
                                             <Label htmlFor="src-renew">Renouvellement</Label>
                                         </div>
-                                        <div className="flex items-center space-x-2 border p-3 rounded-xl bg-white flex-1 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
+                                        <div className="flex items-center space-x-2 border p-3 rounded-lg bg-white flex-1 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
                                             <RadioGroupItem value="MUTATION" id="src-mut" />
                                             <Label htmlFor="src-mut">Mutation (Autre club)</Label>
                                         </div>
@@ -182,7 +182,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                         placeholder="Votre n° de licence"
                                         defaultValue={initialData?.ffaLicenseNumber || userProfile.ffaNumber || ""}
                                         required={hasLicense}
-                                        className="rounded-xl"
+                                        className="rounded-lg"
                                     />
                                     {state?.errors?.ffaLicenseNumber && <p className="text-xs text-red-500 font-bold italic">{state.errors.ffaLicenseNumber[0]}</p>}
                                 </div>
@@ -196,7 +196,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                             placeholder="Nom du club précédent"
                                             defaultValue={initialData?.previousClub || ""}
                                             required={licenseSource === "MUTATION"}
-                                            className="rounded-xl"
+                                            className="rounded-lg"
                                         />
                                         {state?.errors?.previousClub && <p className="text-xs text-red-500 font-bold italic">{state.errors.previousClub[0]}</p>}
                                     </div>
@@ -205,7 +205,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                             ) : (
                             <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-4 pt-4">
                                 {initialData?.certificateUrl && (
-                                    <div className="bg-primary/5 border border-primary/10 rounded-xl p-4 flex items-center justify-between text-sm">
+                                    <div className="bg-primary/5 border border-primary/10 rounded-lg p-4 flex items-center justify-between text-sm">
                                         <div className="flex items-center gap-3 text-primary font-bold">
                                             <FileText className="w-5 h-5" />
                                             <span className="uppercase text-xs tracking-tighter">Certificat déjà fourni</span>
@@ -228,7 +228,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                         type="file"
                                         accept=".pdf,image/*"
                                         required={!hasLicense && !initialData?.certificateUrl}
-                                        className="cursor-pointer bg-white file:bg-primary file:text-white file:font-bold file:uppercase file:text-[10px] file:px-4 file:py-2 file:rounded-lg file:border-none rounded-xl"
+                                        className="cursor-pointer bg-white file:bg-primary file:text-white file:font-bold file:uppercase file:text-[10px] file:px-4 file:py-2 file:rounded-lg file:border-none rounded-lg"
                                     />
                                     {state?.errors?.medicalCertificate && <p className="text-xs text-red-500 font-bold italic">{state.errors.medicalCertificate[0]}</p>}
                                 </div>
@@ -243,7 +243,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                             <div className="space-y-2">
                             <Label>Moyen de paiement</Label>
                             <Select name="paymentMethod" defaultValue={initialData?.paymentMethod || initialData?.payment?.method || "TRANSFER"}>
-                                <SelectTrigger className="rounded-xl">
+                                <SelectTrigger className="rounded-lg">
                                     <SelectValue placeholder="Choisir..." />
                                 </SelectTrigger>
                                 <SelectContent>

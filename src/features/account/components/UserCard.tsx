@@ -27,7 +27,7 @@ export default function UserCard() {
             <DropdownMenuTrigger asChild>
                 <div className="flex gap-2.5 items-center hover:cursor-pointer">
                     <Avatar >
-                        <AvatarImage src={getAssetUrl(user.profileImageUrl)} className="object-cover" />
+                        <AvatarImage src={user.profileImageUrl ? getAssetUrl(user.profileImageUrl) : undefined} className="object-cover" />
                         <AvatarFallback className='bg-primary/10'>{initials}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start overflow-hidden">

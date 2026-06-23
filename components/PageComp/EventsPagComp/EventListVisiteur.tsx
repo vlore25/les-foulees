@@ -27,13 +27,13 @@ export default function EventListVisitor({ events }: { events: EventListItem[] }
         <div className="space-y-12">
             {/* FILTRES */}
             <div className="flex justify-center">
-                <div className="inline-flex bg-muted/50 p-1.5 rounded-tl-2xl rounded-br-2xl border shadow-sm">
+                <div className="inline-flex bg-muted/50 p-1.5 rounded-tl-lg rounded-br-lg border shadow-sm">
                     <button
                         onClick={() => setFilter("future")}
                         className={cn(
                             "px-6 py-2.5 text-sm font-black uppercase tracking-widest transition-all duration-300",
                             filter === "future"
-                                ? "bg-primary text-white shadow-md rounded-tl-xl rounded-br-xl"
+                                ? "bg-primary text-white shadow-md rounded-tl-lg rounded-br-lg"
                                 : "text-muted-foreground hover:text-primary"
                         )}
                     >
@@ -44,7 +44,7 @@ export default function EventListVisitor({ events }: { events: EventListItem[] }
                         className={cn(
                             "px-6 py-2.5 text-sm font-black uppercase tracking-widest transition-all duration-300",
                             filter === "past"
-                                ? "bg-primary text-white shadow-md rounded-tl-xl rounded-br-xl"
+                                ? "bg-primary text-white shadow-md rounded-tl-lg rounded-br-lg"
                                 : "text-muted-foreground hover:text-primary"
                         )}
                     >

@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { ReactNode } from "react";
 import { UserStatusControl } from "./UserStatusCOntrol";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAssetUrl } from "@/src/lib/utils";
+import { User } from "lucide-react";
 
 const formatGender = (gender: string | null | undefined) => {
     if (!gender) return "Non renseigné";
@@ -32,7 +34,7 @@ export default function UserInfo({ user }: UserInfoProps) {
             
             <article className="flex items-center gap-6 mb-4">
                 <Avatar className="w-24 h-24 border-2 border-primary/10">
-                    <AvatarImage src={user.profileImageUrl || ""} className="object-cover" />
+                    <AvatarImage src={user.profileImageUrl ? getAssetUrl(user.profileImageUrl) : undefined} className="object-cover" />
                     <AvatarFallback className="text-2xl bg-primary/5 text-primary">
                         {user.name[0]}{user.lastname[0]}
                     </AvatarFallback>

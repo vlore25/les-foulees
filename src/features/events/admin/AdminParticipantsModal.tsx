@@ -47,7 +47,7 @@ export default function AdminParticipantsModal({ eventId, eventTitle, participan
     return (
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
-                <button className="flex items-center gap-3 text-left hover:bg-primary/5 p-2 rounded-xl transition-all group/trigger">
+                <button className="flex items-center gap-3 text-left hover:bg-primary/5 p-2 rounded-lg transition-all group/trigger">
                     <div className="p-2 rounded-lg bg-primary/5 text-primary group-hover/trigger:bg-primary group-hover/trigger:text-white transition-colors">
                         <Users size={18} />
                     </div>
@@ -80,7 +80,7 @@ export default function AdminParticipantsModal({ eventId, eventTitle, participan
                         <div className="flex flex-col gap-8">
                             {Object.entries(groupedRegistrations).map(([optionGroup, regs]) => (
                                 <div key={optionGroup} className="space-y-4">
-                                    <div className="flex items-center justify-between bg-primary/5 p-3 rounded-xl border-l-4 border-primary">
+                                    <div className="flex items-center justify-between bg-primary/5 p-3 rounded-lg border-l-4 border-primary">
                                         <h4 className="font-bold text-primary text-sm tracking-tighter">{optionGroup}</h4>
                                         <span className="bg-primary text-white text-[10px] font-black px-2 py-0.5 rounded-full">{regs.length}</span>
                                     </div>

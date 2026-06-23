@@ -115,6 +115,13 @@ export async function createMembershipRequest(prevState: any, formData: FormData
 
     // Vérification spécifique pour le partenaire AVANT de commencer la transaction
     if (type === "COUPLE" && partnerUserId) {
+        if (partnerUserId === session.userId) {
+            return {
+                errors: { partnerUserId: ["Vous ne pouvez pas vous choisir vous-même comme partenaire."] },
+                message: "Sélection de partenaire invalide."
+            };
+        }
+
         const partnerExisting = await prisma.membership.findUnique({
             where: { userId_seasonId: { userId: partnerUserId, seasonId: season.id } }
         });

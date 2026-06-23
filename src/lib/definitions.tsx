@@ -169,6 +169,14 @@ export const membershipSchema = z.object({
 }, {
   message: "L'adhésion Jeune est réservée aux mineurs.",
   path: ["type"],
+}).refine((data) => {
+  if (data.type === "COUPLE" && !data.partnerUserId) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Le partenaire est obligatoire pour une adhésion couple.",
+  path: ["partnerUserId"],
 });
 
 export type MembershipFormValues = z.infer<typeof membershipSchema>;

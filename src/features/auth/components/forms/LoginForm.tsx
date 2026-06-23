@@ -101,7 +101,7 @@ const LoginForm = () => {
                     <div className="space-y-4 pt-2">
                         <Button
                             disabled={pending}
-                            className="w-full text-lg h-12 font-bold uppercase rounded-none rounded-tl-xl rounded-br-xl shadow-lg"
+                            className="w-full text-lg h-12 font-bold uppercase rounded-none rounded-tl-lg rounded-br-lg shadow-lg"
                         >
                             {pending ? "Connexion..." : "Se connecter"}
                         </Button>

@@ -56,7 +56,7 @@ export default function EventForm({ event }: EventFormProps) {
                         name="title"
                         defaultValue={event?.title || ""}
                         placeholder="Ex: Trail de la Forêt"
-                        className="rounded-xl border-primary/10 focus:border-primary/30"
+                        className="rounded-lg border-primary/10 focus:border-primary/30"
                     />
                     {state?.error?.title && (
                         <p className="text-red-500 text-sm">{state.error.title[0]}</p>
@@ -75,7 +75,7 @@ export default function EventForm({ event }: EventFormProps) {
                             name="place"
                             defaultValue={event?.location || ""}
                             placeholder="Ex: Avrillé, Maine-et-Loire"
-                            className="pl-10 rounded-xl border-primary/10 focus:border-primary/30"
+                            className="pl-10 rounded-lg border-primary/10 focus:border-primary/30"
                         />
                     </div>
                     {state?.error?.place && (
@@ -121,7 +121,7 @@ export default function EventForm({ event }: EventFormProps) {
                     <Label>
                         Distances / Rôles
                     </Label>
-                    <div className="p-4 border border-primary/10 rounded-xl bg-muted/20">
+                    <div className="p-4 border border-primary/10 rounded-lg bg-muted/20">
                         <DynamicListManager 
                             name="distances"
                             label="Ajouter des distances (Ex: 10km, Bénévole)"
@@ -138,7 +138,7 @@ export default function EventForm({ event }: EventFormProps) {
                     <Label>
                         Options de Repas
                     </Label>
-                    <div className="p-4 border border-primary/10 rounded-xl bg-muted/20">
+                    <div className="p-4 border border-primary/10 rounded-lg bg-muted/20">
                         <DynamicListManager 
                             name="meals"
                             label="Ajouter des repas (Ex: Repas samedi)"
@@ -153,7 +153,7 @@ export default function EventForm({ event }: EventFormProps) {
                     <Label>
                         Options d'Hébergement
                     </Label>
-                    <div className="p-4 border border-primary/10 rounded-xl bg-muted/20">
+                    <div className="p-4 border border-primary/10 rounded-lg bg-muted/20">
                         <DynamicListManager 
                             name="accommodations"
                             label="Ajouter des hébergements (Ex: Nuit du 12)"
@@ -174,7 +174,7 @@ export default function EventForm({ event }: EventFormProps) {
                     name="description"
                     defaultValue={event?.description || ""}
                     placeholder="Décrivez l'événement, le programme, les modalités..."
-                    className="rounded-xl border-primary/10 focus:border-primary/30 min-h-[120px]"
+                    className="rounded-lg border-primary/10 focus:border-primary/30 min-h-[120px]"
                 />
                 {state?.error?.description && (
                     <p className="text-red-500 text-sm">{state.error.description[0]}</p>
@@ -190,7 +190,7 @@ export default function EventForm({ event }: EventFormProps) {
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                     {event?.imgUrl && (
-                        <div className="relative w-40 h-24 rounded-2xl overflow-hidden border-2 border-primary/10 shrink-0 shadow-sm">
+                        <div className="relative w-40 h-24 rounded-lg overflow-hidden border-2 border-primary/10 shrink-0 shadow-sm">
                             <img
                                 src={getAssetUrl(event.imgUrl)}
                                 alt={event.title}
@@ -208,7 +208,7 @@ export default function EventForm({ event }: EventFormProps) {
                             name="picture"
                             type="file"
                             accept="image/png, image/jpeg, image/webp"
-                            className="rounded-xl border-primary/10 cursor-pointer file:bg-primary file:text-white file:font-black file:uppercase file:text-[9px] file:px-4 file:py-2 file:rounded-lg file:border-none"
+                            className="rounded-lg border-primary/10 cursor-pointer file:bg-primary file:text-white file:font-black file:uppercase file:text-[9px] file:px-4 file:py-2 file:rounded-lg file:border-none"
                         />
                         <p className='text-muted-foreground text-[10px] font-bold italic'>
                             Formats acceptés : JPG, PNG, WEBP. Maximum 5 Mo.
@@ -222,7 +222,7 @@ export default function EventForm({ event }: EventFormProps) {
 
             {state?.message && (
                 <div className={cn(
-                    "p-4 rounded-xl text-xs font-bold uppercase tracking-widest animate-in fade-in zoom-in-95 duration-300",
+                    "p-4 rounded-lg text-xs font-bold uppercase tracking-widest animate-in fade-in zoom-in-95 duration-300",
                     state.message.includes('succès') ? "bg-green-500/10 text-green-700 border border-green-200" : "bg-red-500/10 text-red-700 border border-red-200"
                 )}>
                     {state.message}
@@ -232,7 +232,7 @@ export default function EventForm({ event }: EventFormProps) {
             <Button
                 disabled={pending}
                 type="submit"
-                className="w-full py-6 rounded-xl font-black uppercase tracking-widest transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-primary/10"
+                className="w-full py-6 rounded-lg font-black uppercase tracking-widest transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-primary/10"
             >
                 {pending
                     ? "Enregistrement en cours..."
@@ -259,7 +259,7 @@ function EventDatePicker({ name, initialDate }: { name: string, initialDate?: Da
                     <Button
                         variant="outline"
                         className={cn(
-                            "w-full justify-between font-bold text-xs uppercase tracking-widest rounded-xl border-primary/10",
+                            "w-full justify-between font-bold text-xs uppercase tracking-widest rounded-lg border-primary/10 hover:bg-slate-50 hover:text-slate-900 hover:scale-100 transition-none",
                             !date && "text-muted-foreground"
                         )}
                     >
@@ -270,7 +270,7 @@ function EventDatePicker({ name, initialDate }: { name: string, initialDate?: Da
                         <ChevronDownIcon className="h-4 w-4 opacity-50" />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 rounded-2xl border-none shadow-2xl" align="start">
+                <PopoverContent className="w-auto p-0 rounded-lg border-none shadow-2xl" align="start">
                     <Calendar
                         mode="single"
                         selected={date}
@@ -289,10 +289,10 @@ function EventDatePicker({ name, initialDate }: { name: string, initialDate?: Da
 function EventTypeSelect({ name, initialValue }: { name: string, initialValue?: string }) {
     return (
         <Select name={name} defaultValue={initialValue}>
-            <SelectTrigger className="w-full rounded-xl border-primary/10 font-bold text-xs uppercase tracking-widest">
+            <SelectTrigger className="w-full rounded-lg border-primary/10 font-bold text-xs uppercase tracking-widest">
                 <SelectValue placeholder="Sélectionner un type" />
             </SelectTrigger>
-            <SelectContent className="rounded-xl">
+            <SelectContent className="rounded-lg">
                 <SelectGroup>
                     <SelectLabel className="text-[10px] font-black uppercase text-primary/40 tracking-widest">Sport</SelectLabel>
                     <SelectItem value="TRAIL" className="text-xs font-bold uppercase">Trail</SelectItem>

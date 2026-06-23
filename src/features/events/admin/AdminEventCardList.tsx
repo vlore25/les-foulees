@@ -52,12 +52,15 @@ export default function AdminEventCardList({ events }: { events: EventListItem[]
                         </div>
 
                         <div className="p-4 flex flex-col flex-grow">
-                            <TypographyH3 className="text-sm leading-tight mb-3 line-clamp-1">
+                            <div className="flex">
+                                <TypographyH3 className="text-sm leading-tight mb-3 line-clamp-1">
                                 {event.title}
                             </TypographyH3>
-                            <div className="absolute top-2 right-2">
+                            <div>
                                 <EventRowActions eventId={event.id} />
                             </div>
+                            </div>
+                            
                             <div className="space-y-1.5 mb-4 text-xs font-medium text-slate-500">
                                 <div className="flex items-center gap-2">
                                     <Calendar size={12} className="text-primary/60 shrink-0" />

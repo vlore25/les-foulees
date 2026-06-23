@@ -72,7 +72,7 @@ export default function AdminPaymentsList({ payments }: AdminPaymentsListProps) 
             {/* IDENTITÉ ET MONTANT */}
             <div className="flex items-center gap-4 min-w-0 flex-1">
               <Avatar className="h-10 w-10 border border-slate-100 shrink-0">
-                <AvatarImage src={getAssetUrl(p.user.profileImageUrl)} className="object-cover" />
+                <AvatarImage src={p.user.profileImageUrl ? getAssetUrl(p.user.profileImageUrl) : undefined} className="object-cover" />
                 <AvatarFallback className="bg-slate-50 text-slate-500 font-bold uppercase text-xs">
                     {p.user.name?.[0]}{p.user.lastname?.[0]}
                 </AvatarFallback>
