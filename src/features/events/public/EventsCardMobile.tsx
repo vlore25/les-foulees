@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronRight, Calendar, MapPin } from "lucide-react";
 import Link from "next/link";
-import { getAssetUrl, formatEventType } from "@/src/lib/utils";
+import { cn, getAssetUrl, formatEventType } from "@/src/lib/utils";
 import { TypographyH3, TypographyP, TypographyDetail } from "@/components/ui/typography";
 
 interface EventsProps {
