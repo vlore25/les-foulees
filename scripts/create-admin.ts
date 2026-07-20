@@ -3,7 +3,7 @@ import { PrismaClient } from '../prisma/generated/client'
 import * as bcrypt from 'bcrypt';
 
 const adapter = new PrismaPg({
-  connectionString: process.env.POSTGRES_DATABASE_URL!,
+  connectionString: process.env.DATABASE_URL!,
 });
 const prisma = new PrismaClient({ adapter })
 
@@ -36,9 +36,9 @@ async function main() {
       lastname: 'System',
       role: 'ADMIN',
       status: 'ACTIVE',
-      address: 'Siège Administratif',
+      address: 'AdminAdress',
       zipCode: '00000',
-      city: 'AdminCity',
+      city: 'AdminVille',
       phone: '0000000000',
       birthdate: new Date('2000-01-01'), 
       showPhoneDirectory: false,

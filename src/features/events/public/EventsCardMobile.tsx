@@ -1,6 +1,7 @@
 // src/features/events/public/EventsCardMobile.tsx
 
 "use client";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { EventListItem } from "../dal";
 import { Button } from "@/components/ui/button";
@@ -15,9 +16,57 @@ interface EventsProps {
 }
 
 export default function EventsCardMobile({ events }: EventsProps) {
+    const [filter, setFilter] = useState<"future" | "past">("future");
+
+    const now = new Date();
+    const futureEventsCount = events.filter(event => {
+        const eventDate = event.dateStart ? new Date(event.dateStart) : new Date();
+        return eventDate >= now;
+    });
+
+    const filteredEvents = events.filter(event => {
+        const eventDate = event.dateStart ? new Date(event.dateStart) : new Date();
+        return filter === "future" ? eventDate >= now : eventDate < now;
+    });
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {events.map((event) => {
+        <div className="space-y-8">
+            <div className="flex justify-center">
+                <div className="inline-flex bg-muted/50 p-1.5 rounded-tl-lg rounded-br-lg border shadow-sm">
+                    <button
+                        onClick={() => setFilter("future")}
+                        className={cn(
+                            "px-6 py-2.5 text-sm font-black uppercase tracking-widest transition-all duration-300",
+                            filter === "future"
+                                ? "bg-primary text-white shadow-md rounded-tl-lg rounded-br-lg"
+                                : "text-muted-foreground hover:text-primary"
+                        )}
+                    >
+                        À venir ({futureEventsCount.length})
+                    </button>
+                    <button
+                        onClick={() => setFilter("past")}
+                        className={cn(
+                            "px-6 py-2.5 text-sm font-black uppercase tracking-widest transition-all duration-300",
+                            filter === "past"
+                                ? "bg-primary text-white shadow-md rounded-tl-lg rounded-br-lg"
+                                : "text-muted-foreground hover:text-primary"
+                        )}
+                    >
+                        Passés
+                    </button>
+                </div>
+            </div>
+
+            {filteredEvents.length === 0 ? (
+                <div className="text-center py-16 bg-muted/20 rounded-[2rem] border-2 border-dashed border-muted/50">
+                    <p className="text-muted-foreground font-black uppercase tracking-widest italic opacity-60">
+                        Aucun événement {filter === "future" ? "prévu pour le moment" : "enregistré"}
+                    </p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                    {filteredEvents.map((event) => {
                 return (
                     <Card 
                         key={event.id} 
@@ -73,14 +122,16 @@ export default function EventsCardMobile({ events }: EventsProps) {
                             <div className="pt-2 mt-auto border-t border-primary/5 flex items-center justify-between gap-3">
                                 <Button asChild className="w-full" variant={event.isParticipant ? "secondary" : "default"}>
                                     <Link href={`/espace-membre/evenements/${event.id}`}>
-                                        {event.isParticipant ? "Gérer mon inscription" : "Savoir plus"}
+                                        {event.isParticipant ? "Gérer mon inscription" : "En savoir plus"}
                                     </Link>
                                 </Button>
                             </div>
                         </div>
                     </Card>
                 )
-            })}
+                    })}
+                </div>
+            )}
         </div>
     );
 }

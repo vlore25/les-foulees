@@ -15,16 +15,6 @@ const SITEMAP = [
         ]
     },
     {
-        title: "Espace Membre",
-        links: [
-            { name: "Tableau de bord", href: "/espace-membre" },
-            { name: "Annuaire des membres", href: "/espace-membre/annuaire" },
-            { name: "Mon adhésion", href: "/espace-membre/adhesion" },
-            { name: "Calendrier événements", href: "/espace-membre/evenements" },
-            { name: "Mon compte", href: "/espace-membre/compte" },
-        ]
-    },
-    {
         title: "Informations Légales",
         links: [
             { name: "Mentions Légales", href: "/about/mentions-legales" },

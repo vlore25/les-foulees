@@ -8,6 +8,8 @@ import Link from "next/link";
 import { Cookie } from "lucide-react";
 
 export default function CookieBanner() {
+    return null; // Désactivé : Vercel Analytics et Session Cookie ne nécessitent pas de bandeau
+    
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {

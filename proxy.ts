@@ -19,15 +19,6 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/login', req.nextUrl))
   }
  
-  // 5. Redirect to /dashboard if the user is authenticated
-  /*if (
-    isPublicRoute &&
-    session?.userId &&
-    !req.nextUrl.pathname.startsWith('/espace-membre')
-  ) {
-    return NextResponse.redirect(new URL('/espace-membre/annuaire', req.nextUrl))
-  }*/
- 
   return NextResponse.next()
 }
  

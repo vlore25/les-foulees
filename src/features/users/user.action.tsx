@@ -66,7 +66,7 @@ if (!secret) {
 }
 
 const secretKey = new TextEncoder().encode(secret);
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
 export async function sendInviteAction(prevState: InviteUserState, formData: FormData): Promise<InviteUserState> {
   if (!await verifyAdmin()) return { success: false, message: "Action non autorisée." };

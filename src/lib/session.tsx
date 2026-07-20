@@ -15,7 +15,7 @@ const cookie = {
   name: 'lesFoulees',
   options: { 
     httpOnly: true, 
-    secure: false, 
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax' as const, 
     path: '/' 
   },

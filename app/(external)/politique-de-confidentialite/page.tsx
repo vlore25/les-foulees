@@ -1,6 +1,12 @@
 import { Container } from "@/components/ui/Container";
 import { Title } from "@/components/ui/title";
 import { getSiteConfig } from "@/src/features/site-config/dal";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Politique de Confidentialité | Les Foulées Avrillaises",
+  description: "Politique de confidentialité et gestion des données de l'association Les Foulées Avrillaises."
+};
 
 export default async function PolitiqueConfidentialitePage() {
     const config = await getSiteConfig();
@@ -10,7 +16,7 @@ export default async function PolitiqueConfidentialitePage() {
         <Container className="py-4 sm:py-8">
             <div className="max-w-4xl mx-auto space-y-6">
                 <div className="space-y-4">
-                    <Title title="Politique de Confidentialité" />
+                    <Title>Politique de Confidentialité</Title>
                     <p className="text-muted-foreground font-medium italic">En vigueur au 10 avril 2026</p>
                 </div>
 

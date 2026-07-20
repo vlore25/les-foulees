@@ -51,7 +51,7 @@ const CONTACT_DETAILS: ContactDetailItem[] = [
         title: "Nous suivre",
         content: (
             <Link
-            href="https://www.facebook.com/lesfouleesavrillaises"
+            href="https://www.facebook.com/groups/1248257145351513/"
             >
             Facebook
             </Link>
