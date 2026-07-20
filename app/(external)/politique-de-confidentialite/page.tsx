@@ -17,7 +17,9 @@ export default async function PolitiqueConfidentialitePage() {
             <div className="max-w-4xl mx-auto space-y-6">
                 <div className="space-y-4">
                     <Title>Politique de Confidentialité</Title>
-                    <p className="text-muted-foreground font-medium italic">En vigueur au 10 avril 2026</p>
+                    <p className="text-muted-foreground font-medium italic">
+                        En vigueur au {config?.updatedAt ? new Date(config.updatedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "10 avril 2026"}
+                    </p>
                 </div>
 
                 <section className="bg-white p-8 rounded-tl-[2rem] rounded-br-[2rem] shadow-sm border border-primary/5">
