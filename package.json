@@ -64,7 +64,6 @@
     "zod": "^4.4.3"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts",
     "config": "tsx prisma.config.ts"
   },
   "devDependencies": {
