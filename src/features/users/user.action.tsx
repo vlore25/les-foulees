@@ -115,7 +115,7 @@ export async function sendInviteAction(prevState: InviteUserState, formData: For
     const emailHtml = await render(<InviteUser InvitationLink={invitationLink} />);
 
     await resend.emails.send({
-      from: 'Les Foulées Avrillaises <onboarding@resend.dev>',
+      from: 'Les Foulées Avrillaises <ne-pas-repondre@mail.lesfouleesavrillaises.fr>',
       to: [email],
       subject: 'Invitation à rejoindre les Foulées Avrillaises',
       html: emailHtml,
@@ -153,7 +153,7 @@ export async function resendInviteAction(email: string) {
     const emailHtml = await render(<InviteUser InvitationLink={invitationLink} />);
 
     await resend.emails.send({
-      from: 'Les Foulées Avrillaises <onboarding@resend.dev>',
+      from: 'Les Foulées Avrillaises <ne-pas-repondre@mail.lesfouleesavrillaises.fr>',
       to: [email],
       subject: 'Rappel : Invitation à rejoindre les Foulées Avrillaises',
       html: emailHtml,
