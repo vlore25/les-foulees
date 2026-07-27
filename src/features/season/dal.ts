@@ -51,6 +51,14 @@ export async function getNextSeasonPreview(): Promise<NextSeasonResponse> {
     if (lastSeason) {
       newStart = addYears(lastSeason.startDate, 1)
       newEnd = addYears(lastSeason.endDate, 1)
+      
+      // Si la date calculée commence avant le 1er Septembre 2026, on force la rentrée 2026 (saison 2026-2027)
+      if (getYear(newStart) < 2026) {
+        const yearsToDiff = 2026 - getYear(newStart)
+        newStart = addYears(newStart, yearsToDiff)
+        newEnd = addYears(newEnd, yearsToDiff)
+      }
+
       defaultPrices = {
         priceStandard: lastSeason.priceStandard,
         priceYoung: lastSeason.priceYoung,
@@ -58,7 +66,7 @@ export async function getNextSeasonPreview(): Promise<NextSeasonResponse> {
       }
     } else {
       const now = new Date()
-      const year = now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1
+      const year = Math.max(2026, now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1)
       newStart = new Date(year, 8, 1)
       newEnd = new Date(year + 1, 7, 31)
     }
