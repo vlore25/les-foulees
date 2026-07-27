@@ -49,6 +49,9 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
     const [hasLicense, setHasLicense] = useState(false);
     const [partnerHasLicense, setPartnerHasLicense] = useState(false);
 
+    const [mainFileName, setMainFileName] = useState<string>("");
+    const [partnerFileName, setPartnerFileName] = useState<string>("");
+
     // Dynamically calculate and update amount when season/type changes, unless overwritten
     useEffect(() => {
         if (!isAmountDirty && selectedSeasonId) {
@@ -242,13 +245,27 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                                                 <Label htmlFor="partnerMedicalCertificate" className="flex items-center gap-1.5 cursor-pointer text-xs">
                                                     <UploadCloud className="w-4 h-4 text-slate-400" /> Attestation PPS du partenaire (Optionnel)
                                                 </Label>
-                                                <Input
-                                                    id="partnerMedicalCertificate"
-                                                    name="partnerMedicalCertificate"
-                                                    type="file"
-                                                    accept=".pdf,image/*"
-                                                    className="cursor-pointer file:mr-2 file:bg-slate-100 file:border-none file:px-3 file:py-1 file:rounded-md text-slate-500 bg-white"
-                                                />
+                                                <div className="relative">
+                                                    <input
+                                                        id="partnerMedicalCertificate"
+                                                        name="partnerMedicalCertificate"
+                                                        type="file"
+                                                        accept=".pdf,image/*"
+                                                        className="sr-only"
+                                                        onChange={(e) => setPartnerFileName(e.target.files?.[0]?.name || "")}
+                                                    />
+                                                    <label
+                                                        htmlFor="partnerMedicalCertificate"
+                                                        className="flex items-center gap-3 w-full border border-slate-200 rounded-lg p-2 bg-white cursor-pointer hover:bg-slate-50/80 transition-colors"
+                                                    >
+                                                        <span className="bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-md border border-slate-200 transition-colors shrink-0">
+                                                            Choisir un fichier
+                                                        </span>
+                                                        <span className="text-xs text-slate-500 truncate">
+                                                            {partnerFileName || "Aucun fichier sélectionné"}
+                                                        </span>
+                                                    </label>
+                                                </div>
                                                 {state?.errors?.partnerMedicalCertificate && (
                                                     <p className="text-xs text-red-500 font-bold italic">{state.errors.partnerMedicalCertificate[0]}</p>
                                                 )}
@@ -309,13 +326,27 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                                         <Label htmlFor="medicalCertificate" className="flex items-center gap-1.5 cursor-pointer">
                                             <UploadCloud className="w-4 h-4 text-slate-400" /> Charger l'attestation PPS (Optionnel)
                                         </Label>
-                                        <Input
-                                            id="medicalCertificate"
-                                            name="medicalCertificate"
-                                            type="file"
-                                            accept=".pdf,image/*"
-                                            className="cursor-pointer file:mr-2 file:bg-slate-100 file:border-none file:px-3 file:py-1 file:rounded-md text-slate-500"
-                                        />
+                                        <div className="relative">
+                                            <input
+                                                id="medicalCertificate"
+                                                name="medicalCertificate"
+                                                type="file"
+                                                accept=".pdf,image/*"
+                                                className="sr-only"
+                                                onChange={(e) => setMainFileName(e.target.files?.[0]?.name || "")}
+                                            />
+                                            <label
+                                                htmlFor="medicalCertificate"
+                                                className="flex items-center gap-3 w-full border border-slate-200 rounded-lg p-2 bg-white cursor-pointer hover:bg-slate-50/80 transition-colors"
+                                            >
+                                                <span className="bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-md border border-slate-200 transition-colors shrink-0">
+                                                    Choisir un fichier
+                                                </span>
+                                                <span className="text-xs text-slate-500 truncate">
+                                                    {mainFileName || "Aucun fichier sélectionné"}
+                                                </span>
+                                            </label>
+                                        </div>
                                         {state?.errors?.medicalCertificate && (
                                             <p className="text-xs text-red-500 font-bold italic">{state.errors.medicalCertificate[0]}</p>
                                         )}
