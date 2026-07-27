@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/Label";
+import { FileInput } from "@/components/ui/file-input";
 import { useActionState } from "react";
 import { createLegalDocAction, updateLegalDocAction } from "../../docs.actions";
 import { LegalDocFormState } from "@/src/lib/definitions";
@@ -21,10 +22,10 @@ export default function LegalDocForm({ doc }: LegalDocFormProps) {
   const [state, action, pending] = useActionState<LegalDocFormState, FormData>(actionToUse, undefined);
 
   return (
-    <form action={action} className="space-y-4 max-w-lg">
+    <form action={action} className="space-y-4 max-w-md">
       <div className="space-y-2">
-        <Label htmlFor="title">Titre du document</Label>
-        <Input id="title" name="title" defaultValue={doc?.title || ""} placeholder="Ex: Certificat médical de non contre-indication " />
+        <Label htmlFor="title">Titre</Label>
+        <Input id="title" name="title" defaultValue={doc?.title || ""} placeholder="Ex: Attestation de licence, Règlement intérieur..." />
         {state?.error?.title && <p className="text-red-500 text-xs">{state.error.title[0]}</p>}
       </div>
 
@@ -35,8 +36,12 @@ export default function LegalDocForm({ doc }: LegalDocFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="file">Fichier PDF {doc && "(Laisser vide pour garder l'actuel)"}</Label>
-        <Input id="file" name="file" type="file" accept="application/pdf, image/png, image/jpeg, image/jpg, image/webp" />
+        <FileInput
+          id="file"
+          name="file"
+          accept="application/pdf, image/png, image/jpeg, image/jpg, image/webp"
+          label={`Fichier PDF ${doc ? "(Laisser vide pour garder l'actuel)" : ""}`}
+        />
         {state?.error?.file && <p className="text-red-500 text-xs">{state.error.file[0]}</p>}
         {doc?.Url && <p className="text-xs text-muted-foreground mt-1">Fichier actuel : <a href={doc.Url} target="_blank" className="underline text-primary">Voir le document</a></p>}
       </div>

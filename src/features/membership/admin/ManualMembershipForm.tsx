@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { ArrowLeft, Loader2, Info, Euro, UserPlus, CreditCard, ShieldCheck, UploadCloud } from "lucide-react";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
+import { FileInput } from "@/components/ui/file-input";
 
 interface SeasonInfo {
     id: string;
@@ -48,9 +49,6 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
     // Track if main and partner are FFA licensed or need medical certificates
     const [hasLicense, setHasLicense] = useState(false);
     const [partnerHasLicense, setPartnerHasLicense] = useState(false);
-
-    const [mainFileName, setMainFileName] = useState<string>("");
-    const [partnerFileName, setPartnerFileName] = useState<string>("");
 
     // Dynamically calculate and update amount when season/type changes, unless overwritten
     useEffect(() => {
@@ -242,30 +240,12 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                                             </div>
                                         ) : (
                                             <div className="space-y-2 animate-in fade-in duration-200">
-                                                <Label htmlFor="partnerMedicalCertificate" className="flex items-center gap-1.5 cursor-pointer text-xs">
-                                                    <UploadCloud className="w-4 h-4 text-slate-400" /> Attestation PPS du partenaire (Optionnel)
-                                                </Label>
-                                                <div className="relative">
-                                                    <input
-                                                        id="partnerMedicalCertificate"
-                                                        name="partnerMedicalCertificate"
-                                                        type="file"
-                                                        accept=".pdf,image/*"
-                                                        className="sr-only"
-                                                        onChange={(e) => setPartnerFileName(e.target.files?.[0]?.name || "")}
-                                                    />
-                                                    <label
-                                                        htmlFor="partnerMedicalCertificate"
-                                                        className="flex items-center gap-3 w-full border border-slate-200 rounded-lg p-2 bg-white cursor-pointer hover:bg-slate-50/80 transition-colors"
-                                                    >
-                                                        <span className="bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-md border border-slate-200 transition-colors shrink-0">
-                                                            Choisir un fichier
-                                                        </span>
-                                                        <span className="text-xs text-slate-500 truncate">
-                                                            {partnerFileName || "Aucun fichier sélectionné"}
-                                                        </span>
-                                                    </label>
-                                                </div>
+                                                <FileInput
+                                                    id="partnerMedicalCertificate"
+                                                    name="partnerMedicalCertificate"
+                                                    accept=".pdf,image/*"
+                                                    label="Attestation PPS du partenaire (Optionnel)"
+                                                />
                                                 {state?.errors?.partnerMedicalCertificate && (
                                                     <p className="text-xs text-red-500 font-bold italic">{state.errors.partnerMedicalCertificate[0]}</p>
                                                 )}
@@ -323,30 +303,12 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                                     </div>
                                 ) : (
                                     <div className="space-y-2 animate-in fade-in duration-200">
-                                        <Label htmlFor="medicalCertificate" className="flex items-center gap-1.5 cursor-pointer">
-                                            <UploadCloud className="w-4 h-4 text-slate-400" /> Charger l'attestation PPS (Optionnel)
-                                        </Label>
-                                        <div className="relative">
-                                            <input
-                                                id="medicalCertificate"
-                                                name="medicalCertificate"
-                                                type="file"
-                                                accept=".pdf,image/*"
-                                                className="sr-only"
-                                                onChange={(e) => setMainFileName(e.target.files?.[0]?.name || "")}
-                                            />
-                                            <label
-                                                htmlFor="medicalCertificate"
-                                                className="flex items-center gap-3 w-full border border-slate-200 rounded-lg p-2 bg-white cursor-pointer hover:bg-slate-50/80 transition-colors"
-                                            >
-                                                <span className="bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-md border border-slate-200 transition-colors shrink-0">
-                                                    Choisir un fichier
-                                                </span>
-                                                <span className="text-xs text-slate-500 truncate">
-                                                    {mainFileName || "Aucun fichier sélectionné"}
-                                                </span>
-                                            </label>
-                                        </div>
+                                        <FileInput
+                                            id="medicalCertificate"
+                                            name="medicalCertificate"
+                                            accept=".pdf,image/*"
+                                            label="Charger l'attestation PPS (Optionnel)"
+                                        />
                                         {state?.errors?.medicalCertificate && (
                                             <p className="text-xs text-red-500 font-bold italic">{state.errors.medicalCertificate[0]}</p>
                                         )}

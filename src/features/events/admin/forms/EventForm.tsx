@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/Label";
 import { TypographyH3, TypographyPageDescription } from "@/components/ui/typography";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/src/lib/utils";
+import { FileInput } from "@/components/ui/file-input";
 
 interface EventFormProps {
     event?: Event | null;
@@ -203,12 +204,10 @@ export default function EventForm({ event }: EventFormProps) {
                     )}
 
                     <div className="w-full space-y-2">
-                        <Input
+                        <FileInput
                             id="picture"
                             name="picture"
-                            type="file"
                             accept="image/png, image/jpeg, image/webp"
-                            className="rounded-lg border-primary/10 cursor-pointer file:bg-primary file:text-white file:font-black file:uppercase file:text-[9px] file:px-4 file:py-2 file:rounded-lg file:border-none"
                         />
                         <p className='text-muted-foreground text-[10px] font-bold italic'>
                             Formats acceptés : JPG, PNG, WEBP. Maximum 5 Mo.

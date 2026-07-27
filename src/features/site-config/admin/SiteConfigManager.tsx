@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/Label";
+import { FileInput } from "@/components/ui/file-input";
 import { TypographyH2, TypographyH3, TypographyPageDescription, TypographyP } from "@/components/ui/typography";
 import { updateSiteConfigAction, upsertTrainingScheduleAction, deleteTrainingScheduleAction, uploadHeroImagesAction } from "../actions";
 import { Loader2, Plus, Trash2, Save, UploadCloud } from "lucide-react";
@@ -90,24 +91,16 @@ export function SiteConfigManager({ initialConfig, initialSchedules }: { initial
                 </div>
                 <form action={handleSaveHero} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <Label>Image Grand Écran (Desktop)</Label>
-                            <Input 
-                                type="file" 
-                                name="heroDesktop" 
-                                accept="image/*" 
-                                className="cursor-pointer file:bg-primary file:text-white file:rounded-md file:border-none"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Image Téléphone (Mobile)</Label>
-                            <Input 
-                                type="file" 
-                                name="heroMobile" 
-                                accept="image/*" 
-                                className="cursor-pointer file:bg-primary file:text-white file:rounded-md file:border-none"
-                            />
-                        </div>
+                        <FileInput 
+                            name="heroDesktop" 
+                            accept="image/*" 
+                            label="Image Grand Écran (Desktop)"
+                        />
+                        <FileInput 
+                            name="heroMobile" 
+                            accept="image/*" 
+                            label="Image Téléphone (Mobile)"
+                        />
                     </div>
                     <Button type="submit" disabled={savingHero}>
                         {savingHero && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -149,9 +142,8 @@ export function SiteConfigManager({ initialConfig, initialSchedules }: { initial
                                 <Label>Lieu (ex: Stade)</Label>
                                 <Input name="place" value={schedule.place} onChange={(e) => handleScheduleChange(index, "place", e.target.value)} required />
                             </div>
-                            <div className="md:col-span-2 space-y-2">
-                                <Label>Nouvelle Image</Label>
-                                <Input type="file" name="imgFile" accept="image/*" className="cursor-pointer file:bg-primary file:text-white file:rounded-md file:border-none" />
+                            <div className="md:col-span-2">
+                                <FileInput name="imgFile" accept="image/*" label="Nouvelle Image" />
                             </div>
                             <div className="md:col-span-2 flex gap-2">
                                 <Button 

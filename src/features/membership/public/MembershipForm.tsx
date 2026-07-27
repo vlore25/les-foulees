@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/Label"
 import { Switch } from "@/components/ui/switch"
 import { SearchUser } from "./SearchUser"
 import { TypographyH3, TypographyP } from "@/components/ui/typography"
+import { FileInput } from "@/components/ui/file-input"
 
 interface MembershipFormProps {
     userProfile: any;
@@ -29,7 +30,6 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
     const [state, action, pending] = useActionState(createMembershipRequest, initialState)
     const [membershipType, setMembershipType] = useState(initialData?.type || 'INDIVIDUAL')
-    const [fileName, setFileName] = useState<string>("");
 
     const [hasLicense, setHasLicense] = useState(
         initialData ? !!initialData.ffaLicenseNumber : !!userProfile.ffaNumber
@@ -217,36 +217,14 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                     </div>
                                 )}
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="medicalCertificate" className="flex items-center gap-1.5 cursor-pointer">
-                                        <UploadCloud className="w-4 h-4" /> 
-                                        {initialData?.certificateUrl ? "Mettre à jour l'attestation PPS" : "Charger votre attestation PPS"} 
-                                        {!initialData?.certificateUrl && <span className="text-red-500">*</span>}
-                                    </Label>
-                                    <div className="relative">
-                                        <input
-                                            id="medicalCertificate"
-                                            name="medicalCertificate"
-                                            type="file"
-                                            accept=".pdf,image/*"
-                                            required={!hasLicense && !initialData?.certificateUrl}
-                                            className="sr-only"
-                                            onChange={(e) => setFileName(e.target.files?.[0]?.name || "")}
-                                        />
-                                        <label
-                                            htmlFor="medicalCertificate"
-                                            className="flex items-center gap-3 w-full border border-slate-200 rounded-lg p-2.5 bg-white cursor-pointer hover:bg-slate-50/80 transition-colors"
-                                        >
-                                            <span className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-black uppercase tracking-wider px-3.5 py-2 rounded-md border border-slate-200 transition-colors shrink-0">
-                                                Choisir un fichier
-                                            </span>
-                                            <span className="text-xs text-slate-500 truncate">
-                                                {fileName || "Aucun fichier sélectionné"}
-                                            </span>
-                                        </label>
-                                    </div>
-                                    {state?.errors?.medicalCertificate && <p className="text-xs text-red-500 font-bold italic">{state.errors.medicalCertificate[0]}</p>}
-                                </div>
+                                <FileInput
+                                    id="medicalCertificate"
+                                    name="medicalCertificate"
+                                    accept=".pdf,image/*"
+                                    required={!hasLicense && !initialData?.certificateUrl}
+                                    label={`${initialData?.certificateUrl ? "Mettre à jour l'attestation PPS" : "Charger votre attestation PPS"}${!initialData?.certificateUrl ? " *" : ""}`}
+                                />
+                                {state?.errors?.medicalCertificate && <p className="text-xs text-red-500 font-bold italic">{state.errors.medicalCertificate[0]}</p>}
                             </div>
                             )}
                             </div>
