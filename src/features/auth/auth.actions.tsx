@@ -294,7 +294,7 @@ export async function sendPasswordResetEmail(state: RecoveryFormState, formData:
     const emailHtml = await render(<RecoverPasswordTemplate recoverLink={recoverLink} />);
 
     await resend.emails.send({
-      from: 'Les Foulées Avrillaises <onboarding@resend.dev>',
+      from: 'Les Foulées Avrillaises <ne-pas-repondre@mail.lesfouleesavrillaises.fr>',
       to: [email],
       subject: 'Mot de passe oublié',
       html: emailHtml,
