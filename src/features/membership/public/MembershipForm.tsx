@@ -208,7 +208,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                     <div className="bg-primary/5 border border-primary/10 rounded-lg p-4 flex items-center justify-between text-sm">
                                         <div className="flex items-center gap-3 text-primary font-bold">
                                             <FileText className="w-5 h-5" />
-                                            <span className="uppercase text-xs tracking-tighter">Certificat déjà fourni</span>
+                                            <span className="uppercase text-xs tracking-tighter">Attestation PPS déjà fournie</span>
                                         </div>
                                         <a href={initialData.certificateUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-black uppercase text-primary hover:underline underline-offset-4">
                                             Consulter
@@ -219,7 +219,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                 <div className="space-y-2">
                                     <Label htmlFor="medicalCertificate">
                                         <UploadCloud className="w-4 h-4" /> 
-                                        {initialData?.certificateUrl ? "Mettre à jour le certificat" : "Charger votre certificat"} 
+                                        {initialData?.certificateUrl ? "Mettre à jour l'attestation PPS" : "Charger votre attestation PPS"} 
                                         {!initialData?.certificateUrl && <span className="text-red-500">*</span>}
                                     </Label>
                                     <Input

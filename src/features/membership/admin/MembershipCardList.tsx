@@ -103,7 +103,7 @@ export default function MembershipCardList({ memberships }: MembershipCardListPr
                                         </div>
                                     ) : (
                                         <div className="flex flex-col gap-1">
-                                            <span className="text-xs font-black uppercase text-primary tracking-tighter">Certificat médical</span>
+                                            <span className="text-xs font-black uppercase text-primary tracking-tighter">Attestation PPS</span>
                                             {m.certificateUrl ? (
                                                 <a
                                                     href={m.certificateUrl}

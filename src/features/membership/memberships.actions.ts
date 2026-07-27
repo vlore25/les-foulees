@@ -69,8 +69,8 @@ export async function createMembershipRequest(prevState: any, formData: FormData
             });
             if (!existing?.certificateUrl) {
                 return { 
-                    errors: { medicalCertificate: ["Le certificat médical est obligatoire si vous n'avez pas de licence."] },
-                    message: "Veuillez fournir un certificat médical." 
+                    errors: { medicalCertificate: ["L'attestation PPS est obligatoire si vous n'avez pas de licence."] },
+                    message: "Veuillez fournir une attestation PPS." 
                 };
             }
         }
@@ -478,6 +478,10 @@ export type ManualMembershipState = {
         ffaLicenseNumber?: string[];
         previousClub?: string[];
         partnerUserId?: string[];
+        medicalCertificate?: string[];
+        partnerMedicalCertificate?: string[];
+        partnerFfaLicenseNumber?: string[];
+        partnerPreviousClub?: string[];
     };
     message?: string;
     success?: boolean;
@@ -495,9 +499,17 @@ export async function createManualMembershipAction(prevState: any, formData: For
     const paymentMethod = formData.get("paymentMethod") as PaymentMethod;
     const paymentStatus = formData.get("paymentStatus") as PaymentStatus;
     const membershipStatus = formData.get("membershipStatus") as MembershipStatus;
+    
+    // Adhérent Principal Details
     const ffaLicenseNumber = (formData.get("ffaLicenseNumber") as string) || null;
     const previousClub = (formData.get("previousClub") as string) || null;
+    const medicalFile = formData.get("medicalCertificate") as File | null;
+
+    // Partenaire Details
     const partnerUserId = (formData.get("partnerUserId") as string) || null;
+    const partnerFfaLicenseNumber = (formData.get("partnerFfaLicenseNumber") as string) || null;
+    const partnerPreviousClub = (formData.get("partnerPreviousClub") as string) || null;
+    const partnerMedicalFile = formData.get("partnerMedicalCertificate") as File | null;
 
     // Validation
     const errors: any = {};
@@ -525,6 +537,22 @@ export async function createManualMembershipAction(prevState: any, formData: For
     }
 
     try {
+        // Fetch users to get names/lastnames for file uploads
+        const mainUser = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { lastname: true }
+        });
+        if (!mainUser) return { message: "L'utilisateur principal sélectionné n'existe pas." };
+
+        let partnerUser = null;
+        if (type === "COUPLE" && partnerUserId) {
+            partnerUser = await prisma.user.findUnique({
+                where: { id: partnerUserId },
+                select: { lastname: true }
+            });
+            if (!partnerUser) return { message: "Le partenaire sélectionné n'existe pas." };
+        }
+
         const existing = await prisma.membership.findUnique({
             where: { userId_seasonId: { userId, seasonId } }
         });
@@ -538,6 +566,35 @@ export async function createManualMembershipAction(prevState: any, formData: For
             });
             if (partnerExisting) {
                 return { message: "Le partenaire sélectionné a déjà un dossier pour cette saison." };
+            }
+        }
+
+        // Process File uploads
+        let certificateUrl = null;
+        if (medicalFile && medicalFile.size > 0) {
+            try {
+                certificateUrl = await saveUploadedFile(
+                    medicalFile,
+                    "uploads/docs/certificates",
+                    `certif_${mainUser.lastname}_${userId}`
+                );
+            } catch (e) {
+                console.error("Erreur upload certif principal", e);
+                return { message: "Erreur lors de la sauvegarde du certificat de l'adhérent principal." };
+            }
+        }
+
+        let partnerCertificateUrl = null;
+        if (type === "COUPLE" && partnerUserId && partnerUser && partnerMedicalFile && partnerMedicalFile.size > 0) {
+            try {
+                partnerCertificateUrl = await saveUploadedFile(
+                    partnerMedicalFile,
+                    "uploads/docs/certificates",
+                    `certif_${partnerUser.lastname}_${partnerUserId}`
+                );
+            } catch (e) {
+                console.error("Erreur upload certif partenaire", e);
+                return { message: "Erreur lors de la sauvegarde du certificat du partenaire." };
             }
         }
 
@@ -559,6 +616,7 @@ export async function createManualMembershipAction(prevState: any, formData: For
                     ffaLicenseNumber,
                     previousClub,
                     status: membershipStatus,
+                    certificateUrl,
                     paymentId: payment.id,
                 }
             });
@@ -570,6 +628,9 @@ export async function createManualMembershipAction(prevState: any, formData: For
                         seasonId,
                         type: "COUPLE",
                         status: membershipStatus,
+                        certificateUrl: partnerCertificateUrl,
+                        ffaLicenseNumber: partnerFfaLicenseNumber,
+                        previousClub: partnerPreviousClub,
                         paymentId: payment.id,
                         partnerId: mainMembership.id,
                     }

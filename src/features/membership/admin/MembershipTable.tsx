@@ -70,7 +70,7 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
                     <TableRow>
                         <TableHead className="font-bold text-slate-700 uppercase text-xs tracking-wider">Adhérent</TableHead>
                         <TableHead className="font-bold text-slate-700 uppercase text-xs tracking-wider">Type / Duo</TableHead>
-                        <TableHead className="font-bold text-slate-700 uppercase text-xs tracking-wider">Certificat / Licence</TableHead>
+                        <TableHead className="font-bold text-slate-700 uppercase text-xs tracking-wider">PPS / Licence</TableHead>
                         <TableHead className="font-bold text-slate-700 uppercase text-xs tracking-wider">Statut</TableHead>
                         <TableHead className="font-bold text-slate-700 uppercase text-xs tracking-wider">Actions</TableHead>
                     </TableRow>

@@ -104,7 +104,7 @@ export default function MembershipSimpleList({ memberships }: MembershipSimpleLi
                                     </div>
                                 ) : (
                                     <div className="flex flex-col items-end">
-                                        <span className="text-xs font-black uppercase text-slate-400 tracking-tighter">Certificat</span>
+                                        <span className="text-xs font-black uppercase text-slate-400 tracking-tighter">Attestation PPS</span>
                                         {m.certificateUrl ? (
                                             <a
                                                 href={m.certificateUrl}

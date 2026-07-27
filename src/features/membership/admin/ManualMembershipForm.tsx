@@ -10,8 +10,9 @@ import { SearchAllUsers } from "./SearchAllUsers";
 import { SearchUser } from "../public/SearchUser";
 import { createManualMembershipAction } from "../memberships.actions";
 import { toast } from "sonner";
-import { ArrowLeft, Loader2, Info, Euro, UserPlus, CreditCard, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Loader2, Info, Euro, UserPlus, CreditCard, ShieldCheck, UploadCloud } from "lucide-react";
 import Link from "next/link";
+import { Switch } from "@/components/ui/switch";
 
 interface SeasonInfo {
     id: string;
@@ -43,6 +44,10 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
     const [membershipType, setMembershipType] = useState<string>("INDIVIDUAL");
     const [amount, setAmount] = useState<string>("0");
     const [isAmountDirty, setIsAmountDirty] = useState(false);
+
+    // Track if main and partner are FFA licensed or need medical certificates
+    const [hasLicense, setHasLicense] = useState(false);
+    const [partnerHasLicense, setPartnerHasLicense] = useState(false);
 
     // Dynamically calculate and update amount when season/type changes, unless overwritten
     useEffect(() => {
@@ -106,7 +111,7 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                 </div>
             </div>
 
-            <form action={action} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <form action={action} encType="multipart/form-data" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Form Main Controls */}
                 <div className="lg:col-span-2 space-y-6">
                     <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
@@ -178,45 +183,144 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                                 </div>
                             </div>
 
-                            {/* Section Couple: Partner Selector */}
+                             {/* Section Couple: Partner Selector */}
                             {membershipType === "COUPLE" && (
-                                <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                                    <Label>Chercher le conjoint / partenaire <span className="text-red-500">*</span></Label>
-                                    <p className="text-xs text-slate-500 italic">Un deuxième dossier d'adhésion Couple sera automatiquement créé pour ce partenaire.</p>
-                                    <SearchUser />
-                                    {state?.errors?.partnerUserId && (
-                                        <p className="text-xs text-red-500 font-bold italic">{state.errors.partnerUserId[0]}</p>
-                                    )}
+                                <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <div className="space-y-2">
+                                        <Label>Chercher le conjoint / partenaire <span className="text-red-500">*</span></Label>
+                                        <p className="text-xs text-slate-500 italic">Un deuxième dossier d'adhésion Couple sera automatiquement créé pour ce partenaire.</p>
+                                        <SearchUser />
+                                        {state?.errors?.partnerUserId && (
+                                            <p className="text-xs text-red-500 font-bold italic">{state.errors.partnerUserId[0]}</p>
+                                        )}
+                                    </div>
+
+                                    {/* Partner details: FFA or Certificate */}
+                                    <div className="space-y-4 pt-3 border-t border-slate-200">
+                                        <div className="flex items-center justify-between gap-4 p-3 bg-white border rounded-lg shadow-sm">
+                                            <div className="space-y-0.5">
+                                                <Label htmlFor="partner-has-license-switch" className="text-xs">Partenaire licencié FFA ?</Label>
+                                                <p className="text-[10px] text-slate-500 italic">Cochez si le partenaire a déjà une licence active.</p>
+                                            </div>
+                                            <Switch
+                                                id="partner-has-license-switch"
+                                                checked={partnerHasLicense}
+                                                onCheckedChange={setPartnerHasLicense}
+                                                type="button"
+                                            />
+                                        </div>
+
+                                        {partnerHasLicense ? (
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 animate-in fade-in duration-200">
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="partnerFfaLicenseNumber">N° licence FFA du partenaire</Label>
+                                                    <Input
+                                                        id="partnerFfaLicenseNumber"
+                                                        name="partnerFfaLicenseNumber"
+                                                        placeholder="Ex: 1234567"
+                                                        className="rounded-lg bg-white"
+                                                    />
+                                                    {state?.errors?.partnerFfaLicenseNumber && (
+                                                        <p className="text-xs text-red-500 font-bold italic">{state.errors.partnerFfaLicenseNumber[0]}</p>
+                                                    )}
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="partnerPreviousClub">Club précédent du partenaire</Label>
+                                                    <Input
+                                                        id="partnerPreviousClub"
+                                                        name="partnerPreviousClub"
+                                                        placeholder="Nom du club"
+                                                        className="rounded-lg bg-white"
+                                                    />
+                                                    {state?.errors?.partnerPreviousClub && (
+                                                        <p className="text-xs text-red-500 font-bold italic">{state.errors.partnerPreviousClub[0]}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-2 animate-in fade-in duration-200">
+                                                <Label htmlFor="partnerMedicalCertificate" className="flex items-center gap-1.5 cursor-pointer text-xs">
+                                                    <UploadCloud className="w-4 h-4 text-slate-400" /> Attestation PPS du partenaire (Optionnel)
+                                                </Label>
+                                                <Input
+                                                    id="partnerMedicalCertificate"
+                                                    name="partnerMedicalCertificate"
+                                                    type="file"
+                                                    accept=".pdf,image/*"
+                                                    className="cursor-pointer file:mr-2 file:bg-slate-100 file:border-none file:px-3 file:py-1 file:rounded-md text-slate-500 bg-white"
+                                                />
+                                                {state?.errors?.partnerMedicalCertificate && (
+                                                    <p className="text-xs text-red-500 font-bold italic">{state.errors.partnerMedicalCertificate[0]}</p>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             )}
 
-                            {/* FFA details */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                                <div className="space-y-2">
-                                    <Label htmlFor="ffaLicenseNumber">Numéro de licence FFA (Optionnel)</Label>
-                                    <Input
-                                        id="ffaLicenseNumber"
-                                        name="ffaLicenseNumber"
-                                        placeholder="Ex: 1234567"
-                                        className="rounded-lg"
+                            {/* Details Adhérent Principal */}
+                            <div className="space-y-4 pt-2 border-t border-slate-100">
+                                <h3 className="text-xs font-black uppercase text-slate-400 tracking-wider">
+                                    Dossier Adhérent Principal
+                                </h3>
+                                
+                                <div className="flex items-center justify-between gap-4 p-3 bg-slate-50 border rounded-lg">
+                                    <div className="space-y-0.5">
+                                        <Label htmlFor="has-license-switch" className="text-xs">Licencié FFA ?</Label>
+                                        <p className="text-[10px] text-slate-500 italic">Cochez si l'adhérent a déjà une licence active.</p>
+                                    </div>
+                                    <Switch
+                                        id="has-license-switch"
+                                        checked={hasLicense}
+                                        onCheckedChange={setHasLicense}
+                                        type="button"
                                     />
-                                    {state?.errors?.ffaLicenseNumber && (
-                                        <p className="text-xs text-red-500 font-bold italic">{state.errors.ffaLicenseNumber[0]}</p>
-                                    )}
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="previousClub">Club précédent / de mutation (Optionnel)</Label>
-                                    <Input
-                                        id="previousClub"
-                                        name="previousClub"
-                                        placeholder="Nom de l'ancien club"
-                                        className="rounded-lg"
-                                    />
-                                    {state?.errors?.previousClub && (
-                                        <p className="text-xs text-red-500 font-bold italic">{state.errors.previousClub[0]}</p>
-                                    )}
-                                </div>
+                                {hasLicense ? (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in duration-200">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="ffaLicenseNumber">Numéro de licence FFA</Label>
+                                            <Input
+                                                id="ffaLicenseNumber"
+                                                name="ffaLicenseNumber"
+                                                placeholder="Ex: 1234567"
+                                                className="rounded-lg"
+                                            />
+                                            {state?.errors?.ffaLicenseNumber && (
+                                                <p className="text-xs text-red-500 font-bold italic">{state.errors.ffaLicenseNumber[0]}</p>
+                                            )}
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="previousClub">Club précédent / mutation</Label>
+                                            <Input
+                                                id="previousClub"
+                                                name="previousClub"
+                                                placeholder="Nom du club"
+                                                className="rounded-lg"
+                                            />
+                                            {state?.errors?.previousClub && (
+                                                <p className="text-xs text-red-500 font-bold italic">{state.errors.previousClub[0]}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2 animate-in fade-in duration-200">
+                                        <Label htmlFor="medicalCertificate" className="flex items-center gap-1.5 cursor-pointer">
+                                            <UploadCloud className="w-4 h-4 text-slate-400" /> Charger l'attestation PPS (Optionnel)
+                                        </Label>
+                                        <Input
+                                            id="medicalCertificate"
+                                            name="medicalCertificate"
+                                            type="file"
+                                            accept=".pdf,image/*"
+                                            className="cursor-pointer file:mr-2 file:bg-slate-100 file:border-none file:px-3 file:py-1 file:rounded-md text-slate-500"
+                                        />
+                                        {state?.errors?.medicalCertificate && (
+                                            <p className="text-xs text-red-500 font-bold italic">{state.errors.medicalCertificate[0]}</p>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -350,7 +454,7 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                         <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg text-xs text-blue-800 leading-relaxed flex gap-2">
                             <Info size={16} className="shrink-0 mt-0.5" />
                             <span>
-                                L'adhésion créée manuellement n'exige pas de certificat médical. Le paiement est généré instantanément selon vos choix.
+                                L'adhésion créée manuellement n'exige pas d'attestation PPS. Le paiement est généré instantanément selon vos choix.
                             </span>
                         </div>
 

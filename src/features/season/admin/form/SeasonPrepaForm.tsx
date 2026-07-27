@@ -32,14 +32,11 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
     const startDateObj = preview?.data?.startDate ? (typeof preview.data.startDate === 'string' ? new Date(preview.data.startDate) : preview.data.startDate) : null;
     const endDateObj = preview?.data?.endDate ? (typeof preview.data.endDate === 'string' ? new Date(preview.data.endDate) : preview.data.endDate) : null;
 
-    const startDateObj = preview?.data?.startDate ? (typeof preview.data.startDate === 'string' ? new Date(preview.data.startDate) : preview.data.startDate) : null;
-    const endDateObj = preview?.data?.endDate ? (typeof preview.data.endDate === 'string' ? new Date(preview.data.endDate) : preview.data.endDate) : null;
-
     return (
-        <Card className="border-dashed border-2 border-slate-300 rounded-none py-4">
+        <Card className="border-slate-200 bg-white rounded-xl shadow-sm py-4">
             <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2 text-slate-700">
-                    <CalendarPlus className="w-5 h-5" />
+                <CardTitle className="text-base font-bold flex items-center gap-2 text-slate-800">
+                    <CalendarPlus className="w-5 h-5 text-primary" />
                     Préparer la saison prochaine
                 </CardTitle>
             </CardHeader>
