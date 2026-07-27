@@ -176,7 +176,14 @@ export function SiteConfigManager({ initialConfig, initialSchedules }: { initial
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDeleteSchedule(schedule.id, index)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                            <AlertDialogAction 
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteSchedule(schedule.id, index);
+                                                }} 
+                                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                            >
                                                 Supprimer
                                             </AlertDialogAction>
                                         </AlertDialogFooter>

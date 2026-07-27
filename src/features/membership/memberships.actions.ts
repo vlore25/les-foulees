@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache"
 import { getActiveSeasonData } from "../season/dal"
 import { getProfile } from "../account/dal"
 import { deleteUploadedFile, saveUploadedFile } from "@/src/lib/file-storage"
-import { MembershipType, PaymentMethod } from "@/prisma/generated/enums"
+import { MembershipType, PaymentMethod, PaymentStatus, MembershipStatus } from "@/prisma/generated/enums"
 
 export type MembershipState = {
     errors?: {
@@ -465,3 +465,124 @@ export async function getMembershipDetailsAction(membershipId: string) {
         return { success: false, message: "Erreur serveur" };
     }
 }
+
+export type ManualMembershipState = {
+    errors?: {
+        userId?: string[];
+        seasonId?: string[];
+        type?: string[];
+        amount?: string[];
+        paymentMethod?: string[];
+        paymentStatus?: string[];
+        membershipStatus?: string[];
+        ffaLicenseNumber?: string[];
+        previousClub?: string[];
+        partnerUserId?: string[];
+    };
+    message?: string;
+    success?: boolean;
+} | undefined;
+
+export async function createManualMembershipAction(prevState: any, formData: FormData): Promise<ManualMembershipState> {
+    if (!await verifyAdmin()) {
+        return { message: "Action non autorisée." };
+    }
+
+    const userId = formData.get("userId") as string;
+    const seasonId = formData.get("seasonId") as string;
+    const type = formData.get("type") as MembershipType;
+    const amountStr = formData.get("amount") as string;
+    const paymentMethod = formData.get("paymentMethod") as PaymentMethod;
+    const paymentStatus = formData.get("paymentStatus") as PaymentStatus;
+    const membershipStatus = formData.get("membershipStatus") as MembershipStatus;
+    const ffaLicenseNumber = (formData.get("ffaLicenseNumber") as string) || null;
+    const previousClub = (formData.get("previousClub") as string) || null;
+    const partnerUserId = (formData.get("partnerUserId") as string) || null;
+
+    // Validation
+    const errors: any = {};
+    if (!userId) errors.userId = ["L'utilisateur est requis."];
+    if (!seasonId) errors.seasonId = ["La saison est requise."];
+    if (!type) errors.type = ["Le type d'adhésion est requis."];
+    if (!paymentMethod) errors.paymentMethod = ["Le moyen de paiement est requis."];
+    if (!paymentStatus) errors.paymentStatus = ["Le statut du paiement est requis."];
+    if (!membershipStatus) errors.membershipStatus = ["Le statut de l'adhésion est requis."];
+
+    const amount = parseFloat(amountStr);
+    if (isNaN(amount) || amount < 0) {
+        errors.amount = ["Le montant doit être un nombre positif ou nul."];
+    }
+
+    if (type === "COUPLE" && !partnerUserId) {
+        errors.partnerUserId = ["Le partenaire est obligatoire pour une adhésion couple."];
+    }
+    if (type === "COUPLE" && partnerUserId === userId) {
+        errors.partnerUserId = ["L'utilisateur ne peut pas être son propre partenaire."];
+    }
+
+    if (Object.keys(errors).length > 0) {
+        return { errors, message: "Veuillez corriger les erreurs." };
+    }
+
+    try {
+        const existing = await prisma.membership.findUnique({
+            where: { userId_seasonId: { userId, seasonId } }
+        });
+        if (existing) {
+            return { message: "Cet utilisateur a déjà un dossier pour cette saison." };
+        }
+
+        if (type === "COUPLE" && partnerUserId) {
+            const partnerExisting = await prisma.membership.findUnique({
+                where: { userId_seasonId: { userId: partnerUserId, seasonId } }
+            });
+            if (partnerExisting) {
+                return { message: "Le partenaire sélectionné a déjà un dossier pour cette saison." };
+            }
+        }
+
+        await prisma.$transaction(async (tx) => {
+            const payment = await tx.payment.create({
+                data: {
+                    userId,
+                    amount,
+                    method: paymentMethod,
+                    status: paymentStatus,
+                }
+            });
+
+            const mainMembership = await tx.membership.create({
+                data: {
+                    userId,
+                    seasonId,
+                    type,
+                    ffaLicenseNumber,
+                    previousClub,
+                    status: membershipStatus,
+                    paymentId: payment.id,
+                }
+            });
+
+            if (type === "COUPLE" && partnerUserId) {
+                await tx.membership.create({
+                    data: {
+                        userId: partnerUserId,
+                        seasonId,
+                        type: "COUPLE",
+                        status: membershipStatus,
+                        paymentId: payment.id,
+                        partnerId: mainMembership.id,
+                    }
+                });
+            }
+        });
+
+        revalidatePath("/admin/adherants");
+        revalidatePath("/admin/paiements");
+        return { success: true, message: "Adhésion manuelle créée avec succès !" };
+    } catch (e: any) {
+        console.error("Erreur creation adhésion manuelle", e);
+        return { success: false, message: e.message || "Une erreur technique est survenue." };
+    }
+}
+

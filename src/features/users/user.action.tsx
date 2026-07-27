@@ -58,6 +58,42 @@ export async function searchPartnerByName(query: string) {
   }));
 }
 
+export async function searchAllUsersByName(query: string) {
+  if (!await verifyAdmin()) return [];
+
+  const cleanQuery = query.replace(/[^\w\s@.]/gi, '').trim();
+  if (!cleanQuery) return [];
+
+  const searchTerms = cleanQuery.split(/\s+/).filter(term => term.length > 0);
+
+  const users = await prisma.user.findMany({
+    where: {
+      status: 'ACTIVE',
+      AND: searchTerms.map(term => ({
+        OR: [
+          { name: { contains: term, mode: 'insensitive' } },
+          { lastname: { contains: term, mode: 'insensitive' } },
+          { email: { contains: term, mode: 'insensitive' } },
+        ],
+      })),
+    },
+    select: {
+      id: true,
+      name: true,
+      lastname: true,
+      email: true,
+    },
+    take: 10,
+  });
+
+  return users.map(u => ({
+    id: u.id,
+    name: `${u.name} ${u.lastname}`,
+    email: u.email
+  }));
+}
+
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 const secret = process.env.JWT_SECRET;
 

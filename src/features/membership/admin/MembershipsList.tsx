@@ -6,8 +6,10 @@ import { prisma } from "@/src/lib/prisma";
 import SeasonFilter from "./SeasonFilter";
 import ExportButton from "./ExportButton";
 import EmptyCategory from "@/components/common/feedback/EmptyCategory";
-import { Calendar } from "lucide-react";
+import { Calendar, Plus } from "lucide-react";
 import { TypographyH3, TypographyDetail } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function MembershipsList({
     searchParams
@@ -80,10 +82,17 @@ export default async function MembershipsList({
                     />
                 </div>
                 
-                <ExportButton 
-                    data={allMembers} 
-                    filename={`adherents_${currentSeason?.name || 'export'}`} 
-                />
+                <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+                    <Button asChild size="sm" className="font-bold text-xs uppercase tracking-wider rounded-md">
+                        <Link href="/admin/adherants/nouveau">
+                            <Plus size={16} className="mr-1.5" /> Ajouter manuellement
+                        </Link>
+                    </Button>
+                    <ExportButton 
+                        data={allMembers} 
+                        filename={`adherents_${currentSeason?.name || 'export'}`} 
+                    />
+                </div>
             </div>
 
             <div className="space-y-1">
