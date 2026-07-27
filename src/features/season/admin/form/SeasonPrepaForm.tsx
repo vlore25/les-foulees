@@ -17,6 +17,9 @@ interface SeasonPrepaFormProps {
 export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
     const [state, action, pending] = useActionState(generateNextSeason, undefined);
 
+    const startDateObj = preview?.data?.startDate ? (typeof preview.data.startDate === 'string' ? new Date(preview.data.startDate) : preview.data.startDate) : null;
+    const endDateObj = preview?.data?.endDate ? (typeof preview.data.endDate === 'string' ? new Date(preview.data.endDate) : preview.data.endDate) : null;
+
     return (
         <Card className="border-dashed border-2 border-slate-300 rounded-none py-4">
             <CardHeader className="pb-3">
@@ -44,23 +47,21 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
                                     <Label>Date de début</Label>
-                                    <Input
-                                        name="startDate"
-                                        type="date"
-                                        defaultValue={preview.data.startDate.toISOString().split('T')[0]}
-                                        className="bg-white"
-                                        readOnly
-                                    />
+                                    <div className="border border-slate-200 px-3 py-2 bg-slate-50/50 text-slate-700 rounded-md text-sm font-semibold mt-1">
+                                        {startDateObj ? startDateObj.toLocaleDateString("fr-FR") : ""}
+                                    </div>
+                                    {startDateObj && (
+                                        <input type="hidden" name="startDate" value={startDateObj.toISOString().split('T')[0]} />
+                                    )}
                                 </div>
                                 <div>
                                     <Label>Date de fin</Label>
-                                    <Input
-                                        name="endDate"
-                                        type="date"
-                                        defaultValue={preview.data.endDate.toISOString().split('T')[0]}
-                                        className="bg-white"
-                                        readOnly
-                                    />
+                                    <div className="border border-slate-200 px-3 py-2 bg-slate-50/50 text-slate-700 rounded-md text-sm font-semibold mt-1">
+                                        {endDateObj ? endDateObj.toLocaleDateString("fr-FR") : ""}
+                                    </div>
+                                    {endDateObj && (
+                                        <input type="hidden" name="endDate" value={endDateObj.toISOString().split('T')[0]} />
+                                    )}
                                 </div>
                             </div>
                         </div>
