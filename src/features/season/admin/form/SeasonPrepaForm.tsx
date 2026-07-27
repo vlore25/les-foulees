@@ -6,9 +6,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/Label";
 import { CalendarPlus } from "lucide-react";
-import { useActionState } from "react";
+import { useActionState, useRef } from "react";
 import { generateNextSeason } from "../../season.actions";
 import { NextSeasonResponse } from "../../dal";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 interface SeasonPrepaFormProps {
   preview: NextSeasonResponse | null; 
@@ -16,6 +27,10 @@ interface SeasonPrepaFormProps {
 
 export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
     const [state, action, pending] = useActionState(generateNextSeason, undefined);
+    const formRef = useRef<HTMLFormElement>(null);
+
+    const startDateObj = preview?.data?.startDate ? (typeof preview.data.startDate === 'string' ? new Date(preview.data.startDate) : preview.data.startDate) : null;
+    const endDateObj = preview?.data?.endDate ? (typeof preview.data.endDate === 'string' ? new Date(preview.data.endDate) : preview.data.endDate) : null;
 
     const startDateObj = preview?.data?.startDate ? (typeof preview.data.startDate === 'string' ? new Date(preview.data.startDate) : preview.data.startDate) : null;
     const endDateObj = preview?.data?.endDate ? (typeof preview.data.endDate === 'string' ? new Date(preview.data.endDate) : preview.data.endDate) : null;
@@ -30,7 +45,7 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
             </CardHeader>
             <CardContent>
                 {preview && preview.success && preview.data ? (
-                    <form action={action} className="space-y-4">
+                    <form ref={formRef} action={action} className="space-y-4">
 
                         {/* --- MODIFICATION ICI : NOM AUTOMATIQUE --- */}
                         <div className="space-y-3">
@@ -88,9 +103,31 @@ export default function SeasonPrepaForm({preview}: SeasonPrepaFormProps) {
                         
                         
 
-                        <Button type="submit" size="sm" className="w-full mt-2">
-                            Enregistrer la saison
-                        </Button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button type="button" size="sm" className="w-full mt-2" disabled={pending}>
+                                    Enregistrer la saison
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Confirmer la création de la saison ?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Vous êtes sur le point de créer la saison <strong>{preview.data.name}</strong>.<br />
+                                        Les dates de début et de fin seront bloquées et ne pourront plus être modifiées après création.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                    <AlertDialogAction 
+                                        onClick={() => formRef.current?.requestSubmit()}
+                                        className="bg-primary text-primary-foreground hover:bg-primary/95"
+                                    >
+                                        Confirmer la création
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     </form>
                 ) : (
                     <ErrorBox error="Erreur chargement prévisions." />
