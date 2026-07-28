@@ -6,9 +6,9 @@ import "./globals.css";
 import UserProvider from "@/components/providers/UserProvider";
 import { getCurrentUser } from "@/src/features/users/dal";
 import { Toaster } from "@/components/ui/sonner"
-import { GoogleTagManager } from '@next/third-parties/google'
 import CookieBanner from "@/components/common/CookieBanner";
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const vendSans = Vend_Sans({
   variable: "--font-vend-sans",
@@ -16,6 +16,7 @@ const vendSans = Vend_Sans({
 });
 
 const geistMono = Geist_Mono({
+
   variable: "--font-main",
   subsets: ["latin"],
 });
@@ -74,7 +75,8 @@ export default async function RootLayout({
 
   return (
     <html lang="fr">
-      <GoogleTagManager gtmId="G-YR1YQ35J7Q" />
+      <Analytics/>
+      <SpeedInsights/>
       <body
         className={`${vendSans.variable} ${geistMono.variable} antialiased`}
       >
