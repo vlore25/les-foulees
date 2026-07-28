@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/src/features/users/dal";
 import { Toaster } from "@/components/ui/sonner"
 import { GoogleTagManager } from '@next/third-parties/google'
 import CookieBanner from "@/components/common/CookieBanner";
+import { Analytics } from "@vercel/analytics/next"
 
 const vendSans = Vend_Sans({
   variable: "--font-vend-sans",
