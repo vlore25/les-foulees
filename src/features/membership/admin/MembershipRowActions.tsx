@@ -271,6 +271,37 @@ export default function MembershipRowActions({ id, status, paymentStatus }: Memb
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Section Document / PPS */}
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-2 text-primary border-b border-primary/10 pb-2">
+                                    <FileText size={18} />
+                                    <TypographyH3 className="text-primary text-lg">Document médical / Licence</TypographyH3>
+                                </div>
+                                {(details.type === 'LICENSE_RUNNING' || details.ffaLicenseNumber) ? (
+                                    <div className="space-y-1">
+                                        <TypographyP className="text-sm font-bold text-blue-600">Licence FFA</TypographyP>
+                                        <TypographyP className="text-sm text-slate-600">N° {details.ffaLicenseNumber || "Non renseigné"}</TypographyP>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-1">
+                                        <TypographyP className="text-sm font-bold text-slate-700">Attestation PPS</TypographyP>
+                                        {details.certificateUrl ? (
+                                            <a
+                                                href={details.certificateUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline bg-primary/5 px-3 py-1.5 rounded-md transition-colors"
+                                            >
+                                                Consulter l'attestation PPS
+                                            </a>
+                                        ) : (
+                                            <TypographyP className="text-sm font-bold text-red-500 uppercase italic">Document manquant</TypographyP>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
                             {details.partner && (
                                 <div className="space-y-3">
                                     <div className="flex items-center gap-2 text-primary border-b border-primary/10 pb-2">
