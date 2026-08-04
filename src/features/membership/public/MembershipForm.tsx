@@ -145,6 +145,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                                 {initialData ? (
                                     <div className="p-3 bg-slate-50 border rounded-lg text-xs font-bold text-slate-500">
                                         Partenaire déjà lié.
+                                        <input type="hidden" name="partnerUserId" value={initialData.partnerId || initialData.partnerOf?.userId || "ALREADY_LINKED"} />
                                     </div>
                                 ) : (
                                     <>
@@ -164,6 +165,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
                             <p className="text-sm font-bold text-primary uppercase">Offre Couple</p>
                             <p className="text-xs text-slate-600 italic">Adhésion groupée avec votre partenaire.</p>
                             <input type="hidden" name="type" value="COUPLE" />
+                            <input type="hidden" name="partnerUserId" value={initialData.partnerId || "ALREADY_LINKED"} />
                             </div>
                             </div>
                             )}
