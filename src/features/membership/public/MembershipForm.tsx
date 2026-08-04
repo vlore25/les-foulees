@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useState } from "react"
+import { useActionState, useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -38,6 +38,12 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
         initialData?.licenseType || "RENEWAL"
     );
 
+    useEffect(() => {
+        if (state?.errors?.medicalCertificate) {
+            setHasLicense(false);
+        }
+    }, [state?.errors?.medicalCertificate]);
+
     // Un partenaire invité est identifié par la présence d'un partnerId (il est lié à l'adhésion principale)
     const isInvitedPartner = initialData && !!initialData.partnerId;
 
@@ -50,10 +56,33 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
                 {state?.message && (
                     <div className={cn(
-                        "p-4 rounded-lg text-sm flex items-center gap-2",
-                        state.success ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                        "p-4 rounded-lg text-sm flex flex-col gap-1",
+                        state.success ? "bg-green-100 text-green-700 border border-green-200" : "bg-red-100 text-red-700 border border-red-200"
                     )}>
-                        {state.message}
+                        <div className="font-bold flex items-center gap-2">
+                            {state.message}
+                        </div>
+                        {state?.errors && Object.keys(state.errors).length > 0 && (
+                            <ul className="list-disc list-inside text-xs mt-1 space-y-1">
+                                {Object.entries(state.errors).map(([field, errMsgs]) => {
+                                    const labels: Record<string, string> = {
+                                        medicalCertificate: "Attestation PPS",
+                                        ffaLicenseNumber: "Numéro de licence FFA",
+                                        previousClub: "Ancien club",
+                                        partnerUserId: "Partenaire",
+                                        paymentMethod: "Moyen de paiement",
+                                        type: "Type d'adhésion"
+                                    };
+                                    const label = labels[field] || field;
+                                    return (
+                                        <li key={field}>
+                                            <span className="font-semibold">{label} : </span>
+                                            {Array.isArray(errMsgs) ? errMsgs.join(", ") : String(errMsgs)}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        )}
                     </div>
                 )}
 
