@@ -647,3 +647,81 @@ export async function createManualMembershipAction(prevState: any, formData: For
     }
 }
 
+export async function updatePPSCertificateAction(prevState: any, formData: FormData): Promise<MembershipState> {
+    const session = await getSession();
+    if (!session?.userId) return { message: "Vous devez être connecté." };
+    
+    const user = await getProfile(session.userId);
+    if (!user) return { message: "Utilisateur introuvable." };
+
+    const medicalFile = formData.get("medicalCertificate") as File | null;
+    if (!medicalFile || medicalFile.size === 0) {
+        return { 
+            errors: { medicalCertificate: ["Veuillez sélectionner un fichier."] },
+            message: "Aucun fichier fourni." 
+        };
+    }
+
+    const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(medicalFile.type)) {
+        return { 
+            errors: { medicalCertificate: ["Format de fichier invalide (PDF ou Image uniquement)."] },
+            message: "Fichier invalide." 
+        };
+    }
+
+    const season = await getActiveSeasonData();
+    if (!season) {
+        return { message: "Aucune saison active." };
+    }
+
+    const membership = await prisma.membership.findUnique({
+        where: { userId_seasonId: { userId: session.userId, seasonId: season.id } }
+    });
+
+    if (!membership) {
+        return { message: "Aucune adhésion en cours pour cette saison." };
+    }
+
+    let certificateUrl = null;
+    try {
+        certificateUrl = await saveUploadedFile(
+            medicalFile,
+            "uploads/docs/certificates",
+            `certif_${user.lastname}_${session.userId}`
+        );
+    } catch (e) {
+        console.error("Erreur upload certif", e);
+        return { message: "Erreur technique lors de la sauvegarde du certificat." };
+    }
+
+    try {
+        const oldCertificate = membership.certificateUrl;
+
+        await prisma.membership.update({
+            where: { id: membership.id },
+            data: {
+                certificateUrl,
+                status: "PENDING", // Repasse en attente pour validation par l'administration
+            }
+        });
+
+        if (oldCertificate) {
+            try {
+                await deleteUploadedFile(oldCertificate);
+            } catch (delError) {
+                console.error("Erreur lors de la suppression de l'ancien certificat:", delError);
+            }
+        }
+
+        revalidatePath("/espace-membre/adhesion");
+        revalidatePath("/admin/adherants");
+        
+        return { success: true, message: "Attestation PPS mise à jour avec succès !" };
+    } catch (e) {
+        console.error(e);
+        return { success: false, message: "Une erreur est survenue lors de l'enregistrement." };
+    }
+}
+
+

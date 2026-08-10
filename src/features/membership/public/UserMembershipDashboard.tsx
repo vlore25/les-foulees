@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AlertCircle, CheckCircle, Clock, Download, Calendar, User, FileText } from "lucide-react";
 import ErrorCard from "@/components/common/feedback/ErrorCard";
 import { MembershipForm } from "./MembershipForm";
+import { UpdatePPSForm } from "./UpdatePPSForm";
 import { MembershipStatus } from "@/prisma/generated/enums";
 import { memberCardPdf } from "../memberCardPdf";
 import { cn } from "@/src/lib/utils";
@@ -147,6 +148,21 @@ export default function UserMembershipDashboard({ user, season, membership }: Us
                                 </div>
                             </div>
                         )}
+
+                        {!membership.ffaLicenseNumber && (
+                            <div className="mt-8 pt-8 border-t border-slate-100 space-y-4 animate-in fade-in">
+                                <div className="space-y-1">
+                                    <TypographyH3 className="text-lg font-bold text-slate-800">
+                                        Mettre à jour mon attestation PPS
+                                    </TypographyH3>
+                                    <TypographyP className="text-slate-500 text-sm">
+                                        Votre attestation PPS a expiré ou va bientôt expirer ? Vous pouvez charger la nouvelle version ci-dessous. Votre dossier repassera temporairement en attente de validation par l'administration.
+                                    </TypographyP>
+                                </div>
+                                <UpdatePPSForm currentCertificateUrl={membership.certificateUrl} />
+                            </div>
+                        )}
+
                     </div>
                 </div>
             </div>
