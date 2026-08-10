@@ -123,27 +123,34 @@ export const verifyValidatedMembership = cache(async () => {
     return { isAuth: true, userId: session.userId as string }
   }
 
-  // Chercher la saison correspondant à la date actuelle
+  // Chercher les saisons valides (soit actives par date, soit ouvertes aux inscriptions)
   const now = new Date();
-  const activeSeason = await prisma.season.findFirst({
+  const activeSeasons = await prisma.season.findMany({
     where: { 
-      startDate: { lte: now },
-      endDate: { gte: now }
-    }
+      OR: [
+        { isOpenForRegistration: true },
+        {
+          startDate: { lte: now },
+          endDate: { gte: now }
+        }
+      ]
+    },
+    select: { id: true }
   })
 
-  if (activeSeason) {
-    // Vérifier si l'utilisateur a une adhésion validée pour cette saison
-    const membership = await prisma.membership.findUnique({
+  const seasonIds = activeSeasons.map(s => s.id);
+
+  if (seasonIds.length > 0) {
+    // Vérifier si l'utilisateur a une adhésion validée pour l'une de ces saisons
+    const membership = await prisma.membership.findFirst({
       where: {
-        userId_seasonId: {
-          userId: session.userId as string,
-          seasonId: activeSeason.id
-        }
+        userId: session.userId as string,
+        seasonId: { in: seasonIds },
+        status: 'VALIDATED'
       }
     })
 
-    if (!membership || membership.status !== 'VALIDATED') {
+    if (!membership) {
       redirect('/espace-membre/adhesion')
     }
   }

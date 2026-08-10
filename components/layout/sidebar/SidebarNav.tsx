@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/side-bat";
 import { ItemsNavAdmin, ItemsNavUser } from "./ItemsNav";
 import Link from "next/link";
@@ -11,10 +13,11 @@ interface SidebarNavProps {
 
 export function SidebarNav({ type, isAdmin }: SidebarNavProps) {
   const { setOpenMobile } = useSidebar();
+  const pathname = usePathname();
 
-  const handleLinkClick = () => {
+  useEffect(() => {
     setOpenMobile(false);
-  };
+  }, [pathname, setOpenMobile]);
 
   const navItems = type === "ADMIN" ? ItemsNavAdmin : ItemsNavUser;
 
@@ -34,7 +37,7 @@ export function SidebarNav({ type, isAdmin }: SidebarNavProps) {
                   return (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild>
-                        <Link href={item.url} onClick={handleLinkClick}>
+                        <Link href={item.url}>
                           <Icon />
                           <span>{item.title}</span>
                         </Link>
