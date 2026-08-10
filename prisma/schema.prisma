@@ -179,6 +179,7 @@ model Membership {
   previousClub     String?
   certificateUrl   String?
   status           MembershipStatus @default(PENDING)
+  pendingReason    String?
   type             MembershipType   @default(INDIVIDUAL)
   paymentId        String?
   createdAt        DateTime         @default(now())

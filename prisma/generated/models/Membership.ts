@@ -32,6 +32,7 @@ export type MembershipMinAggregateOutputType = {
   previousClub: string | null
   certificateUrl: string | null
   status: $Enums.MembershipStatus | null
+  pendingReason: string | null
   type: $Enums.MembershipType | null
   paymentId: string | null
   createdAt: Date | null
@@ -47,6 +48,7 @@ export type MembershipMaxAggregateOutputType = {
   previousClub: string | null
   certificateUrl: string | null
   status: $Enums.MembershipStatus | null
+  pendingReason: string | null
   type: $Enums.MembershipType | null
   paymentId: string | null
   createdAt: Date | null
@@ -62,6 +64,7 @@ export type MembershipCountAggregateOutputType = {
   previousClub: number
   certificateUrl: number
   status: number
+  pendingReason: number
   type: number
   paymentId: number
   createdAt: number
@@ -79,6 +82,7 @@ export type MembershipMinAggregateInputType = {
   previousClub?: true
   certificateUrl?: true
   status?: true
+  pendingReason?: true
   type?: true
   paymentId?: true
   createdAt?: true
@@ -94,6 +98,7 @@ export type MembershipMaxAggregateInputType = {
   previousClub?: true
   certificateUrl?: true
   status?: true
+  pendingReason?: true
   type?: true
   paymentId?: true
   createdAt?: true
@@ -109,6 +114,7 @@ export type MembershipCountAggregateInputType = {
   previousClub?: true
   certificateUrl?: true
   status?: true
+  pendingReason?: true
   type?: true
   paymentId?: true
   createdAt?: true
@@ -197,6 +203,7 @@ export type MembershipGroupByOutputType = {
   previousClub: string | null
   certificateUrl: string | null
   status: $Enums.MembershipStatus
+  pendingReason: string | null
   type: $Enums.MembershipType
   paymentId: string | null
   createdAt: Date
@@ -233,6 +240,7 @@ export type MembershipWhereInput = {
   previousClub?: Prisma.StringNullableFilter<"Membership"> | string | null
   certificateUrl?: Prisma.StringNullableFilter<"Membership"> | string | null
   status?: Prisma.EnumMembershipStatusFilter<"Membership"> | $Enums.MembershipStatus
+  pendingReason?: Prisma.StringNullableFilter<"Membership"> | string | null
   type?: Prisma.EnumMembershipTypeFilter<"Membership"> | $Enums.MembershipType
   paymentId?: Prisma.StringNullableFilter<"Membership"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Membership"> | Date | string
@@ -253,6 +261,7 @@ export type MembershipOrderByWithRelationInput = {
   previousClub?: Prisma.SortOrderInput | Prisma.SortOrder
   certificateUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  pendingReason?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   paymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -278,6 +287,7 @@ export type MembershipWhereUniqueInput = Prisma.AtLeast<{
   previousClub?: Prisma.StringNullableFilter<"Membership"> | string | null
   certificateUrl?: Prisma.StringNullableFilter<"Membership"> | string | null
   status?: Prisma.EnumMembershipStatusFilter<"Membership"> | $Enums.MembershipStatus
+  pendingReason?: Prisma.StringNullableFilter<"Membership"> | string | null
   type?: Prisma.EnumMembershipTypeFilter<"Membership"> | $Enums.MembershipType
   paymentId?: Prisma.StringNullableFilter<"Membership"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Membership"> | Date | string
@@ -297,6 +307,7 @@ export type MembershipOrderByWithAggregationInput = {
   previousClub?: Prisma.SortOrderInput | Prisma.SortOrder
   certificateUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  pendingReason?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   paymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -318,6 +329,7 @@ export type MembershipScalarWhereWithAggregatesInput = {
   previousClub?: Prisma.StringNullableWithAggregatesFilter<"Membership"> | string | null
   certificateUrl?: Prisma.StringNullableWithAggregatesFilter<"Membership"> | string | null
   status?: Prisma.EnumMembershipStatusWithAggregatesFilter<"Membership"> | $Enums.MembershipStatus
+  pendingReason?: Prisma.StringNullableWithAggregatesFilter<"Membership"> | string | null
   type?: Prisma.EnumMembershipTypeWithAggregatesFilter<"Membership"> | $Enums.MembershipType
   paymentId?: Prisma.StringNullableWithAggregatesFilter<"Membership"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Membership"> | Date | string
@@ -331,6 +343,7 @@ export type MembershipCreateInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -349,6 +362,7 @@ export type MembershipUncheckedCreateInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   paymentId?: string | null
   createdAt?: Date | string
@@ -363,6 +377,7 @@ export type MembershipUpdateInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -381,6 +396,7 @@ export type MembershipUncheckedUpdateInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -397,6 +413,7 @@ export type MembershipCreateManyInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   paymentId?: string | null
   createdAt?: Date | string
@@ -410,6 +427,7 @@ export type MembershipUpdateManyMutationInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -423,6 +441,7 @@ export type MembershipUncheckedUpdateManyInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -458,6 +477,7 @@ export type MembershipCountOrderByAggregateInput = {
   previousClub?: Prisma.SortOrder
   certificateUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  pendingReason?: Prisma.SortOrder
   type?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -473,6 +493,7 @@ export type MembershipMaxOrderByAggregateInput = {
   previousClub?: Prisma.SortOrder
   certificateUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  pendingReason?: Prisma.SortOrder
   type?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -488,6 +509,7 @@ export type MembershipMinOrderByAggregateInput = {
   previousClub?: Prisma.SortOrder
   certificateUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  pendingReason?: Prisma.SortOrder
   type?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -683,6 +705,7 @@ export type MembershipCreateWithoutUserInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -699,6 +722,7 @@ export type MembershipUncheckedCreateWithoutUserInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   paymentId?: string | null
   createdAt?: Date | string
@@ -744,6 +768,7 @@ export type MembershipScalarWhereInput = {
   previousClub?: Prisma.StringNullableFilter<"Membership"> | string | null
   certificateUrl?: Prisma.StringNullableFilter<"Membership"> | string | null
   status?: Prisma.EnumMembershipStatusFilter<"Membership"> | $Enums.MembershipStatus
+  pendingReason?: Prisma.StringNullableFilter<"Membership"> | string | null
   type?: Prisma.EnumMembershipTypeFilter<"Membership"> | $Enums.MembershipType
   paymentId?: Prisma.StringNullableFilter<"Membership"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Membership"> | Date | string
@@ -757,6 +782,7 @@ export type MembershipCreateWithoutSeasonInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -773,6 +799,7 @@ export type MembershipUncheckedCreateWithoutSeasonInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   paymentId?: string | null
   createdAt?: Date | string
@@ -813,6 +840,7 @@ export type MembershipCreateWithoutPartnerOfInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -830,6 +858,7 @@ export type MembershipUncheckedCreateWithoutPartnerOfInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   paymentId?: string | null
   createdAt?: Date | string
@@ -848,6 +877,7 @@ export type MembershipCreateWithoutPartnerInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -865,6 +895,7 @@ export type MembershipUncheckedCreateWithoutPartnerInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   paymentId?: string | null
   createdAt?: Date | string
@@ -894,6 +925,7 @@ export type MembershipUpdateWithoutPartnerOfInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -911,6 +943,7 @@ export type MembershipUncheckedUpdateWithoutPartnerOfInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -935,6 +968,7 @@ export type MembershipUpdateWithoutPartnerInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -952,6 +986,7 @@ export type MembershipUncheckedUpdateWithoutPartnerInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -965,6 +1000,7 @@ export type MembershipCreateWithoutPaymentInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -982,6 +1018,7 @@ export type MembershipUncheckedCreateWithoutPaymentInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1022,6 +1059,7 @@ export type MembershipCreateManyUserInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   paymentId?: string | null
   createdAt?: Date | string
@@ -1035,6 +1073,7 @@ export type MembershipUpdateWithoutUserInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1051,6 +1090,7 @@ export type MembershipUncheckedUpdateWithoutUserInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1066,6 +1106,7 @@ export type MembershipUncheckedUpdateManyWithoutUserInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1080,6 +1121,7 @@ export type MembershipCreateManySeasonInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   paymentId?: string | null
   createdAt?: Date | string
@@ -1093,6 +1135,7 @@ export type MembershipUpdateWithoutSeasonInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1109,6 +1152,7 @@ export type MembershipUncheckedUpdateWithoutSeasonInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1124,6 +1168,7 @@ export type MembershipUncheckedUpdateManyWithoutSeasonInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1139,6 +1184,7 @@ export type MembershipCreateManyPaymentInput = {
   previousClub?: string | null
   certificateUrl?: string | null
   status?: $Enums.MembershipStatus
+  pendingReason?: string | null
   type?: $Enums.MembershipType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1151,6 +1197,7 @@ export type MembershipUpdateWithoutPaymentInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1168,6 +1215,7 @@ export type MembershipUncheckedUpdateWithoutPaymentInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1183,6 +1231,7 @@ export type MembershipUncheckedUpdateManyWithoutPaymentInput = {
   previousClub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   certificateUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumMembershipStatusFieldUpdateOperationsInput | $Enums.MembershipStatus
+  pendingReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1199,6 +1248,7 @@ export type MembershipSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   previousClub?: boolean
   certificateUrl?: boolean
   status?: boolean
+  pendingReason?: boolean
   type?: boolean
   paymentId?: boolean
   createdAt?: boolean
@@ -1219,6 +1269,7 @@ export type MembershipSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   previousClub?: boolean
   certificateUrl?: boolean
   status?: boolean
+  pendingReason?: boolean
   type?: boolean
   paymentId?: boolean
   createdAt?: boolean
@@ -1238,6 +1289,7 @@ export type MembershipSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   previousClub?: boolean
   certificateUrl?: boolean
   status?: boolean
+  pendingReason?: boolean
   type?: boolean
   paymentId?: boolean
   createdAt?: boolean
@@ -1257,6 +1309,7 @@ export type MembershipSelectScalar = {
   previousClub?: boolean
   certificateUrl?: boolean
   status?: boolean
+  pendingReason?: boolean
   type?: boolean
   paymentId?: boolean
   createdAt?: boolean
@@ -1264,7 +1317,7 @@ export type MembershipSelectScalar = {
   partnerId?: boolean
 }
 
-export type MembershipOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "seasonId" | "ffaLicenseNumber" | "previousClub" | "certificateUrl" | "status" | "type" | "paymentId" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["membership"]>
+export type MembershipOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "seasonId" | "ffaLicenseNumber" | "previousClub" | "certificateUrl" | "status" | "pendingReason" | "type" | "paymentId" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["membership"]>
 export type MembershipInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   season?: boolean | Prisma.SeasonDefaultArgs<ExtArgs>
@@ -1302,6 +1355,7 @@ export type $MembershipPayload<ExtArgs extends runtime.Types.Extensions.Internal
     previousClub: string | null
     certificateUrl: string | null
     status: $Enums.MembershipStatus
+    pendingReason: string | null
     type: $Enums.MembershipType
     paymentId: string | null
     createdAt: Date
@@ -1742,6 +1796,7 @@ export interface MembershipFieldRefs {
   readonly previousClub: Prisma.FieldRef<"Membership", 'String'>
   readonly certificateUrl: Prisma.FieldRef<"Membership", 'String'>
   readonly status: Prisma.FieldRef<"Membership", 'MembershipStatus'>
+  readonly pendingReason: Prisma.FieldRef<"Membership", 'String'>
   readonly type: Prisma.FieldRef<"Membership", 'MembershipType'>
   readonly paymentId: Prisma.FieldRef<"Membership", 'String'>
   readonly createdAt: Prisma.FieldRef<"Membership", 'DateTime'>

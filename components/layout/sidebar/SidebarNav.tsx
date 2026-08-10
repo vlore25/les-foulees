@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/side-bat";
 import { ItemsNavAdmin, ItemsNavUser } from "./ItemsNav";
@@ -14,9 +14,13 @@ interface SidebarNavProps {
 export function SidebarNav({ type, isAdmin }: SidebarNavProps) {
   const { setOpenMobile } = useSidebar();
   const pathname = usePathname();
+  const mountedPathnameRef = useRef(pathname);
 
   useEffect(() => {
-    setOpenMobile(false);
+    if (mountedPathnameRef.current !== pathname) {
+      setOpenMobile(false);
+      mountedPathnameRef.current = pathname;
+    }
   }, [pathname, setOpenMobile]);
 
   const navItems = type === "ADMIN" ? ItemsNavAdmin : ItemsNavUser;

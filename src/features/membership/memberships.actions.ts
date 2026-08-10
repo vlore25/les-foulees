@@ -703,6 +703,7 @@ export async function updatePPSCertificateAction(prevState: any, formData: FormD
             data: {
                 certificateUrl,
                 status: "PENDING", // Repasse en attente pour validation par l'administration
+                pendingReason: "Mise à jour PPS",
             }
         });
 

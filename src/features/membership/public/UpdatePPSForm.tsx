@@ -29,7 +29,7 @@ export function UpdatePPSForm({ currentCertificateUrl }: UpdatePPSFormProps) {
     }, [state?.success]);
 
     return (
-        <form action={action} className="space-y-4 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+        <form action={action} className="space-y-4">
             <div className="space-y-2">
                 <FileInput
                     id="medicalCertificate"

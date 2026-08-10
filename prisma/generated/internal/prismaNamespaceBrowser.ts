@@ -198,6 +198,7 @@ export const MembershipScalarFieldEnum = {
   previousClub: 'previousClub',
   certificateUrl: 'certificateUrl',
   status: 'status',
+  pendingReason: 'pendingReason',
   type: 'type',
   paymentId: 'paymentId',
   createdAt: 'createdAt',

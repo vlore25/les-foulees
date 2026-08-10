@@ -17,6 +17,7 @@ interface MembershipWithRelations {
     id: string;
     type: string;
     status: string;
+    pendingReason?: string | null;
     certificateUrl?: string | null;
     ffaLicenseNumber?: string | null;
     user: {
@@ -147,8 +148,15 @@ export default function MembershipTable({ memberships }: MembershipsListProps) {
 
                   
                                 <TableCell>
-                                    <div className="scale-110 origin-left">
-                                        {getStatusBadge(m.status)}
+                                    <div className="flex flex-col items-start gap-1">
+                                        <div className="scale-110 origin-left">
+                                            {getStatusBadge(m.status)}
+                                        </div>
+                                        {m.pendingReason && m.status === 'PENDING' && (
+                                            <span className="text-[10px] text-yellow-700 bg-yellow-50 px-1.5 py-0.5 rounded font-medium border border-yellow-200 whitespace-nowrap">
+                                                {m.pendingReason}
+                                            </span>
+                                        )}
                                     </div>
                                 </TableCell>
 
