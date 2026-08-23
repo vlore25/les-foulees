@@ -87,7 +87,7 @@ export default function EventListVisitor({ events }: { events: EventListItem[] }
                                     <Calendar size={16} className="text-primary shrink-0" />
                                     <span>
                                         {event.dateStart ? new Date(event.dateStart).toLocaleDateString('fr-FR', {
-                                            day: 'numeric', month: 'long', year: 'numeric'
+                                            day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris'
                                         }) : "Date à venir"}
                                     </span>
                                 </div>

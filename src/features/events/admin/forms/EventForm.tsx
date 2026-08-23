@@ -250,9 +250,13 @@ function EventDatePicker({ name, initialDate }: { name: string, initialDate?: Da
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState<Date | undefined>(initialDate ? new Date(initialDate) : undefined);
 
+    const getNoonUtcString = (d: Date) => {
+        return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0)).toISOString();
+    };
+
     return (
         <>
-            <input type="hidden" name={name} value={date ? date.toISOString() : ""} />
+            <input type="hidden" name={name} value={date ? getNoonUtcString(date) : ""} />
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button

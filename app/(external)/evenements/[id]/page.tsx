@@ -72,7 +72,7 @@ export default async function EventDetailsPage({ params }: { params: Params }) {
                                     <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">Date</p>
                                     <p className="font-bold text-slate-700 italic">
                                         {dateStart ? dateStart.toLocaleDateString('fr-FR', {
-                                            day: 'numeric', month: 'long', year: 'numeric'
+                                            day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris'
                                         }) : "À venir"}
                                     </p>
                                 </div>
