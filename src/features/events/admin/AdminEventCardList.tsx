@@ -65,7 +65,7 @@ export default function AdminEventCardList({ events }: { events: EventListItem[]
                                 <div className="flex items-center gap-2">
                                     <Calendar size={12} className="text-primary/60 shrink-0" />
                                     <span>
-                                        {event.dateStart ? new Date(event.dateStart).toLocaleDateString('fr-FR') : "À venir"}
+                                        {event.dateStart ? new Date(event.dateStart).toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' }) : "À venir"}
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2">

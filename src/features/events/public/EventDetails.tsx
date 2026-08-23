@@ -101,7 +101,8 @@ export default function EventDetails({ event }: EventDetailsProps) {
                                                 ? new Date(event.dateStart).toLocaleDateString("fr-FR", {
                                                     day: "numeric",
                                                     month: "long",
-                                                    year: "numeric"
+                                                    year: "numeric",
+                                                    timeZone: "Europe/Paris"
                                                 })
                                                 : "À définir"
                                             }
@@ -113,7 +114,8 @@ export default function EventDetails({ event }: EventDetailsProps) {
                                                     {new Date(event.dateEnd).toLocaleDateString("fr-FR", {
                                                         day: "numeric",
                                                         month: "long",
-                                                        year: "numeric"
+                                                        year: "numeric",
+                                                        timeZone: "Europe/Paris"
                                                     })}
                                                 </span>
                                             </>

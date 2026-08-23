@@ -32,7 +32,10 @@ export default function EventsTableDesktop({ events }: EventsProps) {
                                 <TableCell>
                                     {event.dateStart
                                         ? new Date(event.dateStart).toLocaleDateString("fr-FR", {
-                                            day: "2-digit", month: "short", year: "numeric"
+                                            day: "numeric",
+                                            month: "short",
+                                            year: "numeric",
+                                            timeZone: "Europe/Paris"
                                         })
                                         : "Pas de date"
                                     }
@@ -40,7 +43,10 @@ export default function EventsTableDesktop({ events }: EventsProps) {
                                 <TableCell>
                                     {event.dateEnd
                                         ? new Date(event.dateEnd).toLocaleDateString("fr-FR", {
-                                            day: "2-digit", month: "short", year: "numeric"
+                                            day: "numeric",
+                                            month: "short",
+                                            year: "numeric",
+                                            timeZone: "Europe/Paris"
                                         })
                                         : "-"
                                     }

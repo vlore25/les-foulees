@@ -102,7 +102,8 @@ export default function EventsCardMobile({ events }: EventsProps) {
                                                 ? new Date(event.dateStart).toLocaleDateString("fr-FR", {
                                                     day: "numeric",
                                                     month: "long",
-                                                    year: "numeric"
+                                                    year: "numeric",
+                                                    timeZone: "Europe/Paris"
                                                 })
                                                 : "À définir"
                                             }

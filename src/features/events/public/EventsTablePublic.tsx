@@ -28,7 +28,8 @@ export default function EventsTablePublic({ events }: EventsProps) {
                                         ? new Date(event.dateStart).toLocaleDateString("fr-FR", {
                                             day: "numeric",
                                             month: "long",
-                                            year: "numeric"
+                                            year: "numeric",
+                                            timeZone: "Europe/Paris"
                                         })
                                         : "Pas de date"
                                     }

@@ -264,7 +264,7 @@ function EventDatePicker({ name, initialDate }: { name: string, initialDate?: Da
                     >
                         <span className="flex items-center">
                             <CalendarIcon className="mr-2 h-4 w-4 text-primary" />
-                            {date ? date.toLocaleDateString("fr-FR", { day: 'numeric', month: 'long', year: 'numeric' }) : <span>Choisir une date</span>}
+                            {date ? date.toLocaleDateString("fr-FR", { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' }) : <span>Choisir une date</span>}
                         </span>
                         <ChevronDownIcon className="h-4 w-4 opacity-50" />
                     </Button>
