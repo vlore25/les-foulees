@@ -8,6 +8,11 @@ import { getActiveSeasonData } from "../season/dal"
 import { getProfile } from "../account/dal"
 import { deleteUploadedFile, saveUploadedFile } from "@/src/lib/file-storage"
 import { MembershipType, PaymentMethod, PaymentStatus, MembershipStatus } from "@/prisma/generated/enums"
+import { Resend } from "resend"
+import { MembershipValidatedEmail } from "@/components/email-templates/MembershipValidatedTemplate"
+import { MembershipRejectedEmail } from "@/components/email-templates/MembershipRejectedTemplate"
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export type MembershipState = {
     errors?: {
@@ -354,12 +359,22 @@ export async function validateMembershipAction(membershipId: string) {
     if (!await verifyAdmin()) return { success: false, message: "Action non autorisée." };
 
     try {
-        await prisma.membership.update({
+        const updated = await prisma.membership.update({
             where: { id: membershipId },
             data: {
                 status: "VALIDATED",
-            }
+            },
+            include: { user: true }
         })
+
+        if (updated.user?.email) {
+            await resend.emails.send({
+                from: 'Les Foulées Avrillaises <ne-pas-repondre@mail.lesfouleesavrillaises.fr>',
+                to: [updated.user.email],
+                subject: 'Votre adhésion est validée !',
+                react: MembershipValidatedEmail({ userName: updated.user.name || 'Membre' })
+            });
+        }
 
         revalidatePath("/espace-membre/adhesion")
         revalidatePath("/admin/adherants")
@@ -375,12 +390,22 @@ export async function refuseMembershipAction(membershipId: string) {
     if (!await verifyAdmin()) return { success: false, message: "Action non autorisée." };
 
     try {
-        await prisma.membership.update({
+        const updated = await prisma.membership.update({
             where: { id: membershipId },
             data: {
                 status: "REJECTED",
-            }
+            },
+            include: { user: true }
         });
+
+        if (updated.user?.email) {
+            await resend.emails.send({
+                from: 'Les Foulées Avrillaises <ne-pas-repondre@mail.lesfouleesavrillaises.fr>',
+                to: [updated.user.email],
+                subject: 'Action requise : Votre dossier d\'adhésion',
+                react: MembershipRejectedEmail({ userName: updated.user.name || 'Membre' })
+            });
+        }
 
         revalidatePath("/espace-membre/adhesion")
         revalidatePath("/admin/adherants")
@@ -537,10 +562,10 @@ export async function createManualMembershipAction(prevState: any, formData: For
     }
 
     try {
-        // Fetch users to get names/lastnames for file uploads
+        // Fetch users to get names/lastnames for file uploads and notifications
         const mainUser = await prisma.user.findUnique({
             where: { id: userId },
-            select: { lastname: true }
+            select: { lastname: true, name: true, email: true }
         });
         if (!mainUser) return { message: "L'utilisateur principal sélectionné n'existe pas." };
 
@@ -548,7 +573,7 @@ export async function createManualMembershipAction(prevState: any, formData: For
         if (type === "COUPLE" && partnerUserId) {
             partnerUser = await prisma.user.findUnique({
                 where: { id: partnerUserId },
-                select: { lastname: true }
+                select: { lastname: true, name: true, email: true }
             });
             if (!partnerUser) return { message: "Le partenaire sélectionné n'existe pas." };
         }
@@ -637,6 +662,25 @@ export async function createManualMembershipAction(prevState: any, formData: For
                 });
             }
         });
+
+        if (membershipStatus === "VALIDATED") {
+            if (mainUser.email) {
+                await resend.emails.send({
+                    from: 'Les Foulées Avrillaises <ne-pas-repondre@mail.lesfouleesavrillaises.fr>',
+                    to: [mainUser.email],
+                    subject: 'Votre adhésion est validée !',
+                    react: MembershipValidatedEmail({ userName: mainUser.name || 'Membre' })
+                });
+            }
+            if (type === "COUPLE" && partnerUser?.email) {
+                await resend.emails.send({
+                    from: 'Les Foulées Avrillaises <ne-pas-repondre@mail.lesfouleesavrillaises.fr>',
+                    to: [partnerUser.email],
+                    subject: 'Votre adhésion est validée !',
+                    react: MembershipValidatedEmail({ userName: partnerUser.name || 'Membre' })
+                });
+            }
+        }
 
         revalidatePath("/admin/adherants");
         revalidatePath("/admin/paiements");

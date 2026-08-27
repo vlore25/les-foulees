@@ -1,20 +1,15 @@
-// components/email-templates/RecoverPasswordTemplate.tsx
 import * as React from 'react';
+import { EmailLayout } from './EmailLayout';
 
 interface RecoverTemplateProps {
   recoverLink: string;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.lesfouleesavrillaises.fr';
-const logoUrl = `${baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl}/logo/foulees-logo.png`;
-
 export function RecoverPasswordTemplate({ recoverLink }: RecoverTemplateProps) {
-  return (
-    <div style={{ fontFamily: 'sans-serif', color: '#333', padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-        <img src={logoUrl} alt="Les Foulées Avrillaises" style={{ maxWidth: '150px' }} />
-      </div>
+  const disclaimer = "Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email en toute sécurité. Votre mot de passe actuel restera inchangé.";
 
+  return (
+    <EmailLayout footerDisclaimer={disclaimer}>
       <h2 style={{ color: '#1a1a1a', textAlign: 'center' }}>Réinitialisation de mot de passe</h2>
       
       <p style={{ fontSize: '16px', lineHeight: '1.5' }}>Bonjour,</p>
@@ -48,25 +43,6 @@ export function RecoverPasswordTemplate({ recoverLink }: RecoverTemplateProps) {
         Si le bouton ne fonctionne pas, vous pouvez copier et coller ce lien dans votre navigateur :<br/>
         <a href={recoverLink} style={{ color: '#0066cc', wordBreak: 'break-all' }}>{recoverLink}</a>
       </p>
-
-      <hr style={{ border: 'none', borderTop: '1px solid #eee', margin: '30px 0' }} />
-
-      <div style={{ fontSize: '14px', color: '#666', textAlign: 'center' }}>
-        <p style={{ margin: '5px 0' }}><strong>Les Foulées Avrillaises</strong></p>
-        <p style={{ margin: '5px 0' }}>
-          Stade Auguste Delaune<br/>
-          Rond Point du Général de Gaulle<br/>
-          49240 Avrillé
-        </p>
-        <p style={{ margin: '5px 0' }}>
-          Email : <a href="mailto:contact@lesfouleesavrillaises.fr" style={{ color: '#0066cc' }}>contact@lesfouleesavrillaises.fr</a>
-        </p>
-      </div>
-
-      <p style={{ fontSize: '12px', color: '#888', textAlign: 'center', marginTop: '20px' }}>
-        Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email en toute sécurité. 
-        Votre mot de passe actuel restera inchangé.
-      </p>
-    </div>
+    </EmailLayout>
   );
 }

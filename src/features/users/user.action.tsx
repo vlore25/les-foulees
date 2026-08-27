@@ -14,10 +14,10 @@ import { getProfile } from '../account/dal';
  * Helper pour vérifier si l'utilisateur est admin
  */
 async function verifyAdmin() {
-    const session = await getSession();
-    if (!session?.userId) return false;
-    const user = await getProfile(session.userId);
-    return user?.role === 'ADMIN';
+  const session = await getSession();
+  if (!session?.userId) return false;
+  const user = await getProfile(session.userId);
+  return user?.role === 'ADMIN';
 }
 
 export async function searchPartnerByName(query: string) {
@@ -155,12 +155,18 @@ export async function sendInviteAction(prevState: InviteUserState, formData: For
       to: [email],
       subject: 'Invitation à rejoindre les Foulées Avrillaises',
       html: emailHtml,
+      attachments: [
+        {
+          path: 'https://uuukalgwtpny3ch1.public.blob.vercel-storage.com/docs/rib__1785245789560.pdf',
+          filename: 'RIB.pdf'
+        }
+      ]
     });
 
     revalidatePath("/admin/utilisateurs");
 
-    return { 
-      success: true, 
+    return {
+      success: true,
       message: `Invitation envoyée avec succès à ${email}`,
     };
 
@@ -197,8 +203,8 @@ export async function resendInviteAction(email: string) {
 
     revalidatePath("/admin/utilisateurs");
 
-    return { 
-      success: true, 
+    return {
+      success: true,
       message: `Invitation renvoyée avec succès à ${email}`,
     };
 
@@ -214,25 +220,25 @@ export async function statusUserAction(userId: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { status: true }, 
+      select: { status: true },
     });
 
     if (!user) {
       throw new Error("Utilisateur non trouvé");
     }
 
-    const newStatus = user.status === "ACTIVE" ? "INACTIVE" : "ACTIVE"; 
+    const newStatus = user.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
 
     await prisma.user.update({
       where: { id: userId },
-      data: { 
+      data: {
         status: newStatus,
         deactivatedAt: newStatus === "INACTIVE" ? new Date() : null,
       },
     });
 
     revalidatePath("/admin/utilisateurs");
-    revalidatePath(`/admin/utilisateurs/${userId}`); 
+    revalidatePath(`/admin/utilisateurs/${userId}`);
 
     return { success: true, status: newStatus };
   } catch (error) {
@@ -247,7 +253,7 @@ export async function toggleRoleUserAction(userId: string) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { role: true }, 
+      select: { role: true },
     });
 
     if (!user) {
@@ -262,7 +268,7 @@ export async function toggleRoleUserAction(userId: string) {
     });
 
     revalidatePath("/admin/utilisateurs");
-    revalidatePath(`/admin/utilisateurs/${userId}`); 
+    revalidatePath(`/admin/utilisateurs/${userId}`);
 
     return { success: true, role: newRole };
   } catch (error) {
@@ -295,38 +301,38 @@ export async function anonymizeUserAction(userId: string) {
   if (!await verifyAdmin()) return { success: false, error: "Action non autorisée." };
 
   try {
-      const userToAnon = await prisma.user.findUnique({ where: { id: userId }, select: { profileImageUrl: true } });
-      if (userToAnon?.profileImageUrl) {
-          const { deleteUploadedFile } = await import('@/src/lib/file-storage');
-          await deleteUploadedFile(userToAnon.profileImageUrl);
-      }
+    const userToAnon = await prisma.user.findUnique({ where: { id: userId }, select: { profileImageUrl: true } });
+    if (userToAnon?.profileImageUrl) {
+      const { deleteUploadedFile } = await import('@/src/lib/file-storage');
+      await deleteUploadedFile(userToAnon.profileImageUrl);
+    }
 
-      await prisma.user.update({
-          where: { id: userId },
-          data: {
-              name: "Ancien",
-              lastname: "Utilisateur",
-              email: `anonyme_${userId.substring(0, 8)}@les-foulees.fr`,
-              phone: null,
-              address: "Effacée",
-              zipCode: "00000",
-              city: "Effacée",
-              birthdate: null,
-              emergencyName: null,
-              emergencyLastName: null,
-              emergencyPhone: null,
-              profileImageUrl: null,
-              status: "INACTIVE",
-              deactivatedAt: new Date(),
-              password: "",
-              showEmailDirectory: false,
-              showPhoneDirectory: false
-          }
-      });
-      revalidatePath("/admin/utilisateurs");
-      revalidatePath(`/admin/utilisateurs/${userId}`);
-      return { success: true };
-  } catch(e) {
-      return { success: false, error: "Erreur lors de l'anonymisation" };
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        name: "Ancien",
+        lastname: "Utilisateur",
+        email: `anonyme_${userId.substring(0, 8)}@les-foulees.fr`,
+        phone: null,
+        address: "Effacée",
+        zipCode: "00000",
+        city: "Effacée",
+        birthdate: null,
+        emergencyName: null,
+        emergencyLastName: null,
+        emergencyPhone: null,
+        profileImageUrl: null,
+        status: "INACTIVE",
+        deactivatedAt: new Date(),
+        password: "",
+        showEmailDirectory: false,
+        showPhoneDirectory: false
+      }
+    });
+    revalidatePath("/admin/utilisateurs");
+    revalidatePath(`/admin/utilisateurs/${userId}`);
+    return { success: true };
+  } catch (e) {
+    return { success: false, error: "Erreur lors de l'anonymisation" };
   }
 }
