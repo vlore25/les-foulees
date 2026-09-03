@@ -8,7 +8,6 @@ import EmptyCategory from "@/components/common/feedback/EmptyCategory";
 export default async function TrainingSchedule() {
 
     let tableItems = await getTrainingSchedules();
-    console.log(tableItems)
     if (tableItems.length === 0) {
         return (
             <EmptyCategory emptyIcon={Calendar} text="Horaires des entraînements bientôt disponibles" />
@@ -36,7 +35,7 @@ export default async function TrainingSchedule() {
                                         {item.day}
                                     </h4>
                                 </div>
-                                
+
                                 <div className="p-6 relative bg-white">
                                     <div className="space-y-4 text-slate-700 font-medium">
                                         <div className="flex items-center gap-4">

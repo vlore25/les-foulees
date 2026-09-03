@@ -657,33 +657,38 @@ function GenreSelect({
   genre: string;
   initialValue?: string;
 }) {
+  const [val, setVal] = useState(initialValue || "");
+  
   return (
-    <Select name={genre} defaultValue={initialValue}>
-      <SelectTrigger className="w-full border-slate-200 font-bold">
-        <SelectValue placeholder="Genre" />
-      </SelectTrigger>
-      <SelectContent className="rounded-lg shadow-xl border-slate-100">
-        <SelectGroup>
-          <SelectItem
-            value="FEMALE"
-            className="font-bold text-sm py-3 rounded-lg"
-          >
-            Femme
-          </SelectItem>
-          <SelectItem
-            value="MALE"
-            className="font-bold text-sm py-3 rounded-lg"
-          >
-            Homme
-          </SelectItem>
-          <SelectItem
-            value="OTHER"
-            className="font-bold text-sm py-3 rounded-lg"
-          >
-            Autre
-          </SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <>
+      <input type="hidden" name={genre} value={val} />
+      <Select defaultValue={initialValue} onValueChange={setVal}>
+        <SelectTrigger className="w-full border-slate-200 font-bold">
+          <SelectValue placeholder="Genre" />
+        </SelectTrigger>
+        <SelectContent className="rounded-lg shadow-xl border-slate-100">
+          <SelectGroup>
+            <SelectItem
+              value="FEMALE"
+              className="font-bold text-sm py-3 rounded-lg"
+            >
+              Femme
+            </SelectItem>
+            <SelectItem
+              value="MALE"
+              className="font-bold text-sm py-3 rounded-lg"
+            >
+              Homme
+            </SelectItem>
+            <SelectItem
+              value="OTHER"
+              className="font-bold text-sm py-3 rounded-lg"
+            >
+              Autre
+            </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </>
   );
 }

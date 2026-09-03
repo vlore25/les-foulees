@@ -278,20 +278,28 @@ function FormInput({ label, name, defaultValue, error, placeholder }: FormInputP
 }
 
 function GenreSelect({ name, defaultValue, onValueChange }: { name: string, defaultValue?: string, onValueChange?: (value: string) => void }) {
+    const [val, setVal] = useState(defaultValue || "");
+    
     return (
-        <Select name={name} defaultValue={defaultValue} onValueChange={onValueChange}>
-            <SelectTrigger className="w-full mt-1">
-                <SelectValue placeholder="Indiquer votre genre" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                    <SelectLabel>Genre</SelectLabel>
-                    <SelectItem value="FEMALE">Femme</SelectItem>
-                    <SelectItem value="MALE">Homme</SelectItem>
-                    <SelectItem value="OTHER">Autre</SelectItem>
-                </SelectGroup>
-            </SelectContent>
-        </Select>
+        <>
+            <input type="hidden" name={name} value={val} />
+            <Select defaultValue={defaultValue} onValueChange={(value) => {
+                setVal(value);
+                if (onValueChange) onValueChange(value);
+            }}>
+                <SelectTrigger className="w-full mt-1">
+                    <SelectValue placeholder="Indiquer votre genre" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        <SelectLabel>Genre</SelectLabel>
+                        <SelectItem value="FEMALE">Femme</SelectItem>
+                        <SelectItem value="MALE">Homme</SelectItem>
+                        <SelectItem value="OTHER">Autre</SelectItem>
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
+        </>
     );
 }
 
