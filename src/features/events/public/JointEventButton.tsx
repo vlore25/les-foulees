@@ -13,12 +13,13 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/Label";
 import { Switch } from "@/components/ui/switch";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface JoinButtonProps {
   eventId: string;
+  eventType?: string;
   isParticipant: boolean;
   distances?: string[];
   meals?: string[];
@@ -28,10 +29,11 @@ interface JoinButtonProps {
   userAccommodations?: string[];
 }
 
-export default function JoinEventButton({ 
-  eventId, 
-  isParticipant, 
-  distances = [], 
+export default function JoinEventButton({
+  eventId,
+  eventType,
+  isParticipant,
+  distances = [],
   meals = [],
   accommodations = [],
   userDistance = null,
@@ -39,18 +41,20 @@ export default function JoinEventButton({
   userAccommodations = []
 }: JoinButtonProps) {
   const [isPending, startTransition] = useTransition();
-  
+
   const [selectedDistance, setSelectedDistance] = useState<string | null>(distances.length > 0 ? distances[0] : null);
   const [selectedMeals, setSelectedMeals] = useState<string[]>([]);
   const [selectedAccommodations, setSelectedAccommodations] = useState<string[]>([]);
   const [carpooling, setCarpooling] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  const isRace = eventType === "TRAIL" || eventType === "COURSE_ROUTE";
+
   // Fonction pour l'inscription 
   const handleJoin = () => {
     startTransition(async () => {
       const result = await joinEventAction(eventId, selectedDistance, selectedMeals, selectedAccommodations, carpooling);
-      
+
       if (!result?.success) {
         toast.error(result?.message || "Une erreur est survenue lors de l'inscription.");
       } else {
@@ -64,7 +68,7 @@ export default function JoinEventButton({
   const handleLeave = () => {
     startTransition(async () => {
       const result = await leaveEventAction(eventId);
-      
+
       if (!result?.success) {
         toast.error(result?.message || "Une erreur est survenue lors de la désinscription.");
       } else {
@@ -74,13 +78,13 @@ export default function JoinEventButton({
   };
 
   const toggleMeal = (option: string) => {
-    setSelectedMeals(prev => 
+    setSelectedMeals(prev =>
       prev.includes(option) ? prev.filter(p => p !== option) : [...prev, option]
     );
   };
 
   const toggleAccommodation = (option: string) => {
-    setSelectedAccommodations(prev => 
+    setSelectedAccommodations(prev =>
       prev.includes(option) ? prev.filter(p => p !== option) : [...prev, option]
     );
   };
@@ -88,16 +92,16 @@ export default function JoinEventButton({
   if (isParticipant) {
     return (
       <div className="flex flex-col gap-2 items-center lg:items-start">
-        <Button 
-          className="lg:w-50 w-full"
-          onClick={handleLeave} 
+        <Button
+          className="lg:w-50 w-full rounded-full"
+          onClick={handleLeave}
           disabled={isPending}
-          variant="outlinerounded"
+          variant="outline"
         >
           {isPending ? "Chargement..." : "Se désinscrire"}
         </Button>
         <div className="flex flex-col text-xs text-muted-foreground mt-2">
-          {userDistance && <p>Distance : <span className="font-medium">{userDistance}</span></p>}
+          {userDistance && <p>Participation : <span className="font-medium">{userDistance}</span></p>}
           {userMeals.length > 0 && <p>Repas : <span className="font-medium">{userMeals.join(", ")}</span></p>}
           {userAccommodations.length > 0 && <p>Hébergement : <span className="font-medium">{userAccommodations.join(", ")}</span></p>}
         </div>
@@ -118,8 +122,16 @@ export default function JoinEventButton({
             Inscription à l'événement
           </DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-6 py-4">
+          {isRace && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-md text-sm leading-relaxed">
+              <strong>Attention cette étape ne vous inscrit pas à la course !</strong><br />
+              Votre démarche ici permet uniquement d'informer les autres membres du club de votre présence (pour s'organiser, covoiturer, etc.).<br />
+              Pour valider votre vraie inscription à l'épreuve : Veuillez utiliser le lien officiel présent dans le descriptif de l'événement.
+            </div>
+          )}
+
           {distances.length > 0 && (
             <div className="space-y-4">
               <h4 className="text-sm font-semibold text-muted-foreground">Distance / Rôle</h4>
@@ -141,8 +153,8 @@ export default function JoinEventButton({
               <h4 className="text-sm font-semibold text-muted-foreground">Repas</h4>
               {meals.map((meal) => (
                 <div key={meal} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`meal-${meal}`} 
+                  <Checkbox
+                    id={`meal-${meal}`}
                     checked={selectedMeals.includes(meal)}
                     onCheckedChange={() => toggleMeal(meal)}
                   />
@@ -159,8 +171,8 @@ export default function JoinEventButton({
               <h4 className="text-sm font-semibold text-muted-foreground">Hébergement</h4>
               {accommodations.map((acc) => (
                 <div key={acc} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`acc-${acc}`} 
+                  <Checkbox
+                    id={`acc-${acc}`}
                     checked={selectedAccommodations.includes(acc)}
                     onCheckedChange={() => toggleAccommodation(acc)}
                   />
@@ -173,8 +185,8 @@ export default function JoinEventButton({
           )}
 
           <div className="flex items-center space-x-2 pt-4 border-t border-primary/10">
-            <Switch 
-              id="carpooling-switch" 
+            <Switch
+              id="carpooling-switch"
               checked={carpooling}
               onCheckedChange={setCarpooling}
             />
@@ -182,9 +194,9 @@ export default function JoinEventButton({
               Je propose un covoiturage
             </Label>
           </div>
-          
+
           <Button className="w-full mt-4" onClick={handleJoin} disabled={isPending || (distances.length > 0 && !selectedDistance)}>
-             {isPending ? "Validation..." : "Valider mon inscription"}
+            {isPending ? "Validation..." : (isRace ? "J'ai compris, signaler ma présence" : "Valider mon inscription")}
           </Button>
         </div>
       </DialogContent>

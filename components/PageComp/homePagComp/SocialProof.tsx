@@ -8,7 +8,7 @@ import { Cake, Calendars, Users } from "lucide-react";
 export default async function SocialProof() {
     const eventsOfYears = await getEventsCountCurrentYear();
     const userCount = await getUsersCount();
-    const clubYears = (new Date().getFullYear() - 2018);
+    const clubYears = (new Date().getFullYear() - 2014);
 
     const socials = [
         {

@@ -216,6 +216,7 @@ export default function EventDetails({ event }: EventDetailsProps) {
                         <div className="flex flex-col gap-4">
                             <JoinEventButton
                                 eventId={event.id}
+                                eventType={event.type}
                                 isParticipant={event.isParticipant}
                                 distances={event.distances}
                                 meals={event.meals}
@@ -234,7 +235,21 @@ export default function EventDetails({ event }: EventDetailsProps) {
                 <div className="space-y-6">
                     <Quote>À propos de l'événement</Quote>
                     <TypographyP className="whitespace-pre-wrap text-foreground text-base">
-                        {event.description || "Aucune description fournie pour cet événement."}
+                        {event.description ? (
+                            event.description.split(/(https?:\/\/[^\s]+|(?:www\.)?[a-zA-Z0-9.-]+\.(?:com|fr|net|org)(?:\/[^\s]*)?)/gi).map((part, i) => {
+                                if (!part) return null;
+                                const isUrl = /^(https?:\/\/[^\s]+|(?:www\.)?[a-zA-Z0-9.-]+\.(?:com|fr|net|org)(?:\/[^\s]*)?)$/i.test(part);
+                                if (isUrl) {
+                                    const href = part.toLowerCase().startsWith('http') ? part : `https://${part}`;
+                                    return (
+                                        <a key={i} href={href} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold break-all">
+                                            {part}
+                                        </a>
+                                    );
+                                }
+                                return part;
+                            })
+                        ) : "Aucune description fournie pour cet événement."}
                     </TypographyP>
                 </div>
             </div>

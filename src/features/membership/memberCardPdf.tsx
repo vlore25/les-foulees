@@ -10,6 +10,13 @@ interface MemberCardPdfProps {
     season: Season;
 }
 
+const TYPE_LABELS: Record<string, string> = {
+    INDIVIDUAL: "Individuel",
+    YOUNG: "Jeune (-18)",
+    LICENSE_RUNNING: "Licence Running (FFA)",
+    COUPLE: "Couple"
+};
+
 export async function memberCardPdf({ userData, memberShipData, season }: MemberCardPdfProps) {
 
 
@@ -17,9 +24,7 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
     const { type } = memberShipData
     const { startDate, endDate } = season
 
-    const capiType =
-        type.charAt(0)
-        + type.slice(1).toLowerCase().replace(/_/g, ' ')
+    const capiType = TYPE_LABELS[type] || (type.charAt(0) + type.slice(1).toLowerCase().replace(/_/g, ' '));
 
     try {
 
@@ -30,14 +35,13 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
         const pages = pdfDoc.getPages();
         const firstPage = pages[0];
         const firstHeight = 237;
-        const textColor = rgb(0.26, 0.23, 0.23);
-        const licenseTextColor = rgb(0.13, 0.52, 0.12)
+        const textColor = rgb(0.1, 0.1, 0.1);
 
         if (profileImageUrl) {
             try {
                 // Utiliser getAssetUrl pour avoir une URL de base
                 let imageUrl = getAssetUrl(profileImageUrl);
-                
+
                 // Si l'URL est relative, on la rend absolue pour la Server Action
                 if (!imageUrl.startsWith('http') && !imageUrl.startsWith('data:')) {
                     imageUrl = `${window.location.origin}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
@@ -99,7 +103,7 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
                     if (image) {
                         const width = 65;
                         const height = 65;
-                        
+
                         firstPage.drawImage(image, {
                             x: firstPage.getWidth() - 85.5,
                             y: 228,
@@ -114,6 +118,13 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
         }
 
         // Identité
+        firstPage.drawText(`${name} ${lastname}`, {
+            x: 15,
+            y: firstHeight,
+            size: 10,
+            font: helveticaFont,
+            color: textColor
+        });
         firstPage.drawText(`${name} ${lastname}`, {
             x: 15,
             y: firstHeight,
@@ -138,7 +149,7 @@ export async function memberCardPdf({ userData, memberShipData, season }: Member
             y: firstHeight - 32,
             size: 10,
             font: helveticaFont,
-            color: licenseTextColor
+            color: textColor
         });
 
         // 1. Generate the bytes
@@ -168,7 +179,7 @@ async function cropToCircle(imageBuffer: ArrayBuffer): Promise<ArrayBuffer> {
         const blob = new Blob([imageBuffer]);
         const url = URL.createObjectURL(blob);
         const img = new Image();
-        
+
         // Indispensable pour éviter les erreurs "tainted canvas" si l'image vient d'un autre port/domaine
         img.crossOrigin = "anonymous";
 

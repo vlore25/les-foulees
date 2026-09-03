@@ -21,14 +21,14 @@ const social = [
 
 const Footer = ({ className }: Footer2Props) => {
   return (
-    <section className={cn("bg-primary-400 text-primary-foreground mt-10", className)}>
+    <section className={cn("bg-white text-slate-600 border-t border-slate-200 mt-10", className)}>
       <div className="container max-w-6xl mx-auto px-4">
 
         <footer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 py-12 items-start">
           
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left lg:col-span-2">
             <FouleesLogo size={100} className="!w-[120px] lg:!w-[150px] mb-2" />
-            <div className="text-sm  space-y-1">
+            <div className="text-sm space-y-1 mt-2 text-slate-500">
               <p>{assoAdress.street}</p>
               <p>{assoAdress.codePostal} {assoAdress.city}</p>
               <p>{assoAdress.region}, {assoAdress.country}</p>
@@ -39,15 +39,16 @@ const Footer = ({ className }: Footer2Props) => {
                 alt="Ville d'Avrillé"
                 width={120}
                 height={70}
+                className="opacity-80 hover:opacity-100 transition-opacity"
               />
             </div>
           </div>
 
           <div className="flex flex-col items-center sm:items-start">
-            <h3 className="font-bold text-lg mb-4 text-white">Liens utiles</h3>
+            <h3 className="font-bold text-lg mb-4 text-primary-700">Liens utiles</h3>
             <ul className="space-y-3 text-sm">
               {navItems.map((item, i) => (
-                <li key={i} className="hover:underline">
+                <li key={i} className="hover:text-primary-600 transition-colors">
                   <Link href={item.href}>{item.title}</Link>
                 </li>
               ))}
@@ -55,13 +56,13 @@ const Footer = ({ className }: Footer2Props) => {
           </div>
 
           <div className="flex flex-col items-center sm:items-start">
-            <h3 className="font-bold text-lg mb-2 text-white">Nous suivre</h3>
-            <div className="flex gap-1">
+            <h3 className="font-bold text-lg mb-4 text-primary-700">Nous suivre</h3>
+            <div className="flex gap-2">
               {social.map((item) => (
                 <Link
                   key={item.title}
                   href={item.href}
-                  className="hover:scale-110 transition-transform p-2 bg-white/10 rounded-full"
+                  className="hover:scale-110 transition-transform p-2.5 bg-primary-50 text-primary-600 rounded-full hover:bg-primary-100 hover:text-primary-700"
                 >
                   {item.icon}
                 </Link>
@@ -70,16 +71,16 @@ const Footer = ({ className }: Footer2Props) => {
           </div>
         </footer>
 
-        <Separator className="bg-white h-[1px] w-full" />
+        <Separator className="bg-slate-200 h-[1px] w-full" />
 
-        <div className="flex flex-col md:flex-row justify-between items-center py-8 gap-6 text-[11px] uppercase tracking-widest ">
+        <div className="flex flex-col md:flex-row justify-between items-center py-8 gap-6 text-[11px] uppercase tracking-widest text-slate-500">
 
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             {navItemsFooter.map((item, i) => (
               <Link
                 key={i}
                 href={item.href}
-                className="hover:text-white hover:underline transition-colors"
+                className="hover:text-primary-600 transition-colors"
               >
                 {item.title}
               </Link>
@@ -88,9 +89,9 @@ const Footer = ({ className }: Footer2Props) => {
 
           <div className="flex flex-col md:flex-row items-center gap-x-2 text-center">
             <p>Copyright © 2026 Les Foulées Avrillaises</p>
-            <span className="hidden md:inline text-white">|</span>
+            <span className="hidden md:inline text-slate-300">|</span>
             <p>
-              Site par <a href={navItemsFooter2[1].href} className="underline font-bold">{navItemsFooter2[1].title}</a>
+              Site par <a href={navItemsFooter2[1].href} className="text-primary-600 font-bold hover:underline">{navItemsFooter2[1].title}</a>
             </p>
           </div>
         </div>
