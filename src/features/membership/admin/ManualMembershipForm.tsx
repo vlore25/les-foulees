@@ -116,7 +116,7 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                 {/* Form Main Controls */}
                 <div className="lg:col-span-2 space-y-6">
                     <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                        
+
                         {/* Section 1: User Selection */}
                         <div className="space-y-4">
                             <h2 className="text-sm font-black uppercase tracking-wider text-primary border-b pb-2 flex items-center gap-2">
@@ -140,9 +140,9 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="seasonId">Saison de l'adhésion <span className="text-red-500">*</span></Label>
-                                    <Select 
-                                        name="seasonId" 
-                                        value={selectedSeasonId} 
+                                    <Select
+                                        name="seasonId"
+                                        value={selectedSeasonId}
                                         onValueChange={setSelectedSeasonId}
                                     >
                                         <SelectTrigger className="rounded-lg">
@@ -163,9 +163,9 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
 
                                 <div className="space-y-2">
                                     <Label htmlFor="type">Type d'adhésion <span className="text-red-500">*</span></Label>
-                                    <Select 
-                                        name="type" 
-                                        value={membershipType} 
+                                    <Select
+                                        name="type"
+                                        value={membershipType}
                                         onValueChange={setMembershipType}
                                     >
                                         <SelectTrigger className="rounded-lg">
@@ -184,7 +184,7 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                                 </div>
                             </div>
 
-                             {/* Section Couple: Partner Selector */}
+                            {/* Section Couple: Partner Selector */}
                             {membershipType === "COUPLE" && (
                                 <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                     <div className="space-y-2">
@@ -260,7 +260,7 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                                 <h3 className="text-xs font-black uppercase text-slate-400 tracking-wider">
                                     Dossier Adhérent Principal
                                 </h3>
-                                
+
                                 <div className="flex items-center justify-between gap-4 p-3 bg-slate-50 border rounded-lg">
                                     <div className="space-y-0.5">
                                         <Label htmlFor="has-license-switch" className="text-xs">Licencié FFA ?</Label>
@@ -328,13 +328,11 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                                     <Label htmlFor="paymentMethod">Moyen de règlement <span className="text-red-500">*</span></Label>
                                     <Select name="paymentMethod" defaultValue="CASH">
                                         <SelectTrigger className="rounded-lg">
-                                            <SelectValue />
+                                            <SelectValue placeholder="Choisir..." />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="CASH">Espèces</SelectItem>
                                             <SelectItem value="CHECK">Chèque</SelectItem>
                                             <SelectItem value="TRANSFER">Virement Bancaire</SelectItem>
-                                            <SelectItem value="ONLINE">En ligne</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {state?.errors?.paymentMethod && (
@@ -394,10 +392,10 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                                         <Euro className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                     </div>
                                     {isAmountDirty && (
-                                        <Button 
-                                            type="button" 
-                                            variant="ghost" 
-                                            size="sm" 
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
                                             onClick={handleResetAmount}
                                             className="text-xs text-primary font-bold hover:bg-slate-50"
                                         >
@@ -451,9 +449,9 @@ export function ManualMembershipForm({ seasons }: ManualMembershipFormProps) {
                             </span>
                         </div>
 
-                        <Button 
-                            type="submit" 
-                            disabled={pending} 
+                        <Button
+                            type="submit"
+                            disabled={pending}
                             className="w-full py-6 rounded-lg font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
                         >
                             {pending ? (

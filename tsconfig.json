@@ -28,6 +28,9 @@
       ],
       "@prisma/*": [
         "./prisma/generated/*"
+      ],
+      "@features/*": [
+        "./src/features/*"
       ]
     },
   },

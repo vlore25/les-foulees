@@ -56,6 +56,9 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  verification: {
+    google: '8xoT_ljYKABvtk4ogIsmwVE5S0X5TeSqAaBIXBvFbcs'
+  }
 };
 
 export const viewport = {
@@ -75,8 +78,8 @@ export default async function RootLayout({
 
   return (
     <html lang="fr">
-      <Analytics/>
-      <SpeedInsights/>
+      <Analytics />
+      <SpeedInsights />
       <body
         className={`${vendSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -86,7 +89,7 @@ export default async function RootLayout({
           {children}
         </UserProvider>
       </body>
-      
+
     </html>
   );
 }

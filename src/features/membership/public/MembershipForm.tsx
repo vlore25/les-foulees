@@ -5,19 +5,33 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Loader2, UploadCloud, FileText } from "lucide-react" 
+import { Loader2, FileText } from "lucide-react"
 import { cn } from "@/src/lib/utils"
 import { createMembershipRequest } from "../memberships.actions"
 import { Label } from "@/components/ui/Label"
 import { Switch } from "@/components/ui/switch"
 import { SearchUser } from "./SearchUser"
-import { TypographyH3, TypographyP } from "@/components/ui/typography"
+import { TypographyH3 } from "@/components/ui/typography"
 import { FileInput } from "@/components/ui/file-input"
+
+function InfoActionCard({ message, actionText, actionHref, className }: { message: string, actionText: string, actionHref: string, className?: string }) {
+    return (
+        <div className={cn("bg-primary/5 border border-primary/10 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between text-sm gap-4", className)}>
+            <div className="flex items-center gap-3 text-primary">
+                <FileText className="w-5 h-5 flex-shrink-0" />
+                <span className="text-xs">{message}</span>
+            </div>
+            <a href={actionHref} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-primary hover:underline underline-offset-4 shrink-0">
+                {actionText}
+            </a>
+        </div>
+    );
+}
 
 interface MembershipFormProps {
     userProfile: any;
     season: any
-    initialData?: any; 
+    initialData?: any;
 }
 
 const initialState = {
@@ -30,6 +44,7 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
 
     const [state, action, pending] = useActionState(createMembershipRequest, initialState)
     const [membershipType, setMembershipType] = useState(initialData?.type || 'INDIVIDUAL')
+    const [paymentMethod, setPaymentMethod] = useState(initialData?.paymentMethod || initialData?.payment?.method || "TRANSFER")
 
     const [hasLicense, setHasLicense] = useState(
         initialData ? !!initialData.ffaLicenseNumber : !!userProfile.ffaNumber
@@ -48,244 +63,249 @@ export function MembershipForm({ userProfile, season, initialData }: MembershipF
     const isInvitedPartner = initialData && !!initialData.partnerId;
 
     return (
-            <form action={action} className="space-y-8 bg-white p-6 rounded-lg border shadow-sm">
+        <form action={action} className="space-y-8 bg-white p-6 rounded-lg border shadow-sm">
 
-                {initialData?.id && <input type="hidden" name="membershipId" value={initialData.id} />}
-                
-                {hasLicense && <input type="hidden" name="licenseType" value={licenseSource} />}
+            {initialData?.id && <input type="hidden" name="membershipId" value={initialData.id} />}
 
-                {state?.message && (
-                    <div className={cn(
-                        "p-4 rounded-lg text-sm flex flex-col gap-1",
-                        state.success ? "bg-green-100 text-green-700 border border-green-200" : "bg-red-100 text-red-700 border border-red-200"
-                    )}>
-                        <div className="font-bold flex items-center gap-2">
-                            {state.message}
+            {hasLicense && <input type="hidden" name="licenseType" value={licenseSource} />}
+
+            {state?.message && (
+                <div className={cn(
+                    "p-4 rounded-lg text-sm flex flex-col gap-1",
+                    state.success ? "bg-green-100 text-green-700 border border-green-200" : "bg-red-100 text-red-700 border border-red-200"
+                )}>
+                    <div className="font-bold flex items-center gap-2">
+                        {state.message}
+                    </div>
+                    {state?.errors && Object.keys(state.errors).length > 0 && (
+                        <ul className="list-disc list-inside text-xs mt-1 space-y-1">
+                            {Object.entries(state.errors).map(([field, errMsgs]) => {
+                                const labels: Record<string, string> = {
+                                    medicalCertificate: "Attestation PPS",
+                                    ffaLicenseNumber: "Numéro de licence FFA",
+                                    previousClub: "Ancien club",
+                                    partnerUserId: "Partenaire",
+                                    paymentMethod: "Moyen de paiement",
+                                    type: "Type d'adhésion"
+                                };
+                                const label = labels[field] || field;
+                                return (
+                                    <li key={field}>
+                                        <span className="font-semibold">{label} : </span>
+                                        {Array.isArray(errMsgs) ? errMsgs.join(", ") : String(errMsgs)}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    )}
+                </div>
+            )}
+
+            {/* Section Type d'adhésion : cachée pour le partenaire invité car déjà définie, ou désactivée si correction */}
+            {!isInvitedPartner ? (
+                <div className="space-y-4">
+                    <h3 className="text-lg font-black uppercase tracking-tight border-b pb-2 text-primary">1. Type d'adhésion</h3>
+
+                    {initialData && (
+                        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg mb-4">
+                            <p className="text-xs font-bold text-amber-700 uppercase">Modification de dossier</p>
+                            <p className="text-[10px] text-amber-600 italic">Le type d'adhésion ne peut plus être modifié une fois la demande soumise.</p>
                         </div>
-                        {state?.errors && Object.keys(state.errors).length > 0 && (
-                            <ul className="list-disc list-inside text-xs mt-1 space-y-1">
-                                {Object.entries(state.errors).map(([field, errMsgs]) => {
-                                    const labels: Record<string, string> = {
-                                        medicalCertificate: "Attestation PPS",
-                                        ffaLicenseNumber: "Numéro de licence FFA",
-                                        previousClub: "Ancien club",
-                                        partnerUserId: "Partenaire",
-                                        paymentMethod: "Moyen de paiement",
-                                        type: "Type d'adhésion"
-                                    };
-                                    const label = labels[field] || field;
-                                    return (
-                                        <li key={field}>
-                                            <span className="font-semibold">{label} : </span>
-                                            {Array.isArray(errMsgs) ? errMsgs.join(", ") : String(errMsgs)}
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        )}
-                    </div>
-                )}
+                    )}
 
-                {/* Section Type d'adhésion : cachée pour le partenaire invité car déjà définie, ou désactivée si correction */}
-                {!isInvitedPartner ? (
-                    <div className="space-y-4">
-                        <h3 className="text-lg font-black uppercase tracking-tight border-b pb-2 text-primary">1. Type d'adhésion</h3>
-                        
-                        {initialData && (
-                            <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg mb-4">
-                                <p className="text-xs font-bold text-amber-700 uppercase">Modification de dossier</p>
-                                <p className="text-[10px] text-amber-600 italic">Le type d'adhésion ne peut plus être modifié une fois la demande soumise.</p>
-                            </div>
-                        )}
+                    <RadioGroup
+                        name="type"
+                        value={membershipType}
+                        onValueChange={setMembershipType}
+                        disabled={!!initialData}
+                        className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                    >
+                        <div className={cn(
+                            "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
+                            !!initialData && "opacity-60 cursor-not-allowed"
+                        )}>
+                            <RadioGroupItem value="INDIVIDUAL" id="t-indi" disabled={!!initialData} />
+                            <Label htmlFor="t-indi">Individuel {season.priceStandard} €</Label>
+                        </div>
+                        <div className={cn(
+                            "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
+                            !!initialData && "opacity-60 cursor-not-allowed"
+                        )}>
+                            <RadioGroupItem value="COUPLE" id="t-couple" disabled={!!initialData} />
+                            <Label htmlFor="t-couple">Couple {season.priceCouple} €</Label>
+                        </div>
+                        <div className={cn(
+                            "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
+                            !!initialData && "opacity-60 cursor-not-allowed"
+                        )}>
+                            <RadioGroupItem value="YOUNG" id="t-young" disabled={!!initialData} />
+                            <Label htmlFor="t-young">Jeune -18 ans {season.priceYoung} €</Label>
+                        </div>
+                        <div className={cn(
+                            "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
+                            !!initialData && "opacity-60 cursor-not-allowed"
+                        )}>
+                            <RadioGroupItem value="LICENSE_RUNNING" id="t-run" disabled={!!initialData} />
+                            <Label htmlFor="t-run">Licence Running FFA {season.priceFfa} €</Label>
+                        </div>
+                    </RadioGroup>
+                    {initialData && <input type="hidden" name="type" value={membershipType} />}
+                    {state?.errors?.type && <p className="text-xs text-red-500 font-bold italic">{state.errors.type[0]}</p>}
 
-                        <RadioGroup
-                            name="type"
-                            value={membershipType}
-                            onValueChange={setMembershipType}
-                            disabled={!!initialData}
-                            className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-                        >
-                            <div className={cn(
-                                "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
-                                !!initialData && "opacity-60 cursor-not-allowed"
-                            )}>
-                                <RadioGroupItem value="INDIVIDUAL" id="t-indi" disabled={!!initialData} />
-                                <Label htmlFor="t-indi">Individuel {season.priceStandard} €</Label>
-                            </div>
-                            <div className={cn(
-                                "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
-                                !!initialData && "opacity-60 cursor-not-allowed"
-                            )}>
-                                <RadioGroupItem value="COUPLE" id="t-couple" disabled={!!initialData} />
-                                <Label htmlFor="t-couple">Couple {season.priceCouple} €</Label>
-                            </div>
-                            <div className={cn(
-                                "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
-                                !!initialData && "opacity-60 cursor-not-allowed"
-                            )}>
-                                <RadioGroupItem value="YOUNG" id="t-young" disabled={!!initialData} />
-                                <Label htmlFor="t-young">Jeune -18 ans {season.priceYoung} €</Label>
-                            </div>
-                            <div className={cn(
-                                "flex items-center space-x-3 border p-4 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5",
-                                !!initialData && "opacity-60 cursor-not-allowed"
-                            )}>
-                                <RadioGroupItem value="LICENSE_RUNNING" id="t-run" disabled={!!initialData} />
-                                <Label htmlFor="t-run">Licence Running FFA {season.priceFfa} €</Label>
-                            </div>
-                        </RadioGroup>
-                        {initialData && <input type="hidden" name="type" value={membershipType} />}
-                        {state?.errors?.type && <p className="text-xs text-red-500 font-bold italic">{state.errors.type[0]}</p>}
+                    {membershipType === "COUPLE" && (
+                        <div className="animate-in fade-in slide-in-from-top-2 duration-300 pt-4 space-y-3 border-t border-dashed mt-4">
+                            <Label>Chercher votre conjoint(e) <span className="text-red-500">*</span></Label>
+                            <p className="text-xs text-muted-foreground italic">Votre partenaire doit déjà avoir un compte sur le site.</p>
 
-                        {membershipType === "COUPLE" && (
-                            <div className="animate-in fade-in slide-in-from-top-2 duration-300 pt-4 space-y-3 border-t border-dashed mt-4">
-                                <Label>Chercher votre conjoint(e) <span className="text-red-500">*</span></Label>
-                                <p className="text-xs text-muted-foreground italic">Votre partenaire doit déjà avoir un compte sur le site.</p>
-                                
-                                {initialData ? (
-                                    <div className="p-3 bg-slate-50 border rounded-lg text-xs font-bold text-slate-500">
-                                        Partenaire déjà lié.
-                                        <input type="hidden" name="partnerUserId" value={initialData.partnerId || initialData.partnerOf?.userId || "ALREADY_LINKED"} />
-                                    </div>
-                                ) : (
-                                    <>
-                                        <SearchUser />
-                                        {state?.errors?.partnerUserId && (
-                                            <p className="text-xs text-red-500 font-bold italic">{state.errors.partnerUserId[0]}</p>
-                                        )}
-                                    </>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                ) : (
-                            <div className="space-y-4">
-                            <h3 className="text-lg font-black uppercase tracking-tight border-b pb-2 text-primary">1. Type d'adhésion</h3>
-                            <div className="p-4 bg-primary/5 border border-primary/10 rounded-lg">
-                            <p className="text-sm font-bold text-primary uppercase">Offre Couple</p>
-                            <p className="text-xs text-slate-600 italic">Adhésion groupée avec votre partenaire.</p>
-                            <input type="hidden" name="type" value="COUPLE" />
-                            <input type="hidden" name="partnerUserId" value={initialData.partnerId || "ALREADY_LINKED"} />
-                            </div>
-                            </div>
-                            )}
-
-                            <div className="space-y-6 pt-2">
-                            <h3 className="text-lg font-black uppercase tracking-tight border-b pb-2 text-primary">2. Infos & Licence</h3>
-                            <div className="space-y-4">
-                            <div className="flex items-center justify-between gap-4 p-4 bg-muted/20 rounded-lg">
-                            <div className="space-y-0.5">
-                                <Label htmlFor="has-license-switch">Êtes-vous déjà licencié FFA ?</Label>
-                                <p className="text-[10px] text-muted-foreground italic">Renouvellement ou Mutation depuis un autre club.</p>
-                            </div>
-                            <Switch
-                                id="has-license-switch"
-                                checked={hasLicense}
-                                onCheckedChange={setHasLicense}
-                                type="button"
-                            />
-                            </div>
-
-                            {hasLicense ? (
-                            <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-5 pt-4">
-                                <div className="space-y-3">
-                                    <Label>Votre situation :</Label>
-                                    <RadioGroup
-                                        value={licenseSource}
-                                        onValueChange={(v) => setLicenseSource(v as "RENEWAL" | "MUTATION")}
-                                        className="flex flex-col sm:flex-row gap-3"
-                                    >
-                                       <div className="flex items-center space-x-2 border p-3 rounded-lg bg-white flex-1 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
-                                            <RadioGroupItem value="RENEWAL" id="src-renew" />
-                                            <Label htmlFor="src-renew">Renouvellement</Label>
-                                        </div>
-                                        <div className="flex items-center space-x-2 border p-3 rounded-lg bg-white flex-1 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
-                                            <RadioGroupItem value="MUTATION" id="src-mut" />
-                                            <Label htmlFor="src-mut">Mutation (Autre club)</Label>
-                                        </div>
-                                    </RadioGroup>
+                            {initialData ? (
+                                <div className="p-3 bg-slate-50 border rounded-lg text-xs font-bold text-slate-500">
+                                    Partenaire déjà lié.
+                                    <input type="hidden" name="partnerUserId" value={initialData.partnerId || initialData.partnerOf?.userId || "ALREADY_LINKED"} />
                                 </div>
+                            ) : (
+                                <>
+                                    <SearchUser />
+                                    {state?.errors?.partnerUserId && (
+                                        <p className="text-xs text-red-500 font-bold italic">{state.errors.partnerUserId[0]}</p>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div className="space-y-4">
+                    <h3 className="text-lg font-black uppercase tracking-tight border-b pb-2 text-primary">1. Type d'adhésion</h3>
+                    <div className="p-4 bg-primary/5 border border-primary/10 rounded-lg">
+                        <p className="text-sm font-bold text-primary uppercase">Offre Couple</p>
+                        <p className="text-xs text-slate-600 italic">Adhésion groupée avec votre partenaire.</p>
+                        <input type="hidden" name="type" value="COUPLE" />
+                        <input type="hidden" name="partnerUserId" value={initialData.partnerId || "ALREADY_LINKED"} />
+                    </div>
+                </div>
+            )}
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="ffa">Numéro de licence <span className="text-red-500">*</span></Label>
+            <div className="space-y-6 pt-2">
+                <h3 className="text-lg font-black uppercase tracking-tight border-b pb-2 text-primary">2. Infos & Licence</h3>
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between gap-4 p-4 bg-muted/20 rounded-lg">
+                        <div className="space-y-0.5">
+                            <Label htmlFor="has-license-switch">Êtes-vous déjà licencié FFA ?</Label>
+                            <p className="text-[10px] text-muted-foreground italic">Renouvellement ou Mutation depuis un autre club.</p>
+                        </div>
+                        <Switch
+                            id="has-license-switch"
+                            checked={hasLicense}
+                            onCheckedChange={setHasLicense}
+                            type="button"
+                        />
+                    </div>
+
+                    {hasLicense ? (
+                        <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-5 pt-4">
+                            <div className="space-y-3">
+                                <Label>Votre situation :</Label>
+                                <RadioGroup
+                                    value={licenseSource}
+                                    onValueChange={(v) => setLicenseSource(v as "RENEWAL" | "MUTATION")}
+                                    className="flex flex-col sm:flex-row gap-3"
+                                >
+                                    <div className="flex items-center space-x-2 border p-3 rounded-lg bg-white flex-1 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
+                                        <RadioGroupItem value="RENEWAL" id="src-renew" />
+                                        <Label htmlFor="src-renew">Renouvellement</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 border p-3 rounded-lg bg-white flex-1 transition-colors [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5">
+                                        <RadioGroupItem value="MUTATION" id="src-mut" />
+                                        <Label htmlFor="src-mut">Mutation (Autre club)</Label>
+                                    </div>
+                                </RadioGroup>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="ffa">Numéro de licence <span className="text-red-500">*</span></Label>
+                                <Input
+                                    id="ffa"
+                                    name="ffa"
+                                    placeholder="Votre n° de licence"
+                                    defaultValue={initialData?.ffaLicenseNumber || userProfile.ffaNumber || ""}
+                                    required={hasLicense}
+                                    className="rounded-lg"
+                                />
+                                {state?.errors?.ffaLicenseNumber && <p className="text-xs text-red-500 font-bold italic">{state.errors.ffaLicenseNumber[0]}</p>}
+                            </div>
+
+                            {licenseSource === "MUTATION" && (
+                                <div className="space-y-2 animate-in fade-in pl-4 border-l-2 border-primary">
+                                    <Label htmlFor="club">Ancien club <span className="text-red-500">*</span></Label>
                                     <Input
-                                        id="ffa"
-                                        name="ffa"
-                                        placeholder="Votre n° de licence"
-                                        defaultValue={initialData?.ffaLicenseNumber || userProfile.ffaNumber || ""}
-                                        required={hasLicense}
+                                        id="club"
+                                        name="club"
+                                        placeholder="Nom du club précédent"
+                                        defaultValue={initialData?.previousClub || ""}
+                                        required={licenseSource === "MUTATION"}
                                         className="rounded-lg"
                                     />
-                                    {state?.errors?.ffaLicenseNumber && <p className="text-xs text-red-500 font-bold italic">{state.errors.ffaLicenseNumber[0]}</p>}
+                                    {state?.errors?.previousClub && <p className="text-xs text-red-500 font-bold italic">{state.errors.previousClub[0]}</p>}
                                 </div>
-
-                                {licenseSource === "MUTATION" && (
-                                    <div className="space-y-2 animate-in fade-in pl-4 border-l-2 border-primary">
-                                        <Label htmlFor="club">Ancien club <span className="text-red-500">*</span></Label>
-                                        <Input
-                                            id="club"
-                                            name="club"
-                                            placeholder="Nom du club précédent"
-                                            defaultValue={initialData?.previousClub || ""}
-                                            required={licenseSource === "MUTATION"}
-                                            className="rounded-lg"
-                                        />
-                                        {state?.errors?.previousClub && <p className="text-xs text-red-500 font-bold italic">{state.errors.previousClub[0]}</p>}
-                                    </div>
-                                )}
-                            </div>
-                            ) : (
-                            <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-4 pt-4">
-                                {initialData?.certificateUrl && (
-                                    <div className="bg-primary/5 border border-primary/10 rounded-lg p-4 flex items-center justify-between text-sm">
-                                        <div className="flex items-center gap-3 text-primary font-bold">
-                                            <FileText className="w-5 h-5" />
-                                            <span className="uppercase text-xs tracking-tighter">Attestation PPS déjà fournie</span>
-                                        </div>
-                                        <a href={initialData.certificateUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-black uppercase text-primary hover:underline underline-offset-4">
-                                            Consulter
-                                        </a>
-                                    </div>
-                                )}
-
-                                <FileInput
-                                    id="medicalCertificate"
-                                    name="medicalCertificate"
-                                    accept=".pdf,image/*"
-                                    required={!hasLicense && !initialData?.certificateUrl}
-                                    label={`${initialData?.certificateUrl ? "Mettre à jour l'attestation PPS" : "Charger votre attestation PPS"}${!initialData?.certificateUrl ? " *" : ""}`}
-                                />
-                                {state?.errors?.medicalCertificate && <p className="text-xs text-red-500 font-bold italic">{state.errors.medicalCertificate[0]}</p>}
-                            </div>
                             )}
-                            </div>
-                            </div>
+                        </div>
+                    ) : (
+                        <div className="animate-in fade-in slide-in-from-top-2 duration-300 space-y-4 pt-4">
+                            {initialData?.certificateUrl && (
+                                <InfoActionCard 
+                                    message="Attestation PPS déjà fournie"
+                                    actionText="Consulter"
+                                    actionHref={initialData.certificateUrl}
+                                />
+                            )}
 
-                            {!isInvitedPartner ? (
-                            <div className="space-y-4 pt-2">
-                            <TypographyH3 className="border-b pb-2">3. Règlement</TypographyH3>
-                            <div className="space-y-2">
-                            <Label>Moyen de paiement</Label>
-                            <Select name="paymentMethod" defaultValue={initialData?.paymentMethod || initialData?.payment?.method || "TRANSFER"}>
-                                <SelectTrigger className="rounded-lg">
-                                    <SelectValue placeholder="Choisir..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="CHECK">Chèque</SelectItem>
-                                    <SelectItem value="TRANSFER">Virement Bancaire</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            {state?.errors?.paymentMethod && <p className="text-xs text-red-500 font-bold italic">{state.errors.paymentMethod[0]}</p>}
-                            </div>
-                            </div>
-                            ) : (
-                            // On garde un input hidden pour le paymentMethod pour la validation Zod
-                            <input type="hidden" name="paymentMethod" value={initialData?.payment?.method || "TRANSFER"} />
-                            )}                <div className="pt-6">
-                    <Button type="submit" disabled={pending} className="w-full py-6 rounded-lg font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
-                        {pending ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Traitement...</> : initialData ? "Mettre à jour ma demande" : "Soumettre mon adhésion"}
-                    </Button>
+                            <FileInput
+                                id="medicalCertificate"
+                                name="medicalCertificate"
+                                accept=".pdf,image/*"
+                                required={!hasLicense && !initialData?.certificateUrl}
+                                label={`${initialData?.certificateUrl ? "Mettre à jour l'attestation PPS" : "Charger votre attestation PPS"}${!initialData?.certificateUrl ? " *" : ""}`}
+                            />
+                            {state?.errors?.medicalCertificate && <p className="text-xs text-red-500 font-bold italic">{state.errors.medicalCertificate[0]}</p>}
+                        </div>
+                    )}
                 </div>
-            </form>
+            </div>
+
+            {!isInvitedPartner ? (
+                <div className="space-y-4 pt-2">
+                    <TypographyH3 className="border-b pb-2">3. Règlement</TypographyH3>
+                    <div className="space-y-2">
+                        <Label>Moyen de paiement</Label>
+                        <Select name="paymentMethod" value={paymentMethod} onValueChange={setPaymentMethod}>
+                            <SelectTrigger className="rounded-lg">
+                                <SelectValue placeholder="Choisir..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="CHECK">Chèque</SelectItem>
+                                <SelectItem value="TRANSFER">Virement Bancaire</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        {state?.errors?.paymentMethod && <p className="text-xs text-red-500 font-bold italic">{state.errors.paymentMethod[0]}</p>}
+
+                        {paymentMethod === "TRANSFER" && (
+                            <InfoActionCard 
+                                className="mt-2"
+                                message="Vous avez besoin de réaliser ce virement manuellement au RIB de l'association."
+                                actionText="Télécharger le RIB"
+                                actionHref="/rib.pdf"
+                            />
+                        )}
+                    </div>
+                </div>
+            ) : (
+                // On garde un input hidden pour le paymentMethod pour la validation Zod
+                <input type="hidden" name="paymentMethod" value={initialData?.payment?.method || "TRANSFER"} />
+            )}                <div className="pt-6">
+                <Button type="submit" disabled={pending} className="w-full py-6 rounded-lg font-bold transition-all hover:scale-[1.02] active:scale-[0.98]">
+                    {pending ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Traitement...</> : initialData ? "Mettre à jour ma demande" : "Soumettre mon adhésion"}
+                </Button>
+            </div>
+        </form>
     )
 }

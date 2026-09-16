@@ -45,3 +45,6 @@ next-env.d.ts
 # gemini
 /gemini.md
 
+
+*storybook.log
+storybook-static
