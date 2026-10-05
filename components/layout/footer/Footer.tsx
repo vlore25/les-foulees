@@ -5,7 +5,7 @@ import { SiFacebook } from '@icons-pack/react-simple-icons';
 import Link from "next/link";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
-import assoAdress from "@/components/const/const";
+import { assoAdress } from "@/components/const/const";
 
 interface Footer2Props {
   className?: string;
@@ -25,7 +25,7 @@ const Footer = ({ className }: Footer2Props) => {
       <div className="container max-w-6xl mx-auto px-4">
 
         <footer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 py-12 items-start">
-          
+
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left lg:col-span-2">
             <FouleesLogo size={100} className="!w-[120px] lg:!w-[150px] mb-2" />
             <div className="text-sm space-y-1 mt-2 text-slate-500">
