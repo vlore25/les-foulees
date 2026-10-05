@@ -80,6 +80,10 @@ export default async function RootLayout({
     <html lang="fr">
       <Analytics />
       <SpeedInsights />
+      <head>
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="11646481-f771-40fe-a7d1-74f0f84c541c"></script>
+      </head>
+
       <body
         className={`${vendSans.variable} ${geistMono.variable} antialiased`}
       >
