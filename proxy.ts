@@ -1,27 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { decrypt } from '@/src/lib/session-edge'
- 
+
 const protectedPaths = ['/espace-membre', '/admin']
 const publicPaths = ['/login', '/']
- 
+
 export default async function middleware(req: NextRequest) {
   // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname
   const isProtectedRoute = protectedPaths.some(prefix => path.startsWith(prefix))
   const isPublicRoute = publicPaths.includes(path)
- 
+
   // 3. Decrypt the session from the cookie
   const cookie = req.cookies.get('lesFoulees')?.value
   const session = await decrypt(cookie)
- 
+
+  if (isPublicRoute && session?.userId) {
+    return NextResponse.redirect(new URL('/espace-membre/annuaire', req.nextUrl))
+  }
+
   // 4. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !session?.userId) {
     return NextResponse.redirect(new URL('/login', req.nextUrl))
   }
- 
+
+
+
   return NextResponse.next()
 }
- 
+
 // Routes Proxy should not run on
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],

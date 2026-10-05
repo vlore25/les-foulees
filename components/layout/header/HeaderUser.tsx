@@ -11,10 +11,6 @@ const HeaderUser = () => {
                 <div className="flex items-center gap-2">
                     <SidebarTrigger />
                 </div>
-                
-                <Button asChild className="font-bold uppercase tracking-widest text-xs">
-                    <Link href={"/"}>Accueil</Link>
-                </Button>
             </div>
         </nav>
     )

@@ -12,6 +12,15 @@ export default function AboutPage() {
                 <Quote>
                     Courir pour le plaisir, dans une ambiance conviviale à Avrillé.
                 </Quote>
+                <p>
+                    President: Max Courent
+                    Vis Président: Jacky Moreu
+                    Trésorier: Jean-Luc Trouillard
+                    Secrétaire: Christelle Remin
+                    Membres du CA:
+                    Christophe Bedouet, Emmanuel Robin,
+                    Thierry Rabeau, Alain Dubray, Françoise Hinschberger
+                </p>
             </div>
         </Container>
     )

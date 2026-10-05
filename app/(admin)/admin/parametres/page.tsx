@@ -11,14 +11,14 @@ export default async function AdminSiteConfigPage() {
     const schedules = await getTrainingSchedules();
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 mx-2">
             <div className="border-b">
                 <TypographyH1>Paramètres du site</TypographyH1>
             </div>
 
-            <SiteConfigManager 
-                initialConfig={config} 
-                initialSchedules={schedules} 
+            <SiteConfigManager
+                initialConfig={config}
+                initialSchedules={schedules}
             />
         </div>
     );

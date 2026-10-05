@@ -10,7 +10,7 @@ import { Resend } from 'resend'
 import { render } from '@react-email/render'
 import { RecoverPasswordTemplate } from '@/components/email-templates/RecoverPasswordTemplate'
 import { saveUploadedFile } from '@/src/lib/file-storage'
-import { registerFormSchema, loginSchema, emailSchema, newPasswordSchema  } from '../../lib/definitions';
+import { registerFormSchema, loginSchema, emailSchema, newPasswordSchema } from '../../lib/definitions';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const secret = process.env.JWT_SECRET;
@@ -40,7 +40,7 @@ export type RegisterFormState = {
     emergencyName?: string[];
     emergencyLastName?: string[];
     emergencyPhone?: string[];
-    showPhoneDirectory?: string[]; 
+    showPhoneDirectory?: string[];
     showEmailDirectory?: string[];
     terms?: string[];
   };
@@ -140,7 +140,7 @@ export async function registerUser(state: RegisterFormState, formData: FormData)
     showEmailDirectory: formData.get('showEmailDirectory') === 'on',
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
-    terms: formData.get('terms-conditions')=== 'on',
+    terms: formData.get('terms-conditions') === 'on',
     profileImage: formData.get('profileImage'),
   }
 
@@ -215,8 +215,8 @@ export async function loginUser(state: LoginFormState, formData: FormData): Prom
   const user = await prisma.user.findUnique({
     where: { email },
   })
-
   if (!user || !(await bcrypt.compare(password, user.password))) {
+
     return {
       message: 'Courriel ou mot de passe incorrect.'
     }
@@ -317,7 +317,7 @@ export async function resetPassword(state: ResetPasswordFormState, formData: For
     return {
       success: false,
       message: "Veuillez corriger les erreurs ci-dessous.",
-      errors: validatedFields.error.flatten().fieldErrors 
+      errors: validatedFields.error.flatten().fieldErrors
     };
   }
 
@@ -335,12 +335,12 @@ export async function resetPassword(state: ResetPasswordFormState, formData: For
     });
 
     if (!existingToken) {
-        return { success: false, message: "Token invalide ou expiré." };
+      return { success: false, message: "Token invalide ou expiré." };
     }
 
     const hasExpired = new Date(existingToken.expires) < new Date();
     if (hasExpired) {
-        return { success: false, message: "Le lien a expiré." };
+      return { success: false, message: "Le lien a expiré." };
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
