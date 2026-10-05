@@ -24,14 +24,14 @@ export default function AboutPage() {
                             Membres du bureau
                         </h2>
                         {membersBureau.map((member) => {
-                            return <>
+                            return <div key={member.name}>
                                 <span className="text-muted-foreground leading-relaxed">
                                     {member.pos}
                                 </span>
                                 <p className="font-semibold leading-relaxed">
                                     {member.name}
                                 </p>
-                            </>
+                            </div>
                         })}
                     </div>
                     <div className="space-y-4 pt-4">
