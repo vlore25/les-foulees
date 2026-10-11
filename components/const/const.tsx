@@ -9,11 +9,11 @@ const assoAdress = {
 const membersBureau = [
     {
         pos: "Président",
-        name: "Max Courent"
+        name: "Max Courant"
     },
     {
-        pos: "Vis Président",
-        name: "Jacky Moreu"
+        pos: "Vice-président",
+        name: "Jacky Moreau"
     },
     {
         pos: "Trésorier",
