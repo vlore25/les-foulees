@@ -110,94 +110,95 @@ export default function JoinEventButton({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen} >
       <DialogTrigger asChild>
         <Button className="w-full lg:w-auto font-bold tracking-wider">
           S'inscrire à l'événement
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="m:max-w-[500px] max-h-[90vh] flex flex-col overflow-hidden">
         <DialogHeader>
           <DialogTitle className="text-xl font-black border-b border-primary/10 pb-4">
             Inscription à l'événement
           </DialogTitle>
         </DialogHeader>
+        <div className="min-h-0 flex-1 overflow-y-auto space-y-6 pr-5">
+          <div className="space-y-6 py-4">
+            {isRace && (
+              <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-md text-sm leading-relaxed">
+                <strong>Attention cette étape ne vous inscrit pas à la course !</strong><br />
+                Votre démarche ici permet uniquement d'informer les autres membres du club de votre présence (pour s'organiser, covoiturer, etc.).<br />
+                Pour valider votre vraie inscription à l'épreuve : Veuillez utiliser le lien officiel présent dans le descriptif de l'événement.
+              </div>
+            )}
 
-        <div className="space-y-6 py-4">
-          {isRace && (
-            <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-md text-sm leading-relaxed">
-              <strong>Attention cette étape ne vous inscrit pas à la course !</strong><br />
-              Votre démarche ici permet uniquement d'informer les autres membres du club de votre présence (pour s'organiser, covoiturer, etc.).<br />
-              Pour valider votre vraie inscription à l'épreuve : Veuillez utiliser le lien officiel présent dans le descriptif de l'événement.
-            </div>
-          )}
+            {distances.length > 0 && (
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold text-muted-foreground">Distance / Rôle</h4>
+                <RadioGroup value={selectedDistance || ""} onValueChange={setSelectedDistance}>
+                  {distances.map((dist) => (
+                    <div key={dist} className="flex items-center space-x-2">
+                      <RadioGroupItem value={dist} id={`dist-${dist}`} />
+                      <Label htmlFor={`dist-${dist}`}>
+                        {dist.toLowerCase()}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </div>
+            )}
 
-          {distances.length > 0 && (
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-muted-foreground">Distance / Rôle</h4>
-              <RadioGroup value={selectedDistance || ""} onValueChange={setSelectedDistance}>
-                {distances.map((dist) => (
-                  <div key={dist} className="flex items-center space-x-2">
-                    <RadioGroupItem value={dist} id={`dist-${dist}`} />
-                    <Label htmlFor={`dist-${dist}`}>
-                      {dist.toLowerCase()}
+            {meals.length > 0 && (
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold text-muted-foreground">Repas</h4>
+                {meals.map((meal) => (
+                  <div key={meal} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`meal-${meal}`}
+                      checked={selectedMeals.includes(meal)}
+                      onCheckedChange={() => toggleMeal(meal)}
+                    />
+                    <Label htmlFor={`meal-${meal}`}>
+                      {meal.toLowerCase()}
                     </Label>
                   </div>
                 ))}
-              </RadioGroup>
-            </div>
-          )}
+              </div>
+            )}
 
-          {meals.length > 0 && (
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-muted-foreground">Repas</h4>
-              {meals.map((meal) => (
-                <div key={meal} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`meal-${meal}`}
-                    checked={selectedMeals.includes(meal)}
-                    onCheckedChange={() => toggleMeal(meal)}
-                  />
-                  <Label htmlFor={`meal-${meal}`}>
-                    {meal.toLowerCase()}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          )}
+            {accommodations.length > 0 && (
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold text-muted-foreground">Hébergement</h4>
+                {accommodations.map((acc) => (
+                  <div key={acc} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`acc-${acc}`}
+                      checked={selectedAccommodations.includes(acc)}
+                      onCheckedChange={() => toggleAccommodation(acc)}
+                    />
+                    <Label htmlFor={`acc-${acc}`}>
+                      {acc.toLowerCase()}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            )}
 
-          {accommodations.length > 0 && (
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-muted-foreground">Hébergement</h4>
-              {accommodations.map((acc) => (
-                <div key={acc} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`acc-${acc}`}
-                    checked={selectedAccommodations.includes(acc)}
-                    onCheckedChange={() => toggleAccommodation(acc)}
-                  />
-                  <Label htmlFor={`acc-${acc}`}>
-                    {acc.toLowerCase()}
-                  </Label>
-                </div>
-              ))}
+            <div className="flex items-center space-x-2 pt-4 border-t border-primary/10">
+              <Switch
+                id="carpooling-switch"
+                checked={carpooling}
+                onCheckedChange={setCarpooling}
+              />
+              <Label htmlFor="carpooling-switch">
+                Je propose un covoiturage
+              </Label>
             </div>
-          )}
 
-          <div className="flex items-center space-x-2 pt-4 border-t border-primary/10">
-            <Switch
-              id="carpooling-switch"
-              checked={carpooling}
-              onCheckedChange={setCarpooling}
-            />
-            <Label htmlFor="carpooling-switch">
-              Je propose un covoiturage
-            </Label>
+            <Button className="w-full mt-4" onClick={handleJoin} disabled={isPending || (distances.length > 0 && !selectedDistance)}>
+              {isPending ? "Validation..." : (isRace ? "J'ai compris, signaler ma présence" : "Valider mon inscription")}
+            </Button>
           </div>
-
-          <Button className="w-full mt-4" onClick={handleJoin} disabled={isPending || (distances.length > 0 && !selectedDistance)}>
-            {isPending ? "Validation..." : (isRace ? "J'ai compris, signaler ma présence" : "Valider mon inscription")}
-          </Button>
         </div>
       </DialogContent>
     </Dialog>
