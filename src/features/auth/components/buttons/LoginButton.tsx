@@ -5,11 +5,9 @@ export default function LoginButton() {
     return (
         <Button asChild className="w-50 self-center">
             <Link href='/login'>
-                <div className="flex flex-row gap-2 text-lg items-center">
-                    <span>
-                        Connexion
-                    </span>
-                </div>
+                <span>
+                    Connexion
+                </span>
             </Link>
         </Button>
     );

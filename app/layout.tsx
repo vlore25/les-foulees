@@ -93,7 +93,6 @@ export default async function RootLayout({
           {children}
         </UserProvider>
       </body>
-
     </html>
   );
 }

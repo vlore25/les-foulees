@@ -1,29 +1,19 @@
 "use client"
 
-import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import Link from "next/link";
 import navItems from "./NavItems";
-import { cn } from "@/src/lib/utils";
 
 const DesktopMenu = () => {
     return (
-        <NavigationMenu className="hidden lg:flex">
-            <NavigationMenuList className="gap-1 xl:gap-2">
-                {navItems.map((item) => (
-                    <NavigationMenuItem key={item.title}>
-                        <NavigationMenuLink asChild className={cn(
-                            navigationMenuTriggerStyle(),
-                            "bg-transparent hover:bg-primary/5 text-lg font-medium transition-all duration-300"
-                        )}>
-                            <Link href={item.href}>
-                                {item.title}
-                            </Link>
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-                ))}
-            </NavigationMenuList>
-        </NavigationMenu>
+        <nav className="hidden lg:flex gap-6">
+            {navItems.map((item) => (
+                <Link key={item.title} href={item.href} className="font-semibold group">
+                    {item.title}
+                    <div className="bg-primary h-[2px] w-0 group-hover:w-full transition-all duration-300"></div>
+                </Link>
+
+            ))}
+        </nav>
     );
 }
-
 export default DesktopMenu;
