@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "bunx prisma@7 generate && bunx prisma@7 migrate deploy && next build",
+    "build": "bunx prisma@7 generate && next build",
     "start": "next start",
     "lint": "eslint",
     "test": "jest"
