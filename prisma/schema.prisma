@@ -30,10 +30,10 @@ enum Genre {
 }
 
 model User {
-  id                 String       @id @default(cuid())
-  email              String       @unique @db.VarChar(255)
+  id                 String              @id @default(cuid())
+  email              String              @unique @db.VarChar(255)
   name               String
-  genre              Genre        @default(OTHER)
+  genre              Genre               @default(OTHER)
   lastname           String
   profileImageUrl    String?
   birthdate          DateTime?
@@ -45,18 +45,17 @@ model User {
   emergencyName      String?
   emergencyLastName  String?
   emergencyPhone     String?
-  showPhoneDirectory Boolean      @default(false)
-  showEmailDirectory Boolean      @default(false)
-  role               Role         @default(USER)
-  status             Status       @default(ACTIVE)
+  showPhoneDirectory Boolean             @default(false)
+  showEmailDirectory Boolean             @default(false)
+  role               Role                @default(USER)
+  status             Status              @default(ACTIVE)
   deactivatedAt      DateTime?
   eventRegistrations EventRegistration[]
   memberships        Membership[]
   payments           Payment[]
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 }
-
 
 model Invitation {
   id        Int      @id @default(autoincrement())
@@ -94,38 +93,39 @@ enum EventType {
 }
 
 model Event {
-  id           String     @id @default(cuid())
-  title        String
-  imgUrl       String
-  description  String?
-  dateStart    DateTime?
-  dateEnd      DateTime?
-  location     String
-  distances    String[]
-  meals        String[]
+  id             String              @id @default(cuid())
+  title          String
+  imgUrl         String
+  description    String?
+  dateStart      DateTime?
+  dateEnd        DateTime?
+  location       String
+  distances      String[]
+  meals          String[]
   accommodations String[]
-  type         EventType
-  visibility   Visibility @default(PUBLIC)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  registrations EventRegistration[]
+  type           EventType
+  isFeatured     Boolean             @default(false)
+  visibility     Visibility          @default(PUBLIC)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  registrations  EventRegistration[]
 }
 
 model EventRegistration {
-  id        String   @id @default(cuid())
-  userId    String
-  eventId   String
-  distance  String?
-  meals     String[]
+  id             String   @id @default(cuid())
+  userId         String
+  eventId        String
+  distance       String?
+  meals          String[]
   accommodations String[]
-  carpooling Boolean @default(false)
-  createdAt DateTime @default(now())
+  carpooling     Boolean  @default(false)
+  createdAt      DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   // Un utilisateur ne peut s'inscrire qu'une seule fois à un même événement
-  @@unique([userId, eventId]) 
+  @@unique([userId, eventId])
 }
 
 // ==============DOCS=================
@@ -140,18 +140,18 @@ model LegalDocs {
 // ==============SEASON=================
 
 model Season {
-  id            String       @id @default(cuid())
-  name          String       @unique
-  startDate     DateTime
-  endDate       DateTime
-  isOpenForRegistration Boolean @default(false)
-  priceStandard Float        @default(35.0)
-  priceCouple   Float        @default(60.0)
-  priceYoung    Float        @default(25.0)
-  priceFfa      Float        @default(98.0)
-  memberships   Membership[]
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  id                    String       @id @default(cuid())
+  name                  String       @unique
+  startDate             DateTime
+  endDate               DateTime
+  isOpenForRegistration Boolean      @default(false)
+  priceStandard         Float        @default(35.0)
+  priceCouple           Float        @default(60.0)
+  priceYoung            Float        @default(25.0)
+  priceFfa              Float        @default(98.0)
+  memberships           Membership[]
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
 }
 
 // ==============DOSSIER ADHERANT=================
@@ -185,10 +185,10 @@ model Membership {
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
   payment          Payment?         @relation(fields: [paymentId], references: [id])
-  
-  partnerId        String?          @unique
-  partner          Membership?      @relation("CoupleMembership", fields: [partnerId], references: [id])
-  partnerOf        Membership?      @relation("CoupleMembership")
+
+  partnerId String?     @unique
+  partner   Membership? @relation("CoupleMembership", fields: [partnerId], references: [id])
+  partnerOf Membership? @relation("CoupleMembership")
 
   @@unique([userId, seasonId])
 }
@@ -209,36 +209,35 @@ enum PaymentStatus {
 }
 
 model Payment {
-  id           String        @id @default(cuid())
-  amount       Float
-  method       PaymentMethod
-  status       PaymentStatus @default(PENDING)
-  reference    String?
-  date         DateTime      @default(now())
-  user         User          @relation(fields: [userId], references: [id])
-  userId       String
-  memberships  Membership[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id          String        @id @default(cuid())
+  amount      Float
+  method      PaymentMethod
+  status      PaymentStatus @default(PENDING)
+  reference   String?
+  date        DateTime      @default(now())
+  user        User          @relation(fields: [userId], references: [id])
+  userId      String
+  memberships Membership[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
 // ==============SITE CONFIGURATION=================
 
 model SiteConfig {
-  id               String   @id @default("default")
-  heroDesktopUrl   String?
-  heroMobileUrl    String?
-  privacyPolicy    String?
-  legalNotice      String?
-  updatedAt        DateTime @updatedAt
+  id             String   @id @default("default")
+  heroDesktopUrl String?
+  heroMobileUrl  String?
+  privacyPolicy  String?
+  legalNotice    String?
+  updatedAt      DateTime @updatedAt
 }
 
 model TrainingSchedule {
-  id        String  @id @default(cuid())
-  day       String
-  hour      String
-  place     String
-  imgUrl    String?
-  order     Int     @default(0)
+  id     String  @id @default(cuid())
+  day    String
+  hour   String
+  place  String
+  imgUrl String?
+  order  Int     @default(0)
 }
-
