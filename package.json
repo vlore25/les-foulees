@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "bunx prisma@7 generate && next build",
+    "prisma7:generate": "prisma7 generate",
+    "prisma7:migrate": "prisma7 migrate dev",
     "start": "next start",
     "lint": "eslint",
     "test": "jest"
@@ -88,6 +90,7 @@
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
     "playwright": "latest",
+    "prisma": "^8.0.0-rc.27",
     "server-only": "^0.0.1",
     "tailwindcss": "^4.3.1",
     "tsx": "^4.22.4",

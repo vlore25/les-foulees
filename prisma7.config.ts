@@ -1,15 +1,18 @@
+"use server"
+
 import 'dotenv/config';
-import { defineConfig } from "@prisma/prisma7/config";
+import { defineConfig, env } from "@prisma/prisma7/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
-    seed: "bunx tsx prisma/seed.ts"
   },
 
   datasource: {
-    url: process.env["DATABASE_URL"],
+    url: env("DATABASE_URL"),
   },
 });
+
+console.log("DATABASE STRING:" + process.env["DATABASE_URL"])
 

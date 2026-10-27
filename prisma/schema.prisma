@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../prisma/generated/"
@@ -74,10 +68,6 @@ model PasswordResetToken {
   @@unique([email, token])
 }
 
-/**
- * ==============EVENTS=================
- */
-
 enum Visibility {
   PRIVATE
   PUBLIC
@@ -124,11 +114,9 @@ model EventRegistration {
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-  // Un utilisateur ne peut s'inscrire qu'une seule fois à un même événement
   @@unique([userId, eventId])
 }
 
-// ==============DOCS=================
 
 model LegalDocs {
   id          String  @id @default(cuid())
@@ -137,7 +125,6 @@ model LegalDocs {
   Url         String?
 }
 
-// ==============SEASON=================
 
 model Season {
   id                    String       @id @default(cuid())
@@ -153,8 +140,6 @@ model Season {
   createdAt             DateTime     @default(now())
   updatedAt             DateTime     @updatedAt
 }
-
-// ==============DOSSIER ADHERANT=================
 
 enum MembershipStatus {
   PENDING
@@ -193,7 +178,6 @@ model Membership {
   @@unique([userId, seasonId])
 }
 
-// ==============CENTRALISED ALL PAYEMENTS=================
 
 enum PaymentMethod {
   CHECK
@@ -221,8 +205,6 @@ model Payment {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 }
-
-// ==============SITE CONFIGURATION=================
 
 model SiteConfig {
   id             String   @id @default("default")

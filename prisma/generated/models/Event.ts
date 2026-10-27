@@ -33,6 +33,7 @@ export type EventMinAggregateOutputType = {
   dateEnd: Date | null
   location: string | null
   type: $Enums.EventType | null
+  isFeatured: boolean | null
   visibility: $Enums.Visibility | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -47,6 +48,7 @@ export type EventMaxAggregateOutputType = {
   dateEnd: Date | null
   location: string | null
   type: $Enums.EventType | null
+  isFeatured: boolean | null
   visibility: $Enums.Visibility | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -64,6 +66,7 @@ export type EventCountAggregateOutputType = {
   meals: number
   accommodations: number
   type: number
+  isFeatured: number
   visibility: number
   createdAt: number
   updatedAt: number
@@ -80,6 +83,7 @@ export type EventMinAggregateInputType = {
   dateEnd?: true
   location?: true
   type?: true
+  isFeatured?: true
   visibility?: true
   createdAt?: true
   updatedAt?: true
@@ -94,6 +98,7 @@ export type EventMaxAggregateInputType = {
   dateEnd?: true
   location?: true
   type?: true
+  isFeatured?: true
   visibility?: true
   createdAt?: true
   updatedAt?: true
@@ -111,6 +116,7 @@ export type EventCountAggregateInputType = {
   meals?: true
   accommodations?: true
   type?: true
+  isFeatured?: true
   visibility?: true
   createdAt?: true
   updatedAt?: true
@@ -201,6 +207,7 @@ export type EventGroupByOutputType = {
   meals: string[]
   accommodations: string[]
   type: $Enums.EventType
+  isFeatured: boolean
   visibility: $Enums.Visibility
   createdAt: Date
   updatedAt: Date
@@ -239,6 +246,7 @@ export type EventWhereInput = {
   meals?: Prisma.StringNullableListFilter<"Event">
   accommodations?: Prisma.StringNullableListFilter<"Event">
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
+  isFeatured?: Prisma.BoolFilter<"Event"> | boolean
   visibility?: Prisma.EnumVisibilityFilter<"Event"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -257,6 +265,7 @@ export type EventOrderByWithRelationInput = {
   meals?: Prisma.SortOrder
   accommodations?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -278,6 +287,7 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   meals?: Prisma.StringNullableListFilter<"Event">
   accommodations?: Prisma.StringNullableListFilter<"Event">
   type?: Prisma.EnumEventTypeFilter<"Event"> | $Enums.EventType
+  isFeatured?: Prisma.BoolFilter<"Event"> | boolean
   visibility?: Prisma.EnumVisibilityFilter<"Event"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Event"> | Date | string
@@ -296,6 +306,7 @@ export type EventOrderByWithAggregationInput = {
   meals?: Prisma.SortOrder
   accommodations?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -319,6 +330,7 @@ export type EventScalarWhereWithAggregatesInput = {
   meals?: Prisma.StringNullableListFilter<"Event">
   accommodations?: Prisma.StringNullableListFilter<"Event">
   type?: Prisma.EnumEventTypeWithAggregatesFilter<"Event"> | $Enums.EventType
+  isFeatured?: Prisma.BoolWithAggregatesFilter<"Event"> | boolean
   visibility?: Prisma.EnumVisibilityWithAggregatesFilter<"Event"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
@@ -336,6 +348,7 @@ export type EventCreateInput = {
   meals?: Prisma.EventCreatemealsInput | string[]
   accommodations?: Prisma.EventCreateaccommodationsInput | string[]
   type: $Enums.EventType
+  isFeatured?: boolean
   visibility?: $Enums.Visibility
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -354,6 +367,7 @@ export type EventUncheckedCreateInput = {
   meals?: Prisma.EventCreatemealsInput | string[]
   accommodations?: Prisma.EventCreateaccommodationsInput | string[]
   type: $Enums.EventType
+  isFeatured?: boolean
   visibility?: $Enums.Visibility
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -372,6 +386,7 @@ export type EventUpdateInput = {
   meals?: Prisma.EventUpdatemealsInput | string[]
   accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -390,6 +405,7 @@ export type EventUncheckedUpdateInput = {
   meals?: Prisma.EventUpdatemealsInput | string[]
   accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -408,6 +424,7 @@ export type EventCreateManyInput = {
   meals?: Prisma.EventCreatemealsInput | string[]
   accommodations?: Prisma.EventCreateaccommodationsInput | string[]
   type: $Enums.EventType
+  isFeatured?: boolean
   visibility?: $Enums.Visibility
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -425,6 +442,7 @@ export type EventUpdateManyMutationInput = {
   meals?: Prisma.EventUpdatemealsInput | string[]
   accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -442,6 +460,7 @@ export type EventUncheckedUpdateManyInput = {
   meals?: Prisma.EventUpdatemealsInput | string[]
   accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -467,6 +486,7 @@ export type EventCountOrderByAggregateInput = {
   meals?: Prisma.SortOrder
   accommodations?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -481,6 +501,7 @@ export type EventMaxOrderByAggregateInput = {
   dateEnd?: Prisma.SortOrder
   location?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -495,6 +516,7 @@ export type EventMinOrderByAggregateInput = {
   dateEnd?: Prisma.SortOrder
   location?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -566,6 +588,7 @@ export type EventCreateWithoutRegistrationsInput = {
   meals?: Prisma.EventCreatemealsInput | string[]
   accommodations?: Prisma.EventCreateaccommodationsInput | string[]
   type: $Enums.EventType
+  isFeatured?: boolean
   visibility?: $Enums.Visibility
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -583,6 +606,7 @@ export type EventUncheckedCreateWithoutRegistrationsInput = {
   meals?: Prisma.EventCreatemealsInput | string[]
   accommodations?: Prisma.EventCreateaccommodationsInput | string[]
   type: $Enums.EventType
+  isFeatured?: boolean
   visibility?: $Enums.Visibility
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -616,6 +640,7 @@ export type EventUpdateWithoutRegistrationsInput = {
   meals?: Prisma.EventUpdatemealsInput | string[]
   accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -633,6 +658,7 @@ export type EventUncheckedUpdateWithoutRegistrationsInput = {
   meals?: Prisma.EventUpdatemealsInput | string[]
   accommodations?: Prisma.EventUpdateaccommodationsInput | string[]
   type?: Prisma.EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -681,6 +707,7 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   meals?: boolean
   accommodations?: boolean
   type?: boolean
+  isFeatured?: boolean
   visibility?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -700,6 +727,7 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   meals?: boolean
   accommodations?: boolean
   type?: boolean
+  isFeatured?: boolean
   visibility?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -717,6 +745,7 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   meals?: boolean
   accommodations?: boolean
   type?: boolean
+  isFeatured?: boolean
   visibility?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -734,12 +763,13 @@ export type EventSelectScalar = {
   meals?: boolean
   accommodations?: boolean
   type?: boolean
+  isFeatured?: boolean
   visibility?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "imgUrl" | "description" | "dateStart" | "dateEnd" | "location" | "distances" | "meals" | "accommodations" | "type" | "visibility" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "imgUrl" | "description" | "dateStart" | "dateEnd" | "location" | "distances" | "meals" | "accommodations" | "type" | "isFeatured" | "visibility" | "createdAt" | "updatedAt", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrations?: boolean | Prisma.Event$registrationsArgs<ExtArgs>
   _count?: boolean | Prisma.EventCountOutputTypeDefaultArgs<ExtArgs>
@@ -764,6 +794,7 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     meals: string[]
     accommodations: string[]
     type: $Enums.EventType
+    isFeatured: boolean
     visibility: $Enums.Visibility
     createdAt: Date
     updatedAt: Date
@@ -1202,6 +1233,7 @@ export interface EventFieldRefs {
   readonly meals: Prisma.FieldRef<"Event", 'String[]'>
   readonly accommodations: Prisma.FieldRef<"Event", 'String[]'>
   readonly type: Prisma.FieldRef<"Event", 'EventType'>
+  readonly isFeatured: Prisma.FieldRef<"Event", 'Boolean'>
   readonly visibility: Prisma.FieldRef<"Event", 'Visibility'>
   readonly createdAt: Prisma.FieldRef<"Event", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Event", 'DateTime'>

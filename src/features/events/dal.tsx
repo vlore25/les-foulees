@@ -1,4 +1,4 @@
-import { prisma } from "@/src/lib/prisma";
+import { db, prisma } from "@/src/lib/prisma";
 import { getSession, verifySession } from "@/src/lib/session";
 import { cache } from "react";
 import { getCurrentUser } from "../users/dal";
@@ -16,7 +16,7 @@ export type EventListItem = {
   distances: string[];
   meals: string[];
   accommodations: string[];
-  isParticipant: boolean; 
+  isParticipant: boolean;
   userDistance: string | null;
   userMeals: string[];
   userAccommodations: string[];
@@ -25,10 +25,62 @@ export type EventListItem = {
 }
 
 //GET ALL EVENTS
+export async function getAllevents8(): Promise<EventListItem[]> {
+  const session = await getSession();
+  const userId = session?.userId;
+
+  const events = await db.orm.public.Event
+    .select(
+      'id',
+      'title',
+      'imgUrl',
+      'description',
+      'dateStart',
+      'dateEnd',
+      'location',
+      'type',
+      'distances',
+      'meals',
+      'accommodations',
+    )
+    .include('registrations', (reg) =>
+      reg
+        .where({ userId: userId })
+        .select('distance', 'meals', 'accommodations', 'carpooling')
+
+    )
+    .orderBy((p) => p.createdAt.asc())
+    .all();
+
+
+
+  return events.map(event => ({
+    id: event.id,
+    title: event.title,
+    imgUrl: event.imgUrl,
+    description: event.description,
+    dateStart: event.dateStart,
+    dateEnd: event.dateEnd,
+    location: event.location,
+    type: event.type,
+    distances: event.distances,
+    meals: event.meals,
+    accommodations: event.accommodations,
+    isParticipant: event.registrations.length > 0,
+    userDistance: event.registrations[0]?.distance || null,
+    userMeals: event.registrations[0]?.meals || [],
+    userAccommodations: event.registrations[0]?.accommodations || [],
+    carpooling: event.registrations[0]?.carpooling || false,
+    participantCount: event.registrations.length || 0
+  }));
+}
+
+
 export async function getAllevents(): Promise<EventListItem[]> {
   const session = await getSession();
   const userId = session?.userId;
-  
+  const eventTest = await getAllevents8();
+
   const events = await prisma.event.findMany({
     select: {
       id: true,
@@ -44,7 +96,7 @@ export async function getAllevents(): Promise<EventListItem[]> {
       accommodations: true,
       registrations: {
         where: { userId: userId ?? "" },
-        select: { distance: true, meals: true, accommodations: true, carpooling: true } 
+        select: { distance: true, meals: true, accommodations: true, carpooling: true }
       },
       _count: {
         select: { registrations: true }
@@ -65,7 +117,7 @@ export async function getAllevents(): Promise<EventListItem[]> {
     distances: event.distances,
     meals: event.meals,
     accommodations: event.accommodations,
-    isParticipant: event.registrations.length > 0, 
+    isParticipant: event.registrations.length > 0,
     userDistance: event.registrations[0]?.distance || null,
     userMeals: event.registrations[0]?.meals || [],
     userAccommodations: event.registrations[0]?.accommodations || [],
@@ -88,7 +140,7 @@ export const getEventById = cache(async (eventId: string) => {
 // GET EVENT AND PARTICIPANTS
 export const getEventWithParticipationStatus = cache(async (eventId: string) => {
   if (!eventId) return null;
-  const session = await verifySession(); 
+  const session = await verifySession();
   const userId = session?.userId;
 
   const event = await prisma.event.findUnique({
@@ -112,8 +164,8 @@ export const getEventWithParticipationStatus = cache(async (eventId: string) => 
   const userRegistration = event.registrations.find(reg => reg.userId === userId) || null;
   const isParticipant = !!userRegistration;
 
-  return { 
-    ...event, 
+  return {
+    ...event,
     isParticipant,
     userDistance: userRegistration?.distance || null,
     userMeals: userRegistration?.meals || [],
@@ -131,8 +183,8 @@ export async function getEventsCountCurrentYear(): Promise<number> {
   const count = await prisma.event.count({
     where: {
       dateStart: {
-        gte: startOfYear, 
-        lte: endOfYear,   
+        gte: startOfYear,
+        lte: endOfYear,
       },
     },
   });
@@ -142,42 +194,42 @@ export async function getEventsCountCurrentYear(): Promise<number> {
 
 export async function getEventParticipantsForExport(eventId: string) {
 
-    const event = await prisma.event.findUnique({
-        where: { id: eventId },
-        select: {
-            title: true,
-            registrations: {
-                include: {
-                    user: {
-                        select: { name: true, lastname: true, email: true, phone: true }
-                    }
-                }
-            }
+  const event = await prisma.event.findUnique({
+    where: { id: eventId },
+    select: {
+      title: true,
+      registrations: {
+        include: {
+          user: {
+            select: { name: true, lastname: true, email: true, phone: true }
+          }
         }
-    });
+      }
+    }
+  });
 
-    return event;
+  return event;
 }
 
 export async function getEventParticipantsListAction(eventId: string) {
-    const user = await getCurrentUser()
-    
-    // SÉCURITÉ : Seulement pour l'admin
-    if (user?.role !== 'ADMIN') {
-        return { success: false, data: [] };
-    }
+  const user = await getCurrentUser()
 
-    const event = await prisma.event.findUnique({
-        where: { id: eventId },
-        select: {
-            registrations: {
-                include: {
-                    user: { select: { name: true, lastname: true } }
-                }
-            }
+  // SÉCURITÉ : Seulement pour l'admin
+  if (user?.role !== 'ADMIN') {
+    return { success: false, data: [] };
+  }
+
+  const event = await prisma.event.findUnique({
+    where: { id: eventId },
+    select: {
+      registrations: {
+        include: {
+          user: { select: { name: true, lastname: true } }
         }
-    });
+      }
+    }
+  });
 
-    return { success: true, data: event?.registrations || [] };
+  return { success: true, data: event?.registrations || [] };
 }
 

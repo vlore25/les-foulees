@@ -7,7 +7,6 @@ import { Container } from "@/components/ui/Container";
 export default async function EventsVisitorPage() {
     // On utilise ton DAL existant pour récupérer tous les événements
     const events = await getAllevents();
-
     return (
         <Container>
             <div className="space-y-2 mb-10">

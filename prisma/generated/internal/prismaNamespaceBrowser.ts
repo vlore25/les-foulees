@@ -141,6 +141,7 @@ export const EventScalarFieldEnum = {
   meals: 'meals',
   accommodations: 'accommodations',
   type: 'type',
+  isFeatured: 'isFeatured',
   visibility: 'visibility',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
